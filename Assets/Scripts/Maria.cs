@@ -1,5 +1,8 @@
 public class Maria : Character 
 {
+    // Character's Skills
+    SwingTheSword swingTheSword = new SwingTheSword();
+
     public Maria()
     {
         name = "Maria"; 
@@ -13,14 +16,14 @@ public class Maria : Character
         mana = 80f;
         burst = 10f; 
     }
-
+    
     public override void UsingFirstSkill()
     {
 
     }
-    public override void UsingSecondSkill()
+    public override void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
     {
-
+        swingTheSword.SkillFunction(character,targets); 
     }
     public override void UsingBurstSkill()
     {

@@ -1,6 +1,6 @@
 public class SwingTheSword : Skill
 {
-    SwingTheSword()
+    public SwingTheSword()
     {
         name = "Swing The Sword";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
@@ -9,6 +9,11 @@ public class SwingTheSword : Skill
         activateTypes = new ActivateType[] { ActivateType.Active };
     }
 
-    public override void SkillFunction() 
-    { }
+    public override void SkillFunction(OnFieldCharacter character, OnFieldCharacter[] targets)
+    {
+        foreach (OnFieldCharacter target in targets)
+        {
+            target.CurrentHealth -= character.CurrentAttack - target.CurrentArmor; 
+        }
+    }
 }

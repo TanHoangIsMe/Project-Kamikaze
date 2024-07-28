@@ -29,7 +29,7 @@ public abstract class Character
 
     // Skill List
     public abstract void UsingFirstSkill();
-    public abstract void UsingSecondSkill();
+    public abstract void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
     public abstract void UsingBurstSkill();
 
 }

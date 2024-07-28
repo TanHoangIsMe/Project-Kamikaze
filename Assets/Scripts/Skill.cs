@@ -7,5 +7,5 @@ public abstract class Skill
     protected SkillType[] skillType;
     protected ActivateType[] activateTypes;
 
-    public abstract void SkillFunction();
+    public abstract void SkillFunction(OnFieldCharacter character, OnFieldCharacter[] targets);
 }
