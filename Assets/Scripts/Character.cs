@@ -1,6 +1,6 @@
-public abstract class Character
+public class Character
 {
-    protected string name;
+    protected string fullName;
 
     // Character's Attribute
     protected RoleType[] roleTypes;
@@ -16,7 +16,7 @@ public abstract class Character
     protected float burst;
 
     // Get Character Info
-    public string Name { get { return name; } }
+    public string FullName { get { return fullName; } }
     public RoleType[] RoleTypes { get { return roleTypes; } }
     public ClassType[] ClassTypes { get { return classTypes; } }
     public ElementType[] ElementTypes { get { return elementTypes; } }
@@ -28,8 +28,8 @@ public abstract class Character
     public float Burst { get { return burst; } }
 
     // Skill List
-    public abstract void UsingFirstSkill();
-    public abstract void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
-    public abstract void UsingBurstSkill();
+    public virtual void UsingFirstSkill() { }
+    public virtual void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets) { }
+    public virtual void UsingBurstSkill() { }
 
 }

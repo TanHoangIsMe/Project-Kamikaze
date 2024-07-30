@@ -5,7 +5,7 @@ public class Maria : Character
 
     public Maria()
     {
-        name = "Maria"; 
+        fullName = "Maria"; 
         roleTypes = new RoleType[] { RoleType.Attacker };
         classTypes = new ClassType[] { ClassType.Warrior };
         elementTypes = new ElementType[] { ElementType.Fire };
