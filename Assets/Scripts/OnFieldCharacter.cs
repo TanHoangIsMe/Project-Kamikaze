@@ -20,9 +20,9 @@ public class OnFieldCharacter : MonoBehaviour
 
     private void Start()
     {
-        //currentAttack = currentCharacter.Attack;
-        //currentArmor = currentCharacter.Armor;
-        //currentHealth = currentCharacter.Health;
+        currentAttack = currentCharacter.Attack;
+        currentArmor = currentCharacter.Armor;
+        currentHealth = currentCharacter.Health;
     }
 
     public void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)

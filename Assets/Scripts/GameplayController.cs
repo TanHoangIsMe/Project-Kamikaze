@@ -3,27 +3,26 @@ using UnityEngine;
 
 public class GameplayController : MonoBehaviour
 {
-    public GameObject target; 
-    //OnFieldCharacter[] onFieldCharacters = new OnFieldCharacter[2];
-    private string a = "Maria";
-    private string prefabPath;
-    private void Awake()
-    {
-        //for (int i = 0; i < onFieldCharacters.Length; i++)
-        //{
-        //    CreateCharacter(onFieldCharacters, new Maria(), i);
-        //}      
-    }
+    private string[] playerChampions = { "Maria", "Maria", "Maria", "Maria", "Maria" };
+    private string[] enemyChampions = { "Maria", "Maria", "Maria", "Maria", "Maria" };
 
+    private string prefabPath;
+ 
     private void Start()
     {
-        //foreach(var onFieldCharacter in onFieldCharacters)
-        //{
-        //    Debug.Log(onFieldCharacter.CurrentHealth);
-        //    onFieldCharacter.UsingSecondSkill(onFieldCharacters[0],onFieldCharacters);
-        //    Debug.Log(onFieldCharacter.CurrentHealth);
-        //}
-        prefabPath = $"Prefabs/Characters/{a}";
+        foreach (string enemyChampion in enemyChampions)
+        {
+            CreateCharacter(enemyChampion);
+        }
+        foreach (string playerChampion in playerChampions)
+        {
+            CreateCharacter(playerChampion);
+        }
+    }
+
+    private void CreateCharacter(string characterName)
+    {
+        prefabPath = $"Prefabs/Characters/{characterName}";
 
         GameObject prefab = Resources.Load<GameObject>(prefabPath);
 
@@ -35,13 +34,5 @@ public class GameplayController : MonoBehaviour
         {
             Debug.LogError("Prefab not found at path: " + prefabPath);
         }
-
     }
-
-    //private void CreateCharacter(OnFieldCharacter[] onFieldCharacters,Character character, int index)
-    //{
-    //    OnFieldCharacter onFieldCharacter = FindObjectOfType<OnFieldCharacter>();
-    //    onFieldCharacter.CurrentCharacter = character;
-    //    onFieldCharacters[index] = onFieldCharacter;
-    //}
 }
