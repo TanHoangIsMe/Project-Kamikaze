@@ -6,12 +6,33 @@ public class OnFieldCharacter : MonoBehaviour
     public Character currentCharacter;
     private float currentAttack;
     private float currentArmor;
+    private float currentSpeed;
     private float currentHealth;
+    private float currentMana;
+    private float currentBurst;
 
     public Character CurrentCharacter { set { currentCharacter = value; } }
     public float CurrentAttack { get { return currentAttack; } set { currentAttack = value; } }
     public float CurrentArmor { get { return currentArmor; } set { currentArmor = value; } }
+    public float CurrentSpeed { get { return currentSpeed; } set { currentSpeed = value; } }
     public float CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
+    public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
+    public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
+
+    public void UsingFirstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    {
+        currentCharacter.UsingFirstSkill(character, targets);
+    }
+
+    public void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    {
+        currentCharacter.UsingSecondSkill(character, targets);
+    }
+
+    public void UsingBurstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    {
+        currentCharacter.UsingBurstSkill(character, targets);
+    }
 
     private void Awake()
     {
@@ -20,14 +41,7 @@ public class OnFieldCharacter : MonoBehaviour
 
     private void Start()
     {
-        currentAttack = currentCharacter.Attack;
-        currentArmor = currentCharacter.Armor;
-        currentHealth = currentCharacter.Health;
-    }
-
-    public void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
-    {
-        currentCharacter.UsingSecondSkill(character,targets);
+        SetUpCurrentStats();
     }
 
     private void CompareToCharacterNameList()
@@ -60,5 +74,15 @@ public class OnFieldCharacter : MonoBehaviour
         {
             Debug.LogError("ClassName does not existed");
         }
+    }
+
+    private void SetUpCurrentStats()
+    {
+        currentAttack = currentCharacter.Attack;
+        currentArmor = currentCharacter.Armor;
+        currentSpeed = currentCharacter.Speed;
+        currentHealth = currentCharacter.Health;
+        currentMana = 0f;
+        currentBurst = 0f;
     }
 }

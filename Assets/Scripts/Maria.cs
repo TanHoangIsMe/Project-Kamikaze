@@ -13,20 +13,20 @@ public class Maria : Character
         armor = 50f;
         speed = 40f;
         health = 700f;
-        mana = 80f;
-        burst = 10f; 
+        maxMana = 80f;
+        maxBurst = 100f; 
     }
     
-    public override void UsingFirstSkill()
+    public override void UsingFirstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
     {
-
+        swingTheSword.SkillFunction(character, targets);
     }
     public override void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
     {
         swingTheSword.SkillFunction(character,targets); 
     }
-    public override void UsingBurstSkill()
+    public override void UsingBurstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
     {
-
+        swingTheSword.SkillFunction(character, targets);
     }
 }

@@ -1,4 +1,4 @@
-public class Character
+public abstract class Character
 {
     protected string fullName;
 
@@ -12,8 +12,8 @@ public class Character
     protected float armor;
     protected float speed;
     protected float health;
-    protected float mana;
-    protected float burst;
+    protected float maxMana;
+    protected float maxBurst;
 
     // Get Character Info
     public string FullName { get { return fullName; } }
@@ -24,12 +24,12 @@ public class Character
     public float Armor { get { return armor; } }
     public float Speed { get { return speed; } }
     public float Health { get { return health; } }
-    public float Mana { get { return mana; } }
-    public float Burst { get { return burst; } }
+    public float MaxMana { get { return maxMana; } }
+    public float MaxBurst { get { return maxBurst; } }
 
     // Skill List
-    public virtual void UsingFirstSkill() { }
-    public virtual void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets) { }
-    public virtual void UsingBurstSkill() { }
+    public abstract void UsingFirstSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
+    public abstract void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
+    public abstract void UsingBurstSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
 
 }
