@@ -37,10 +37,6 @@ public class OnFieldCharacter : MonoBehaviour
     private void Awake()
     {
         CompareToCharacterNameList();
-    }
-
-    private void Start()
-    {
         SetUpCurrentStats();
     }
 
