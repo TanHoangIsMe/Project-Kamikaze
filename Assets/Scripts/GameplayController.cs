@@ -6,6 +6,7 @@ public class GameplayController : MonoBehaviour
 {
     private string prefabPath; // path to character in Prefabs folder
     private int phase = 0;
+    private bool isFinishAction = false; // variable for check if champion finish it's action
 
     // place to hold all champion that exist on battle field
     private List<GameObject> aliveChampions = new List<GameObject>(); 
@@ -31,13 +32,13 @@ public class GameplayController : MonoBehaviour
     private void Start()
     {
         SpawnEnemiesAndHeroes();
-        StartNewPhase();
-        SortChampionTurnBySpeed();
+        StartNewPhase();      
     }
 
     private void StartNewPhase()
     {
         phase++;
+        SortChampionTurnBySpeed();
     }
 
     #region SpawnChampions
@@ -87,50 +88,18 @@ public class GameplayController : MonoBehaviour
             Debug.Log(a + "--" + b);
         }
         Debug.Log("----------------");
-        QuickSort(aliveChampions, 0, aliveChampions.Count - 1);
+        // Sort aliveChampion List in increasing order of champion speed
+        aliveChampions.Sort((champ1, champ2) 
+            => champ1.GetComponent<OnFieldCharacter>().CurrentSpeed
+            .CompareTo(champ2.GetComponent<OnFieldCharacter>().CurrentSpeed));
+
+        // Reverse the list
+        aliveChampions.Reverse();
         foreach (GameObject a in aliveChampions)
         {
             float b = a.GetComponent<OnFieldCharacter>().CurrentSpeed;
             Debug.Log(a + "--" + b);
         }
-    }
-
-    static void QuickSort(List<GameObject> aliveChampions, int low, int high)
-    {
-        if (low < high)
-        {
-            // Partition the list and get the pivot index
-            int pivotIndex = Partition(aliveChampions, low, high);
-
-            // Recursively sort elements before and after partition
-            QuickSort(aliveChampions, low, pivotIndex - 1);
-            QuickSort(aliveChampions, pivotIndex + 1, high);
-        }
-    }
-
-    static int Partition(List<GameObject> aliveChampions, int low, int high)
-    {
-        float pivot = aliveChampions[high].GetComponent<OnFieldCharacter>().CurrentSpeed;
-        int i = low - 1;
-
-        for (int j = low; j < high; j++)
-        {
-            // Change the comparison for descending order
-            if (aliveChampions[j].GetComponent<OnFieldCharacter>().CurrentSpeed > pivot) 
-            {
-                i++;
-                Swap(aliveChampions, i, j);
-            }
-        }
-        Swap(aliveChampions, i + 1, high);
-        return i + 1;
-    }
-
-    static void Swap(List<GameObject> aliveChampions, int i, int j)
-    {
-        GameObject temp = aliveChampions[i];
-        aliveChampions[i] = aliveChampions[j];
-        aliveChampions[j] = temp;
     }
     #endregion
 }
