@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public abstract class Character
 {
+    #region Fields
     protected string fullName;
 
     // Character's Attribute
@@ -15,6 +19,11 @@ public abstract class Character
     protected float maxMana;
     protected float maxBurst;
 
+    // Character's Skills 
+    protected Skill[] skills;
+    #endregion
+
+    #region Properties
     // Get Character Info
     public string FullName { get { return fullName; } }
     public RoleType[] RoleTypes { get { return roleTypes; } }
@@ -25,11 +34,14 @@ public abstract class Character
     public float Speed { get { return speed; } }
     public float Health { get { return health; } }
     public float MaxMana { get { return maxMana; } }
-    public float MaxBurst { get { return maxBurst; } }
+    public float MaxBurst { get { return maxBurst; } }  
+    public Skill[] Skills { get { return skills; } }
+    #endregion
 
+    #region Methods
     // Skill List
-    public abstract void UsingFirstSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
-    public abstract void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
-    public abstract void UsingBurstSkill(OnFieldCharacter character, OnFieldCharacter[] targets);
-
+    public abstract void UsingFirstSkill(GameObject character, List<GameObject> targets);
+    public abstract void UsingSecondSkill(GameObject character, List<GameObject> targets);
+    public abstract void UsingBurstSkill(GameObject character, List<GameObject> targets);
+    #endregion
 }

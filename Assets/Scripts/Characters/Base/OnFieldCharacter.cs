@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OnFieldCharacter : MonoBehaviour 
@@ -11,7 +12,7 @@ public class OnFieldCharacter : MonoBehaviour
     private float currentMana;
     private float currentBurst;
 
-    public Character CurrentCharacter { set { currentCharacter = value; } }
+    public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
     public float CurrentAttack { get { return currentAttack; } set { currentAttack = value; } }
     public float CurrentArmor { get { return currentArmor; } set { currentArmor = value; } }
     public float CurrentSpeed { get { return currentSpeed; } set { currentSpeed = value; } }
@@ -19,17 +20,17 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
 
-    public void UsingFirstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    public void UsingFirstSkill(GameObject character, List<GameObject> targets)
     {
         currentCharacter.UsingFirstSkill(character, targets);
     }
 
-    public void UsingSecondSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    public void UsingSecondSkill(GameObject character, List<GameObject> targets)
     {
         currentCharacter.UsingSecondSkill(character, targets);
     }
 
-    public void UsingBurstSkill(OnFieldCharacter character, OnFieldCharacter[] targets)
+    public void UsingBurstSkill(GameObject character, List<GameObject> targets)
     {
         currentCharacter.UsingBurstSkill(character, targets);
     }

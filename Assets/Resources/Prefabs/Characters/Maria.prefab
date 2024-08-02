@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1277010177005629888}
   - component: {fileID: 8456357202557396728}
   - component: {fileID: 2855192222914609073}
-  - component: {fileID: -8060277968836948022}
+  - component: {fileID: 2823927405883618072}
   m_Layer: 0
   m_Name: Maria
   m_TagString: Maria
@@ -108,7 +108,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-8060277968836948022
+--- !u!114 &2823927405883618072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
