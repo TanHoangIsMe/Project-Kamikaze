@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class GameplayController : MonoBehaviour
 {
-    [SerializeField] Canvas skillMenuCanvas;
+    [SerializeField] GameObject skillMenuCanvas;
 
     private string prefabPath; // path to character in Prefabs folder
-    private int phase = 0; // combat turn
-    private bool isFinishAction = false; // variable for check if champion finish it's action
+    private int phase; // combat turn
+    private bool isFinishAction; // variable for check if champion finish it's action
+    public bool IsFinishAction { set { isFinishAction = value; } }
 
     // place to hold all champion that exist on battle field
     private List<GameObject> aliveChampions;
+    private List<GameObject> turnList;
     private GameObject whoTurn; // variable to know whose turn
     private CombatSkillMenu combatSkillMenu;
 
@@ -36,23 +38,61 @@ public class GameplayController : MonoBehaviour
     private void Awake()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
-        whoTurn = null;
         aliveChampions = new List<GameObject>();
+        whoTurn = null;
+        phase = 0;
+        isFinishAction = false;
     }
 
     private void Start()
     {
         SpawnEnemiesAndHeroes();
-        StartNewPhase();      
+        StartNewPhase();
+    }
+
+    private void Update()
+    {
+        CombatPhase();
+    }
+
+    private void CombatPhase()
+    {
+        if (turnList.Count > 0) // Check if every champions finish their action on this turn
+        {
+            if (!isFinishAction)  // Check if first champion on the list finish action
+            { 
+                whoTurn = turnList[0];
+                if (whoTurn.layer == 6) // Check champion is ally or enemy
+                {
+                    skillMenuCanvas.SetActive(true);
+                    combatSkillMenu.Champion = whoTurn;
+                    //Debug.Log(whoTurn + " turn");
+                }
+                else
+                {
+                    //Debug.Log(whoTurn + " turn");
+                    isFinishAction = true;
+                }
+            }
+            else // if first champion of the list finish action then remove it from turn list
+            {
+                turnList.RemoveAt(0);
+                isFinishAction = false;
+            }
+        }
+        else // if every champion finish their action
+        {
+            StartNewPhase();
+        }
     }
 
     private void StartNewPhase()
     {
-        phase++;
-        skillMenuCanvas.enabled = true;
-        SortChampionTurnBySpeed();
-        whoTurn = aliveChampions[0];
-        combatSkillMenu.Champion = whoTurn;
+        phase++; // Next phase
+        turnList = new List<GameObject>(aliveChampions);
+        Debug.Log(turnList.Count + " - " + aliveChampions.Count );
+        SortChampionTurnBySpeed(); // Create new turn list  
+        Debug.Log("phase: " + phase);
     }
 
     #region SpawnChampions
@@ -96,16 +136,15 @@ public class GameplayController : MonoBehaviour
     #endregion
 
     #region SortTheChampionTurn
-
     private void SortChampionTurnBySpeed()
     {
         // Sort aliveChampion List in increasing order of champion speed
-        aliveChampions.Sort((champ1, champ2) 
+        turnList.Sort((champ1, champ2) 
             => champ1.GetComponent<OnFieldCharacter>().CurrentSpeed
             .CompareTo(champ2.GetComponent<OnFieldCharacter>().CurrentSpeed));
 
         // Reverse the list
-        aliveChampions.Reverse();
+        turnList.Reverse();
     }
     #endregion
 }

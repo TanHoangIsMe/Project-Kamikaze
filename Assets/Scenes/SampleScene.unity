@@ -629,7 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b5ce40e809bf743ae4d46987a14269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillMenuCanvas: {fileID: 1464223457}
+  skillMenuCanvas: {fileID: 1464223453}
 --- !u!4 &636227417
 Transform:
   m_ObjectHideFlags: 0

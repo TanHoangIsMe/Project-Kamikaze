@@ -4,9 +4,17 @@ using UnityEngine;
 public class CombatSkillMenu : MonoBehaviour
 {
     private GameObject champion;
-    private List<GameObject> targets = new List<GameObject>();
-    private int layer;
     public GameObject Champion { set { champion = value; } }
+
+    private List<GameObject> targets;
+    private GameplayController gameplayController;
+    private int layer;
+
+    private void Awake()
+    {
+        targets = new List<GameObject>();
+        gameplayController = FindObjectOfType<GameplayController>();
+    }
 
     #region UsingSkill
     // Function for pressing Skill 1 button
@@ -23,6 +31,7 @@ public class CombatSkillMenu : MonoBehaviour
 
             onFieldCharacter.UsingFirstSkill(champion,targets);
         }
+        gameplayController.IsFinishAction = true;
         gameObject.SetActive(false);
     }
 
@@ -30,6 +39,7 @@ public class CombatSkillMenu : MonoBehaviour
     public void UsingSkill2()
     {
         Debug.Log("using skill 2");
+        gameplayController.IsFinishAction = true;
         gameObject.SetActive(false);
     }
 
@@ -37,6 +47,7 @@ public class CombatSkillMenu : MonoBehaviour
     public void UsingSkillBurst()
     {
         Debug.Log("using skill burst");
+        gameplayController.IsFinishAction = true;
         gameObject.SetActive(false);
     }
     #endregion
