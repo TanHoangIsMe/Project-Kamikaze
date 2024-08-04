@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameplayController : MonoBehaviour
 {
     [SerializeField] GameObject skillMenuCanvas;
+    [SerializeField] TextMeshProUGUI phaseText;
 
     private string prefabPath; // path to character in Prefabs folder
     private int phase; // combat turn
@@ -89,10 +91,9 @@ public class GameplayController : MonoBehaviour
     private void StartNewPhase()
     {
         phase++; // Next phase
+        phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
         turnList = new List<GameObject>(aliveChampions);
-        Debug.Log(turnList.Count + " - " + aliveChampions.Count );
         SortChampionTurnBySpeed(); // Create new turn list  
-        Debug.Log("phase: " + phase);
     }
 
     #region SpawnChampions
