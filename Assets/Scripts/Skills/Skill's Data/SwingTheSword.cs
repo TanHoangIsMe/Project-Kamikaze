@@ -8,19 +8,28 @@ public class SwingTheSword : Skill
         name = "Swing The Sword";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
         manaCost = 50f;
-        numberOfTargets = 1;
+        numberOfEnemyTargets = 1;
+        numberOfAllyTargets = 0;
         skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };
         targetTypes = new TargetType[] {TargetType.Enemy };
     }
 
-    public override void SkillFunction(GameObject character, List<GameObject> targets)
+    public override void SkillFunction(GameObject character,
+        List<GameObject> enemyTargets = null,
+        List<GameObject> allyTargets = null)
     {
-        foreach (GameObject target in targets)
+        if (enemyTargets != null)
         {
-            target.GetComponent<OnFieldCharacter>().CurrentHealth -= 
-                character.GetComponent<OnFieldCharacter>().CurrentAttack 
-                - target.GetComponent<OnFieldCharacter>().CurrentArmor; 
+            foreach (GameObject target in enemyTargets)
+            {
+                float trueAttackDamage = character.
+                    GetComponent<OnFieldCharacter>().CurrentAttack
+                    - target.GetComponent<OnFieldCharacter>().CurrentArmor;
+                if (trueAttackDamage > 0)
+                    target.GetComponent<OnFieldCharacter>().CurrentHealth
+                        -= trueAttackDamage;
+            }
         }
     }
 }

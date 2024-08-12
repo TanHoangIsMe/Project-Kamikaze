@@ -37,11 +37,4 @@ public abstract class Character
     public float MaxBurst { get { return maxBurst; } }  
     public Skill[] Skills { get { return skills; } }
     #endregion
-
-    #region Methods
-    // Skill List
-    public abstract void UsingFirstSkill(GameObject character, List<GameObject> targets);
-    public abstract void UsingSecondSkill(GameObject character, List<GameObject> targets);
-    public abstract void UsingBurstSkill(GameObject character, List<GameObject> targets);
-    #endregion
 }

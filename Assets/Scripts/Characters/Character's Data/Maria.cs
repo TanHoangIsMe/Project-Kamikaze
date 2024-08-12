@@ -21,17 +21,4 @@ public class Maria : Character
             new SwingTheSword() 
         };
     }
-    
-    public override void UsingFirstSkill(GameObject character, List<GameObject> targets)
-    {
-        skills[0].SkillFunction(character, targets);
-    }
-    public override void UsingSecondSkill(GameObject character, List<GameObject> targets)
-    {
-        skills[1].SkillFunction(character,targets); 
-    }
-    public override void UsingBurstSkill(GameObject character, List<GameObject> targets)
-    {
-        skills[2].SkillFunction(character, targets);
-    }
 }

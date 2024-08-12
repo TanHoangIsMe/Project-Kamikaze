@@ -23,18 +23,12 @@ public class GameplayController : MonoBehaviour
     {
         { new Vector3(-2.4f,0f,-4f) ,"Maria" },
         { new Vector3(-1.6f,0f,-2.6f) ,"UrielAPlotexia" },
-        { new Vector3(0f,0f,-4f) ,"UrielAPlotexia" },
-        { new Vector3(1.6f,0f,-2.6f) ,"Maria" },
-        { new Vector3(2.4f,0f,-4f) ,"Maria" }
     };
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
         { new Vector3(-2.4f,0f,4f) ,"UrielAPlotexia" },
         { new Vector3(-1.6f,0f,2.6f) ,"Maria" },
-        { new Vector3(0f,0f,4f) ,"Maria" },
-        { new Vector3(1.6f,0f,2.6f) ,"UrielAPlotexia" },
-        { new Vector3(2.4f,0f,4f) ,"UrielAPlotexia" }
     };
 
     private void Awake()

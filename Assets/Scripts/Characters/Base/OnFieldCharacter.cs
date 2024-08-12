@@ -20,19 +20,25 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
 
-    public void UsingFirstSkill(GameObject character, List<GameObject> targets)
+    public void UsingFirstSkill(List<GameObject> enemyTargets = null , 
+        List<GameObject> allyTargets = null)
     {
-        currentCharacter.UsingFirstSkill(character, targets);
+        currentCharacter.Skills[0]
+            .SkillFunction(gameObject, enemyTargets,allyTargets);
     }
 
-    public void UsingSecondSkill(GameObject character, List<GameObject> targets)
+    public void UsingSecondSkill(List<GameObject> enemyTargets = null,
+        List<GameObject> allyTargets = null)
     {
-        currentCharacter.UsingSecondSkill(character, targets);
+        currentCharacter.Skills[1]
+            .SkillFunction(gameObject, enemyTargets, allyTargets);
     }
 
-    public void UsingBurstSkill(GameObject character, List<GameObject> targets)
+    public void UsingBurstSkill(List<GameObject> enemyTargets = null,
+        List<GameObject> allyTargets = null)
     {
-        currentCharacter.UsingBurstSkill(character, targets);
+        currentCharacter.Skills[2]
+            .SkillFunction(gameObject, enemyTargets, allyTargets);
     }
 
     private void Awake()
