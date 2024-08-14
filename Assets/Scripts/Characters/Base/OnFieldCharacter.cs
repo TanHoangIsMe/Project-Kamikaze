@@ -20,25 +20,25 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
 
-    public void UsingFirstSkill(List<GameObject> enemyTargets = null , 
-        List<GameObject> allyTargets = null)
+    public void UsingFirstSkill(List<OnFieldCharacter> enemyTargets = null , 
+        List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[0]
-            .SkillFunction(gameObject, enemyTargets,allyTargets);
+            .SkillFunction(this, enemyTargets,allyTargets);
     }
 
-    public void UsingSecondSkill(List<GameObject> enemyTargets = null,
-        List<GameObject> allyTargets = null)
+    public void UsingSecondSkill(List<OnFieldCharacter> enemyTargets = null,
+        List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[1]
-            .SkillFunction(gameObject, enemyTargets, allyTargets);
+            .SkillFunction(this, enemyTargets, allyTargets);
     }
 
-    public void UsingBurstSkill(List<GameObject> enemyTargets = null,
-        List<GameObject> allyTargets = null)
+    public void UsingBurstSkill(List<OnFieldCharacter> enemyTargets = null,
+        List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[2]
-            .SkillFunction(gameObject, enemyTargets, allyTargets);
+            .SkillFunction(this, enemyTargets, allyTargets);
     }
 
     private void Awake()

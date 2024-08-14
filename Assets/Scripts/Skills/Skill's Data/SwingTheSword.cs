@@ -10,25 +10,24 @@ public class SwingTheSword : Skill
         manaCost = 50f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
+        priorityStat = StatType.currentHealth;
         skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };
         targetTypes = new TargetType[] {TargetType.Enemy };
     }
 
-    public override void SkillFunction(GameObject character,
-        List<GameObject> enemyTargets = null,
-        List<GameObject> allyTargets = null)
+    public override void SkillFunction(OnFieldCharacter character,
+        List<OnFieldCharacter> enemyTargets = null,
+        List<OnFieldCharacter> allyTargets = null)
     {
         if (enemyTargets != null)
         {
-            foreach (GameObject target in enemyTargets)
+            foreach (OnFieldCharacter target in enemyTargets)
             {
-                float trueAttackDamage = character.
-                    GetComponent<OnFieldCharacter>().CurrentAttack
-                    - target.GetComponent<OnFieldCharacter>().CurrentArmor;
+                float trueAttackDamage = character.CurrentAttack - target.CurrentArmor;
+
                 if (trueAttackDamage > 0)
-                    target.GetComponent<OnFieldCharacter>().CurrentHealth
-                        -= trueAttackDamage;
+                    target.CurrentHealth -= trueAttackDamage;
             }
         }
     }

@@ -10,6 +10,8 @@ public abstract class Skill
     protected int numberOfEnemyTargets;
     protected int numberOfAllyTargets;
 
+    protected StatType priorityStat;
+
     protected SkillType[] skillTypes;
     protected ActivateType[] activateTypes;
     protected TargetType[] targetTypes;
@@ -21,14 +23,15 @@ public abstract class Skill
     public float ManaCost { get {  return manaCost; } }
     public int NumberOfEnemyTargets { get { return numberOfEnemyTargets; } }
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
+    public StatType PriorityStat { get { return priorityStat; } }
     public SkillType[] SkillTypes { get { return skillTypes; } }
     public ActivateType[] ActivateTypes { get { return activateTypes; } }
     public TargetType[] TargetTypes { get { return targetTypes; } }
     #endregion
 
     #region Methods
-    public abstract void SkillFunction(GameObject character, 
-        List<GameObject> enemyTargets = null, 
-        List<GameObject> allyTargets = null);
+    public abstract void SkillFunction(OnFieldCharacter character, 
+        List<OnFieldCharacter> enemyTargets = null, 
+        List<OnFieldCharacter> allyTargets = null);
     #endregion
 }

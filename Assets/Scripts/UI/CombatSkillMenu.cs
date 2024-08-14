@@ -6,12 +6,15 @@ public class CombatSkillMenu : MonoBehaviour
     private GameObject champion;
     public GameObject Champion { set { champion = value; } }
 
-    private List<GameObject> targets;
+    private List<OnFieldCharacter> enemyTargets; // list to store enemy targets
+    private List<OnFieldCharacter> allyTargets; // list to store ally targets
+
     private GameplayController gameplayController;
     int choseSkill; // value to show which skill user chose
     private void Awake()
     {
-        targets = new List<GameObject>();
+        enemyTargets = new List<OnFieldCharacter>();
+        allyTargets = new List<OnFieldCharacter>();
         gameplayController = FindObjectOfType<GameplayController>();
         choseSkill = 0;
     }
@@ -20,27 +23,27 @@ public class CombatSkillMenu : MonoBehaviour
     // Function for pressing Skill 1 button
     public void UsingSkill1()
     {
-        AutoFindTargetsBasedOnSkill(1);
+        AutoFindTargetsBasedOnSkill(1, true);
         choseSkill = 1;
     }
 
     // Function for pressing Skill 2 button
     public void UsingSkill2()
     {
-        AutoFindTargetsBasedOnSkill(2);
+        AutoFindTargetsBasedOnSkill(2, true);
         choseSkill = 2;
     }
 
     // Function for pressing Skill Burst button
     public void UsingSkillBurst()
     {
-        AutoFindTargetsBasedOnSkill(3);
+        AutoFindTargetsBasedOnSkill(3, true);
         choseSkill = 3;
     }
 
     public void AttackConfirm()
     {
-        //if(choseSkill != 0)
+        //if (choseSkill != 0)
         //    ActivateSkill(choseSkill,)
     }
 
@@ -48,7 +51,7 @@ public class CombatSkillMenu : MonoBehaviour
     // WhichSkill = 1 -> Using skill 1
     //            = 2 -> Using skill 2
     //            = 3 -> Burst
-    private void AutoFindTargetsBasedOnSkill(int whichSkill)
+    private void AutoFindTargetsBasedOnSkill(int whichSkill, bool isLow)
     {
         OnFieldCharacter onFieldCharacter = champion.GetComponent<OnFieldCharacter>();
 
@@ -59,22 +62,18 @@ public class CombatSkillMenu : MonoBehaviour
 
             if (skill.TargetTypes.Count() > 1)
             {
-                AutoFindTargets(skill.NumberOfAllyTargets, 6);
-                List<GameObject> cloneTargets = new List<GameObject>(targets);
-                AutoFindTargets(skill.NumberOfEnemyTargets, 7);
-                //ChoosingSkill(whichSkill, 1, onFieldCharacter, cloneTargets);
+                AutoFindTargets(skill.NumberOfAllyTargets, 6, skill.PriorityStat, isLow);
+                AutoFindTargets(skill.NumberOfEnemyTargets, 7, skill.PriorityStat, isLow);
             }
             else
             {
                 if ((int)skill.TargetTypes[0] == 6)
                 {
-                    AutoFindTargets(skill.NumberOfAllyTargets, 6);
-                    //ChoosingSkill(whichSkill, 2, onFieldCharacter);
+                    AutoFindTargets(skill.NumberOfAllyTargets, 6, skill.PriorityStat, isLow);
                 }
                 else
                 {
-                    AutoFindTargets(skill.NumberOfEnemyTargets, 7);
-                    //ChoosingSkill(whichSkill, 3, onFieldCharacter);
+                    AutoFindTargets(skill.NumberOfEnemyTargets, 7, skill.PriorityStat, isLow);
                 }
             }
         }
@@ -84,85 +83,126 @@ public class CombatSkillMenu : MonoBehaviour
     }
 
     // Choosing skill base on target type (ally, enemy or both)
-    private void ActivateSkill(int whichSkill, int targetType, 
-        OnFieldCharacter onFieldCharacter, List<GameObject> cloneTargets = null)
+    private void ActivateSkill(int whichSkill, int targetType, OnFieldCharacter onFieldCharacter)
     {
         if (targetType == 1)
             if (whichSkill == 1)
-                onFieldCharacter.UsingFirstSkill(enemyTargets: targets,
-                allyTargets: cloneTargets);
+                onFieldCharacter.UsingFirstSkill(enemyTargets: enemyTargets,
+                allyTargets: allyTargets);
             else if (whichSkill == 2)
-                onFieldCharacter.UsingSecondSkill(enemyTargets: targets,
-                allyTargets: cloneTargets);
+                onFieldCharacter.UsingSecondSkill(enemyTargets: enemyTargets,
+                allyTargets: allyTargets);
             else
-                onFieldCharacter.UsingBurstSkill(enemyTargets: targets,
-                allyTargets: cloneTargets);
+                onFieldCharacter.UsingBurstSkill(enemyTargets: enemyTargets,
+                allyTargets: allyTargets);
         else if (targetType == 2)
             if (whichSkill == 1)
-                onFieldCharacter.UsingFirstSkill(allyTargets: cloneTargets);
+                onFieldCharacter.UsingFirstSkill(allyTargets: allyTargets);
             else if (whichSkill == 2)
-                onFieldCharacter.UsingSecondSkill(allyTargets: cloneTargets);
+                onFieldCharacter.UsingSecondSkill(allyTargets: allyTargets);
             else
-                onFieldCharacter.UsingBurstSkill(allyTargets: cloneTargets);
+                onFieldCharacter.UsingBurstSkill(allyTargets: allyTargets);
         else
             if (whichSkill == 1)
-                onFieldCharacter.UsingBurstSkill(enemyTargets: targets);
+                onFieldCharacter.UsingBurstSkill(enemyTargets: enemyTargets);
             else if (whichSkill == 2)
-                onFieldCharacter.UsingBurstSkill(enemyTargets: targets);
+                onFieldCharacter.UsingBurstSkill(enemyTargets: enemyTargets);
             else
-                onFieldCharacter.UsingBurstSkill(enemyTargets: targets);
-
-        string a = "";
-        foreach (GameObject gameObject in targets)
-        {
-            a += gameObject.GetComponent<OnFieldCharacter>().CurrentHealth + "-";
-        }
-        Debug.Log(a);
+                onFieldCharacter.UsingBurstSkill(enemyTargets: enemyTargets);
     }
     #endregion
 
     #region AutoFindTargets
-    private void AutoFindTargets(int numberOfTargets, int layer)
+    private void AutoFindTargets(int numberOfTargets, int layer, StatType priorityStat, bool isLow)
     {
-       CreateTargetsList(layer);
+        CreateTargetsList(layer);
 
-        if(targets != null)
+        List<OnFieldCharacter> targetsToSort = null;
+
+        if (layer == 6 && allyTargets != null)
         {
-            // sort target list by increasing of champion health
-            targets.Sort((champ1, champ2)
-            => champ1.GetComponent<OnFieldCharacter>().CurrentHealth
-            .CompareTo(champ2.GetComponent<OnFieldCharacter>().CurrentHealth));
-
-            // check for not encounter bug that number of targets in list < targets needed
-            if (targets.Count > numberOfTargets)
-                // reduce target list to number of target that skill can impact to
-                targets.RemoveRange(numberOfTargets, targets.Count - numberOfTargets);
+            targetsToSort = allyTargets;
+        }
+        else if (layer == 7 && enemyTargets != null)
+        {
+            targetsToSort = enemyTargets;
         }
 
-        string a = "";
-        foreach(GameObject gameObject in targets)
+        if (targetsToSort != null)
         {
-            a += gameObject.name;
+            // Sort the target list based on the priorityStat
+            targetsToSort.Sort((champ1, champ2) =>
+            {
+                int compareResult = 0;
+
+                switch (priorityStat)
+                {
+                    case StatType.currentAttack:
+                        compareResult = champ1.CurrentAttack.CompareTo(champ2.CurrentAttack);
+                        break;
+                    case StatType.currentArmor:
+                        compareResult = champ1.CurrentArmor.CompareTo(champ2.CurrentArmor);
+                        break;
+                    case StatType.currentSpeed:
+                        compareResult = champ1.CurrentSpeed.CompareTo(champ2.CurrentSpeed);
+                        break;
+                    case StatType.currentHealth:
+                        compareResult = champ1.CurrentHealth.CompareTo(champ2.CurrentHealth);
+                        break;
+                    case StatType.currentMana:
+                        compareResult = champ1.CurrentMana.CompareTo(champ2.CurrentMana);
+                        break;
+                    case StatType.currentBurst:
+                        compareResult = champ1.CurrentBurst.CompareTo(champ2.CurrentBurst);
+                        break;
+                }
+
+                return isLow ? compareResult : -compareResult; // If isLow is true, sort ascending, otherwise descending
+            });
+
+            // Ensure the list size is within the required number of targets
+            if (targetsToSort.Count > numberOfTargets)
+            {
+                targetsToSort.RemoveRange(numberOfTargets, targetsToSort.Count - numberOfTargets);
+            }
         }
-        Debug.Log(a);
     }
 
-
-    private List<GameObject> CreateTargetsList(int layer)
+    private List<OnFieldCharacter> CreateTargetsList(int layer)
     {
-        targets.Clear(); // clear targets list to create new one
+        if(layer == 6) allyTargets.Clear(); // ally
+        else enemyTargets.Clear(); // layer = 7 - enemy
 
-        GameObject[] gameObjects = FindObjectsOfType<GameObject>();
-        foreach (GameObject gameObject in gameObjects)
+        // find all On-field character by searching for its script 
+        OnFieldCharacter[] onFieldCharacters = FindObjectsOfType<OnFieldCharacter>();
+
+        foreach (OnFieldCharacter onFieldCharacter in onFieldCharacters)
         {
-            if (gameObject.layer == layer) targets.Add(gameObject);
+            if (onFieldCharacter.gameObject.layer == layer)
+            {
+                if (layer == 6) // ally
+                {
+                    allyTargets.Add(onFieldCharacter);
+                }
+                else // layer == 7 -> enemy
+                {
+                    enemyTargets.Add(onFieldCharacter);
+                }
+            }
         }
-        
-        if (targets.Count == 0)
+
+        if (enemyTargets.Count > 0)
+        { 
+            return enemyTargets;
+        }
+        else if(allyTargets.Count > 0)
+        {
+            return allyTargets;
+        }
+        else
         {
             return null;
         }
-        return targets; 
     }
     #endregion
 }
