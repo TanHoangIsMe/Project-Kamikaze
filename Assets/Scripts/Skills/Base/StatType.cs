@@ -1,9 +1,9 @@
 public enum StatType
 {
-    currentAttack,
-    currentArmor,
-    currentSpeed,
-    currentHealth,
-    currentMana,
-    currentBurst
+    CurrentAttack,
+    CurrentArmor,
+    CurrentSpeed,
+    CurrentHealth,
+    CurrentMana,
+    CurrentBurst
 }

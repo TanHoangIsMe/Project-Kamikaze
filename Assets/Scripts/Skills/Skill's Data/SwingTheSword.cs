@@ -10,10 +10,10 @@ public class SwingTheSword : Skill
         manaCost = 50f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
-        priorityStat = StatType.currentHealth;
+        priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };
-        targetTypes = new TargetType[] {TargetType.Enemy };
+        targetTypes = new TargetType[] { TargetType.Enemy };
     }
 
     public override void SkillFunction(OnFieldCharacter character,

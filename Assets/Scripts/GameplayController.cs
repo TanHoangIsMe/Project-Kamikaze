@@ -23,12 +23,14 @@ public class GameplayController : MonoBehaviour
     {
         { new Vector3(-2.4f,0f,-4f) ,"Maria" },
         { new Vector3(-1.6f,0f,-2.6f) ,"UrielAPlotexia" },
+        { new Vector3(-1.6f,0f,-1.6f) ,"UrielAPlotexia" },
     };
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-2.4f,0f,4f) ,"UrielAPlotexia" },
+        { new Vector3(-2.4f,0f,4f) ,"Maria" },
         { new Vector3(-1.6f,0f,2.6f) ,"Maria" },
+        
     };
 
     private void Awake()
@@ -61,7 +63,7 @@ public class GameplayController : MonoBehaviour
                 if (whoTurn.layer == 6) // Check champion is ally or enemy
                 {
                     skillMenuCanvas.SetActive(true);
-                    combatSkillMenu.Champion = whoTurn;
+                    combatSkillMenu.Champion = whoTurn.GetComponent<OnFieldCharacter>();
                     //Debug.Log(whoTurn + " turn");
                 }
                 else
