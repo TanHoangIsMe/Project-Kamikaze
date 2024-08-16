@@ -9,6 +9,8 @@ public abstract class Skill
     protected float manaCost;
     protected int numberOfEnemyTargets;
     protected int numberOfAllyTargets;
+    protected int numberOfSelfTarget;
+    protected int numberOfSelfOrAllyTarget;
 
     protected StatType priorityStat;
 
@@ -23,6 +25,8 @@ public abstract class Skill
     public float ManaCost { get {  return manaCost; } }
     public int NumberOfEnemyTargets { get { return numberOfEnemyTargets; } }
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
+    public int NumberOfSelfTarget { get { return numberOfSelfTarget; } }
+    public int NumberOfSelforAllyTarget { get { return numberOfSelfTarget; } }
     public StatType PriorityStat { get { return priorityStat; } }
     public SkillType[] SkillTypes { get { return skillTypes; } }
     public ActivateType[] ActivateTypes { get { return activateTypes; } }

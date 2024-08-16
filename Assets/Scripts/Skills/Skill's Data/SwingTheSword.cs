@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SwingTheSword : Skill
 {
@@ -10,6 +9,7 @@ public class SwingTheSword : Skill
         manaCost = 50f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
+        numberOfSelfTarget = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };

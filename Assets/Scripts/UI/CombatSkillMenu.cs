@@ -13,13 +13,16 @@ public class CombatSkillMenu : MonoBehaviour
 
     private List<OnFieldCharacter> enemyTargets; // list to store enemy targets
     private List<OnFieldCharacter> allyTargets; // list to store ally targets
+    private OnFieldCharacter selfTarget;
 
     private GameplayController gameplayController;
 
     private TargetType[] targetType;
     private StatType priorityStat;
     private int numberOfTargetType;
-    private int numberOfTargets;
+    private int numberOfAllyTargets;
+    private int numberOfEnemyTargets;
+    private int numberOfSelfTarget;
     private int layer;
 
     private int choseSkill; // value to show which skill user chose
@@ -35,6 +38,7 @@ public class CombatSkillMenu : MonoBehaviour
     {
         enemyTargets = new List<OnFieldCharacter>();
         allyTargets = new List<OnFieldCharacter>();
+        selfTarget = null;
 
         gameplayController = FindObjectOfType<GameplayController>();
 
@@ -72,7 +76,7 @@ public class CombatSkillMenu : MonoBehaviour
                     }
 
                     // can select ally
-                    if((selectType == 2 || selectType == 3) && clickedObject.layer == 6)
+                    if((selectType == 2 || selectType == 3) && clickedObject.layer == 6 && clickedObject != champion.gameObject)
                     {
                         allyTargets.Clear();
                         allyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
@@ -108,7 +112,7 @@ public class CombatSkillMenu : MonoBehaviour
 
     public void AttackConfirm()
     {
-        if (enemyTargets.Count > 0 || allyTargets.Count() > 0)
+        if (enemyTargets.Count > 0 || allyTargets.Count() > 0 || selfTarget != null)
         {
             if (targetType.Count() > 1)
             {
@@ -157,14 +161,14 @@ public class CombatSkillMenu : MonoBehaviour
 
     public void ChoosingLowestPriority()
     {
-        AutoFindTargets(numberOfTargets, layer, priorityStat, true);
+        //AutoFindTargets(numberOfTargets, layer, priorityStat, true);
         choosePriorityPanel.gameObject.SetActive(false);
         isFinish = true;
     }
 
     public void ChoosingHighestPriority()
     {
-        AutoFindTargets(numberOfTargets, layer, priorityStat, false);
+        //AutoFindTargets(numberOfTargets, layer, priorityStat, false);
         choosePriorityPanel.gameObject.SetActive(false);
         isFinish = true;
     }
@@ -197,19 +201,33 @@ public class CombatSkillMenu : MonoBehaviour
             .Skills[whichSkill].PriorityStat;
 
         // count how many enemies
-        int numberOfEnemyTargets = champion.currentCharacter
+        numberOfEnemyTargets = champion.currentCharacter
             .Skills[whichSkill].NumberOfEnemyTargets;
 
-        // count how many enemies
-        int numberOfAllyTargets = champion.currentCharacter
+        // count how many ally
+        numberOfAllyTargets = champion.currentCharacter
             .Skills[whichSkill].NumberOfAllyTargets;
+
+        // count how many ally
+        numberOfSelfTarget = champion.currentCharacter
+            .Skills[whichSkill].NumberOfSelfTarget;
 
         // which type of target skill affected to
         targetType = champion.currentCharacter.Skills[whichSkill].TargetTypes;
 
         if (numberOfTargetType == 1)
         {
-            if (targetType[0] == TargetType.Enemy)
+            if (targetType[0] == TargetType.Self) // skill just affected self
+            {
+                selfTarget = champion;
+            }
+            else if(targetType[0] == TargetType.SelfOrAlly) // skill affected self or ally
+            {
+                AutoFindTargets(1,6,priorityStat,true);
+                canSelectTarget = true;
+                selectType = 1;
+            }
+            else if (targetType[0] == TargetType.Enemy)
             {
                 if(numberOfEnemyTargets == 1)
                 {
@@ -241,19 +259,93 @@ public class CombatSkillMenu : MonoBehaviour
                 }
             }
         }
-        else // number of target type = 2
+        else if(numberOfTargetType == 2) // number of target type = 2
         {
-            // skill affect 1 ally and 1 enemy
-            if(numberOfAllyTargets == numberOfEnemyTargets && numberOfAllyTargets == 1)
+            // skill just affected ally and enemy not self
+            if (!targetType.Contains(TargetType.Self))
+            {
+                // skill affect 1 ally and 1 enemy
+                if (numberOfAllyTargets == numberOfEnemyTargets && numberOfAllyTargets == 1)
+                {
+                    // auto find 1 enemy 1 ally which low priority
+                    AutoFindTargets(1, 6, priorityStat, true);
+                    AutoFindTargets(1, 7, priorityStat, true);
+                    canSelectTarget = true;
+                    selectType = 3;
+                }
+                else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
+                {
+                    // auto find 1 enemy
+                    AutoFindTargets(1, 7, priorityStat, true);
+                    canSelectTarget = true;
+                    selectType = 1;
+                    // open choose priority dialog
+                    OpenChoosePriorityDialog(priorityStat, numberOfAllyTargets, 6);
+                }
+                else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
+                {
+                    // auto find 1 ally
+                    AutoFindTargets(1, 6, priorityStat, true);
+                    canSelectTarget = true;
+                    selectType = 2;
+                    // open choose priority dialog
+                    OpenChoosePriorityDialog(priorityStat, numberOfEnemyTargets, 7);
+                }
+                else // number of enemy > 1 and number of ally > 1
+                {
+                    // open choose priority dialog 2 times
+                    StartCoroutine(OpenDialog2Times(numberOfEnemyTargets,
+                        numberOfAllyTargets));
+                }
+            }
+            //skill affected self and enemy
+            else if (targetType.Contains(TargetType.Enemy)) 
+            {
+                allyTargets.Clear();
+                allyTargets.Add(champion);
+
+                if (numberOfEnemyTargets == 1) // skill affected self and 1 enemy
+                {
+                    AutoFindTargets(1, 7, priorityStat, true);
+                    canSelectTarget = true;
+                    selectType = 1;
+                }
+                else // skill affected self and >1 enemy
+                {
+                    // open choose priority dialog
+                    OpenChoosePriorityDialog(priorityStat, numberOfEnemyTargets, 7);
+                }
+            }
+            else // skill affected self and ally
+            {
+                if(numberOfAllyTargets == 1)
+                {
+                    // auto find 1 target which low priority
+                    AutoFindTargets(1, 6, priorityStat, true);
+                    canSelectTarget = true;
+                    selectType = 2;
+                }
+                else
+                {
+                    // open choose priority dialog
+                    OpenChoosePriorityDialog(priorityStat, numberOfAllyTargets, 6);
+                }
+            }
+        }
+        else // number of target = 3
+        {
+            
+            // skill affected self, 1 ally, 1 enemy
+            if (numberOfAllyTargets == numberOfEnemyTargets && numberOfAllyTargets == 1)
             {
                 // auto find 1 enemy 1 ally which low priority
                 AutoFindTargets(1, 6, priorityStat, true);
                 AutoFindTargets(1, 7, priorityStat, true);
                 canSelectTarget = true;
                 selectType = 3;
-
             }
-            else if(numberOfEnemyTargets == 1 &&  numberOfAllyTargets > 1)
+            // skill affected self, > 1 ally, 1 enemy
+            else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
             {
                 // auto find 1 enemy
                 AutoFindTargets(1, 7, priorityStat, true);
@@ -262,7 +354,8 @@ public class CombatSkillMenu : MonoBehaviour
                 // open choose priority dialog
                 OpenChoosePriorityDialog(priorityStat, numberOfAllyTargets, 6);
             }
-            else if(numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
+            // skill affected self, 1 ally, > 1 enemy
+            else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
             {
                 // auto find 1 ally
                 AutoFindTargets(1, 6, priorityStat, true);
@@ -271,10 +364,10 @@ public class CombatSkillMenu : MonoBehaviour
                 // open choose priority dialog
                 OpenChoosePriorityDialog(priorityStat, numberOfEnemyTargets, 7);
             }
-            else // number of enemy > 1 and number of ally > 1
+            else // number of enemy > 1 and number of ally > 1 and self
             {
                 // open choose priority dialog 2 times
-                StartCoroutine(OpenDialog2Times(numberOfEnemyTargets, 
+                StartCoroutine(OpenDialog2Times(numberOfEnemyTargets,
                     numberOfAllyTargets));
             }
         }
@@ -289,7 +382,7 @@ public class CombatSkillMenu : MonoBehaviour
         choosePriorityPanel.gameObject.SetActive(true);
         choosePriorityText.text = $"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?";
         this.priorityStat = priorityStat;
-        this.numberOfTargets = numberOfTargets;
+        //this.numberOfTargets = numberOfTargets;
         this.layer = layer;
     }
 
