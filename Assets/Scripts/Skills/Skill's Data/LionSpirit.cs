@@ -23,11 +23,11 @@ public class LionSpirit : Skill
     {
         if(allyTargets != null)
         {
-            character.CurrentArmor += 30;
+            allyTargets[0].CurrentArmor += 30;
         }
         else
         {
-            allyTargets[0].CurrentArmor += 30;
+            character.CurrentArmor += 30;
         }
     }
 }

@@ -889,8 +889,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
+      - m_Target: {fileID: 1464223459}
+        m_TargetAssemblyTypeName: CheckNumberOfTargets, Assembly-CSharp
         m_MethodName: ChoosingLowestPriority
         m_Mode: 1
         m_Arguments:
@@ -1672,6 +1672,8 @@ GameObject:
   - component: {fileID: 1464223456}
   - component: {fileID: 1464223455}
   - component: {fileID: 1464223458}
+  - component: {fileID: 1464223460}
+  - component: {fileID: 1464223459}
   m_Layer: 5
   m_Name: ' Skill Menu Canvas'
   m_TagString: Untagged
@@ -1778,7 +1780,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef6e141c976a474492ce1eaad2f00dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1464223459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464223453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce17496c5873ff64ba5b654c62ec1266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   choosePriorityPanel: {fileID: 1699481564}
+--- !u!114 &1464223460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464223453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1278a915e27150245ade20935e87f33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1699481563
 GameObject:
   m_ObjectHideFlags: 0
@@ -2008,8 +2034,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
+      - m_Target: {fileID: 1464223459}
+        m_TargetAssemblyTypeName: CheckNumberOfTargets, Assembly-CSharp
         m_MethodName: ChoosingHighestPriority
         m_Mode: 1
         m_Arguments:

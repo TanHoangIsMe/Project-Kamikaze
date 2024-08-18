@@ -16,7 +16,7 @@ public class UrielAPlotexia : Character
         maxMana = 80f;
         maxBurst = 100f;
         skills = new Skill[] {
-            new SwingTheSword(),
+            new LionSpirit(),
             new SwingTheSword(),
             new SwingTheSword()
         };

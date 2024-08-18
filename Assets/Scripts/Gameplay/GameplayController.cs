@@ -23,13 +23,12 @@ public class GameplayController : MonoBehaviour
     {
         { new Vector3(-2.4f,0f,-4f) ,"Maria" },
         { new Vector3(-1.6f,0f,-2.6f) ,"UrielAPlotexia" },
-        { new Vector3(-1.6f,0f,-1.6f) ,"UrielAPlotexia" },
     };
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
         { new Vector3(-2.4f,0f,4f) ,"Maria" },
-        { new Vector3(-1.6f,0f,2.6f) ,"Maria" },
+        { new Vector3(-1.6f,0f,2.6f) ,"UrielAPlotexia" },
         
     };
 
@@ -64,11 +63,9 @@ public class GameplayController : MonoBehaviour
                 {
                     skillMenuCanvas.SetActive(true);
                     combatSkillMenu.Champion = whoTurn.GetComponent<OnFieldCharacter>();
-                    //Debug.Log(whoTurn + " turn");
                 }
                 else
                 {
-                    //Debug.Log(whoTurn + " turn");
                     isFinishAction = true;
                 }
             }
