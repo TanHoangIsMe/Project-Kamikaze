@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,18 +9,15 @@ public class GameplayController : MonoBehaviour
 
     private string prefabPath; // path to character in Prefabs folder
     private int phase; // combat turn
-    private bool isFinishAction; // variable for check if champion finish it's action
-    public bool IsFinishAction { set { isFinishAction = value; } }
 
     // place to hold all champion that exist on battle field
-    private List<GameObject> aliveChampions;
-    private List<GameObject> turnList;
-    private GameObject whoTurn; // variable to know whose turn
+    private List<OnFieldCharacter> turnList;
+    private OnFieldCharacter whoTurn; // variable to know whose turn
     private CombatSkillMenu combatSkillMenu;
 
     private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-2.4f,0f,-4f) ,"Maria" },
+        { new Vector3(-2.4f,0f,-4f) ,"UrielAPlotexia" },
         { new Vector3(-1.6f,0f,-2.6f) ,"UrielAPlotexia" },
     };
 
@@ -35,49 +31,41 @@ public class GameplayController : MonoBehaviour
     private void Awake()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
-        aliveChampions = new List<GameObject>();
+        turnList = new List<OnFieldCharacter>();
         whoTurn = null;
         phase = 0;
-        isFinishAction = false;
     }
 
+    #region Turn
     private void Start()
     {
         SpawnEnemiesAndHeroes();
         StartNewPhase();
     }
 
-    private void Update()
+    public void StartTurn()
     {
-        CombatPhase();
-    }
-
-    private void CombatPhase()
-    {
-        if (turnList.Count > 0) // Check if every champions finish their action on this turn
-        {
-            if (!isFinishAction)  // Check if first champion on the list finish action
-            { 
-                whoTurn = turnList[0];
-                if (whoTurn.layer == 6) // Check champion is ally or enemy
-                {
-                    skillMenuCanvas.SetActive(true);
-                    combatSkillMenu.Champion = whoTurn.GetComponent<OnFieldCharacter>();
-                }
-                else
-                {
-                    isFinishAction = true;
-                }
-            }
-            else // if first champion of the list finish action then remove it from turn list
-            {
-                turnList.RemoveAt(0);
-                isFinishAction = false;
-            }
-        }
-        else // if every champion finish their action
+        if (turnList.Count == 0)
         {
             StartNewPhase();
+            return;
+        }
+        Debug.Log(turnList.Count);
+        Debug.Log(turnList[0]);
+
+        whoTurn = turnList[0];
+        turnList.RemoveAt(0);
+
+        if (whoTurn.gameObject.layer == 6) // ally turn
+        {
+            skillMenuCanvas.SetActive(true);
+            combatSkillMenu.Champion = whoTurn;
+        }
+        else // enemy turn
+        {
+            combatSkillMenu.Champion = whoTurn;
+            combatSkillMenu.UsingSkill1();
+            combatSkillMenu.AttackConfirm();
         }
     }
 
@@ -85,9 +73,18 @@ public class GameplayController : MonoBehaviour
     {
         phase++; // Next phase
         phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
-        turnList = new List<GameObject>(aliveChampions);
-        SortChampionTurnBySpeed(); // Create new turn list  
+        turnList.Clear();
+        CreateTurnList(); // Create new turn list
+        SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
+        StartTurn(); // Start character turn
     }
+
+    private void CreateTurnList()
+    {
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+            turnList.Add(character);
+    }
+    #endregion
 
     #region SpawnChampions
     private void SpawnEnemiesAndHeroes()
@@ -118,9 +115,6 @@ public class GameplayController : MonoBehaviour
 
             // set up champion layer
             champion.layer = layer;
-
-            // add to aliveChampion list
-            aliveChampions.Add(champion);
         }
         else
         {

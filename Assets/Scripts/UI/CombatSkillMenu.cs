@@ -4,13 +4,13 @@ using UnityEngine;
 public class CombatSkillMenu : MonoBehaviour
 {
     private OnFieldCharacter champion;
-    public OnFieldCharacter Champion { set { champion = value; } }
-
-    private int championLayer;
+    public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
     private GameplayController gameplayController;
     private CheckNumberOfTargets checkNumberOfTargets;
     private AutoFindTargets autoFindTargets;
+
+    private int championLayer;
 
     private void Awake()
     {
@@ -18,13 +18,20 @@ public class CombatSkillMenu : MonoBehaviour
         checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
 
+        championLayer = 0;
     }
 
-    // change layer of champion (ally or enemy) to self
     private void ChangeLayerToSelf()
     {
-        championLayer = champion.gameObject.layer;
-        champion.gameObject.layer = 8;
+        if (champion != null)
+        { 
+            championLayer = champion.gameObject.layer;
+            champion.gameObject.layer = 8;
+        }
+        else
+        {
+            Debug.Log("champion is null");
+        }
     }
 
     // Function for pressing Skill 1 button
@@ -91,23 +98,24 @@ public class CombatSkillMenu : MonoBehaviour
                     champion.UsingBurstSkill(allyTargets: allies);
             }
 
-            gameplayController.IsFinishAction = true;
             gameObject.SetActive(false);
 
             // turn off can select target
             checkNumberOfTargets.IsFinish = false;
             checkNumberOfTargets.CanSelectTarget = false;
 
-            // set champion layer back to
+            // set champion layer back
             champion.gameObject.layer = championLayer;
 
-            string a = "";
-            OnFieldCharacter[] b = FindObjectsOfType<OnFieldCharacter>();
-            foreach (OnFieldCharacter c in b)
-            {
-                a += c.name + "-" + c.CurrentHealth + "-" + c.CurrentArmor;
-            }
-            Debug.Log(a);
+            // start next character turn
+            gameplayController.StartTurn();
+            //string a = "";
+            //OnFieldCharacter[] b = FindObjectsOfType<OnFieldCharacter>();
+            //foreach (OnFieldCharacter c in b)
+            //{
+            //    a += c.name + "-" + c.CurrentHealth + "-" + c.CurrentArmor;
+            //}
+            //Debug.Log(a);
         }
         else
         {
