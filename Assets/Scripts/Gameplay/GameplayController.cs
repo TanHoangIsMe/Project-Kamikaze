@@ -14,23 +14,30 @@ public class GameplayController : MonoBehaviour
     private List<OnFieldCharacter> turnList;
     private OnFieldCharacter whoTurn; // variable to know whose turn
     private CombatSkillMenu combatSkillMenu;
-
-    private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
-    {
-        { new Vector3(-2.4f,0f,-4f) ,"UrielAPlotexia" },
-        { new Vector3(-1.6f,0f,-2.6f) ,"UrielAPlotexia" },
-    };
+    private CheckNumberOfTargets checkNumberOfTargets;
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-2.4f,0f,4f) ,"Maria" },
-        { new Vector3(-1.6f,0f,2.6f) ,"UrielAPlotexia" },
-        
+        { new Vector3(-3.5f,0f,-4f) ,"UrielAPlotexia" },
+        { new Vector3(-1.5f,0f,-4f) ,"UrielAPlotexia" },
+        { new Vector3(0f,0f,-4f) ,"Maria" },
+        { new Vector3(1.5f,0f,-4f) ,"UrielAPlotexia" },
+        { new Vector3(3.5f,0f,-4f) ,"UrielAPlotexia" },
+    };
+
+    private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
+    {
+        { new Vector3(-3.5f,0f,4f) ,"Maria" },
+        { new Vector3(-1.5f,0f,4f) ,"UrielAPlotexia" },
+        { new Vector3(0f,0f,4f) ,"UrielAPlotexia" },
+        { new Vector3(1.5f,0f,4f) ,"UrielAPlotexia" },
+        { new Vector3(3.5f,0f,4f) ,"UrielAPlotexia" },
     };
 
     private void Awake()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
         phase = 0;
@@ -63,8 +70,17 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
+            skillMenuCanvas.SetActive(true);
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.UsingSkill1();
+            if (checkNumberOfTargets.IsChoosePriorityOpen)
+            {
+                checkNumberOfTargets.ChoosingLowestPriority();
+            }
+            if (checkNumberOfTargets.IsChoosePriorityOpen)
+            {
+                checkNumberOfTargets.ChoosingLowestPriority();
+            }
             combatSkillMenu.AttackConfirm();
         }
     }

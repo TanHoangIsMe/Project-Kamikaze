@@ -7,6 +7,7 @@ public class LionSpirit : Skill
         name = "Lion's Spirit";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 50f;
+        burstCost = 0f;
         numberOfEnemyTargets = 0;
         numberOfAllyTargets = 0;
         numberOfSelfTarget = 0;
@@ -21,13 +22,21 @@ public class LionSpirit : Skill
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
-        if(allyTargets != null)
+        // decrease champion mana
+        character.CurrentMana -= manaCost;
+        if (character.CurrentMana < 0)
+        { 
+            character.CurrentMana = 0;
+        }
+
+        //  skill function
+        if(allyTargets.Count != 0)
         {
-            allyTargets[0].CurrentArmor += 30;
+            allyTargets[0].CurrentArmor += 30f;
         }
         else
         {
-            character.CurrentArmor += 30;
+            character.CurrentArmor += 30f;
         }
     }
 }

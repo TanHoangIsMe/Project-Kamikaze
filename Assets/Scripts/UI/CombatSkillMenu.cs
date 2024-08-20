@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 public class CombatSkillMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject chooseTargetText;
+
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
@@ -17,8 +20,13 @@ public class CombatSkillMenu : MonoBehaviour
         gameplayController = FindObjectOfType<GameplayController>();
         checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
-
+        
         championLayer = 0;
+    }
+
+    private void Start()
+    {
+        chooseTargetText.SetActive(false);
     }
 
     private void ChangeLayerToSelf()
@@ -37,32 +45,59 @@ public class CombatSkillMenu : MonoBehaviour
     // Function for pressing Skill 1 button
     public void UsingSkill1()
     {
-        ChangeLayerToSelf();
-        checkNumberOfTargets.Champion = champion;
-        checkNumberOfTargets.WhichSkill = 0;
-        checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        if (champion.CurrentMana > champion.Skills[0].ManaCost)
+        {
+            ChangeLayerToSelf();
+            chooseTargetText.SetActive(true);
+            checkNumberOfTargets.Champion = champion;
+            checkNumberOfTargets.WhichSkill = 0;
+            checkNumberOfTargets.CheckInfoToAutoFindTargets();
+            autoFindTargets.TurnOnShowTargets();
+        }
+        else
+        {
+            Debug.Log("Not enough mana to use skill");
+        }
     }
 
     // Function for pressing Skill 2 button
     public void UsingSkill2()
     {
-        ChangeLayerToSelf();
-        checkNumberOfTargets.Champion = champion;
-        checkNumberOfTargets.WhichSkill = 1;
-        checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        if (champion.CurrentMana > champion.Skills[1].ManaCost)
+        {
+            ChangeLayerToSelf();
+            chooseTargetText.SetActive(true);
+            checkNumberOfTargets.Champion = champion;
+            checkNumberOfTargets.WhichSkill = 1;
+            checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        }
+        else
+        {
+            Debug.Log("Not enough mana to use skill");
+        }
     }
 
     // Function for pressing Skill Burst button
     public void UsingSkillBurst()
     {
-        ChangeLayerToSelf();
-        checkNumberOfTargets.Champion = champion;
-        checkNumberOfTargets.WhichSkill = 2;
-        checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        if (champion.CurrentBurst == champion.Skills[2].BurstCost)
+        {
+            ChangeLayerToSelf();
+            chooseTargetText.SetActive(true);
+            checkNumberOfTargets.Champion = champion;
+            checkNumberOfTargets.WhichSkill = 2;
+            checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        }
+        else
+        {
+            Debug.Log("Not enough burst to use skill");
+        }
     }
 
     public void AttackConfirm()
     {
+        Debug.Log(autoFindTargets.EnemyTargets.Count() + "-"
+        + autoFindTargets.AllyTargets.Count()+ "-" + autoFindTargets.SelfTarget);
         if ( autoFindTargets.EnemyTargets.Count() > 0 || 
             autoFindTargets.AllyTargets.Count() > 0 || 
             autoFindTargets.SelfTarget != null )
@@ -79,7 +114,7 @@ public class CombatSkillMenu : MonoBehaviour
                 else
                     champion.UsingFirstSkill(allyTargets: allies);
             }
-            else if(checkNumberOfTargets.WhichSkill == 1) // using skill 2
+            else if (checkNumberOfTargets.WhichSkill == 1) // using skill 2
             {
                 if (enemies.Count() > 0 && allies.Count() > 0)
                     champion.UsingSecondSkill(enemyTargets: enemies, allyTargets: allies);
@@ -98,24 +133,14 @@ public class CombatSkillMenu : MonoBehaviour
                     champion.UsingBurstSkill(allyTargets: allies);
             }
 
-            gameObject.SetActive(false);
-
-            // turn off can select target
-            checkNumberOfTargets.IsFinish = false;
-            checkNumberOfTargets.CanSelectTarget = false;
-
-            // set champion layer back
-            champion.gameObject.layer = championLayer;
-
-            // start next character turn
-            gameplayController.StartTurn();
-            //string a = "";
-            //OnFieldCharacter[] b = FindObjectsOfType<OnFieldCharacter>();
-            //foreach (OnFieldCharacter c in b)
-            //{
-            //    a += c.name + "-" + c.CurrentHealth + "-" + c.CurrentArmor;
-            //}
-            //Debug.Log(a);
+            ResetThings();
+            foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+            {
+                Debug.Log(character.gameObject.name + " - "
+                    + character.gameObject.layer + " - "
+                    + character.CurrentHealth + " - "
+                    + character.CurrentArmor + " - ");
+            }
         }
         else
         {
@@ -124,5 +149,32 @@ public class CombatSkillMenu : MonoBehaviour
             + autoFindTargets.AllyTargets.Count() + "-"
             + autoFindTargets.SelfTarget);
         }
+    }
+
+    private void ResetThings()
+    {
+        // turn off using skill panel
+        gameObject.SetActive(false);
+
+        // turn off can select target
+        checkNumberOfTargets.IsFinish = false;
+        checkNumberOfTargets.CanSelectTarget = false;
+
+        // reset target lists
+        autoFindTargets.AllyTargets.Clear();
+        autoFindTargets.EnemyTargets.Clear();
+        autoFindTargets.SelfTarget = null;
+
+        // set champion layer back
+        champion.gameObject.layer = championLayer;
+
+        // turn off show targets
+        autoFindTargets.TurnOffShowTargets();
+
+        // turn off choose targets text
+        chooseTargetText.SetActive(false);
+
+        // start next character turn
+        gameplayController.StartTurn();
     }
 }

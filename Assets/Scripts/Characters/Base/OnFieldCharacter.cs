@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class OnFieldCharacter : MonoBehaviour 
 {
-    public Character currentCharacter;
+    private Character currentCharacter;
     private float currentAttack;
     private float currentArmor;
     private float currentSpeed;
     private float currentHealth;
     private float currentMana;
     private float currentBurst;
+    private Skill[] skills;
 
     public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
     public float CurrentAttack { get { return currentAttack; } set { currentAttack = value; } }
@@ -19,6 +20,7 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
     public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
+    public Skill[] Skills { get { return skills; } }
 
     public void UsingFirstSkill(List<OnFieldCharacter> enemyTargets = null , 
         List<OnFieldCharacter> allyTargets = null)
@@ -85,7 +87,8 @@ public class OnFieldCharacter : MonoBehaviour
         currentArmor = currentCharacter.Armor;
         currentSpeed = currentCharacter.Speed;
         currentHealth = currentCharacter.Health;
-        currentMana = 0f;
+        currentMana = currentCharacter.MaxMana;
         currentBurst = 0f;
+        skills = currentCharacter.Skills;
     }
 }

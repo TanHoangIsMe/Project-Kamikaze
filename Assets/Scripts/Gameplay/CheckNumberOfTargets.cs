@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CheckNumberOfTargets : MonoBehaviour
 {
-    [SerializeField] Transform choosePriorityPanel;
+    [SerializeField] private Transform choosePriorityPanel;
 
     private TextMeshProUGUI choosePriorityText;
 
@@ -16,6 +16,9 @@ public class CheckNumberOfTargets : MonoBehaviour
 
     private int whichSkill; // which skill
     public int WhichSkill { get { return whichSkill; } set { whichSkill = value; } }
+
+    private bool isChoosePriorityOpen; // value to know if choose priority panel open
+    public bool IsChoosePriorityOpen { get { return isChoosePriorityOpen; } }
 
     // skill info
     private TargetType[] targetType;
@@ -49,6 +52,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
         isFinish = false;
         canSelectTarget = false;
+        isChoosePriorityOpen = false;
     }
 
     private void Update()
@@ -73,9 +77,8 @@ public class CheckNumberOfTargets : MonoBehaviour
                     // Get object that ray hit
                     GameObject clickedObject = hit.collider.gameObject;
                     UpdateTargetListBasedOnSelect(clickedObject);
+                    autoFindTargets.TurnOnShowTargets();
                 }
-                //test(allyTargets);
-                //test(enemyTargets);
             }
         }
     }
@@ -91,19 +94,23 @@ public class CheckNumberOfTargets : MonoBehaviour
 
         choosePriorityPanel.gameObject.SetActive(false);
         isFinish = true;
+        autoFindTargets.TurnOnShowTargets();
+        isChoosePriorityOpen = false;
     }
 
     public void ChoosingHighestPriority()
     {
         if (layer == 6)
             autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfAllyTargets, 6, priorityStat, true);
+                (numberOfAllyTargets, 6, priorityStat, false);
         else
             autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfEnemyTargets, 7, priorityStat, true);
+                (numberOfEnemyTargets, 7, priorityStat, false);
 
         choosePriorityPanel.gameObject.SetActive(false);
         isFinish = true;
+        autoFindTargets.TurnOnShowTargets();
+        isChoosePriorityOpen = false;
     }
 
     private void UpdateTargetListBasedOnSelect(GameObject clickedObject)
@@ -149,14 +156,9 @@ public class CheckNumberOfTargets : MonoBehaviour
 
             if (clickedObject.layer == 6) // select ally
             {
+                autoFindTargets.AllyTargets.Clear();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
                 autoFindTargets.SelfTarget = null;
-            }
-
-            if (clickedObject.layer == 7)
-            {
-                autoFindTargets.EnemyTargets.Clear();
-                autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
             }
         }
 
@@ -171,8 +173,15 @@ public class CheckNumberOfTargets : MonoBehaviour
 
             if (clickedObject.layer == 6) // select ally
             {
+                autoFindTargets.AllyTargets.Clear();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
                 autoFindTargets.SelfTarget = null;
+            }
+
+            if (clickedObject.layer == 7)
+            {
+                autoFindTargets.EnemyTargets.Clear();
+                autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
             }
         }
     }
@@ -180,27 +189,27 @@ public class CheckNumberOfTargets : MonoBehaviour
     private void GetSkillInfo()
     {
         // count how many type of target that skill can affect to
-        numberOfTargetType = champion.currentCharacter
+        numberOfTargetType = champion.CurrentCharacter
             .Skills[whichSkill].TargetTypes.Count();
 
         // priority stat for auto find
-        priorityStat = champion.currentCharacter
+        priorityStat = champion.CurrentCharacter
             .Skills[whichSkill].PriorityStat;
 
         // count how many enemies
-        numberOfEnemyTargets = champion.currentCharacter
+        numberOfEnemyTargets = champion.CurrentCharacter
             .Skills[whichSkill].NumberOfEnemyTargets;
 
         // count how many ally
-        numberOfAllyTargets = champion.currentCharacter
+        numberOfAllyTargets = champion.CurrentCharacter
             .Skills[whichSkill].NumberOfAllyTargets;
 
         // count how many ally
-        numberOfSelfTarget = champion.currentCharacter
+        numberOfSelfTarget = champion.CurrentCharacter
             .Skills[whichSkill].NumberOfSelfTarget;
 
         // which type of target skill affected to
-        targetType = champion.currentCharacter.Skills[whichSkill].TargetTypes;
+        targetType = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
     }
 
     public void CheckInfoToAutoFindTargets()
@@ -212,12 +221,14 @@ public class CheckNumberOfTargets : MonoBehaviour
             if (targetType[0] == TargetType.Self) // skill just affected self
             {
                 autoFindTargets.SelfTarget = champion;
+                autoFindTargets.TurnOnShowTargets();
             }
             else if (targetType[0] == TargetType.SelfOrAlly) // skill affected self or ally
             {
                 autoFindTargets.SelfTarget = champion;
                 canSelectTarget = true;
                 selectType = 4;
+                autoFindTargets.TurnOnShowTargets();
             }
             else if (targetType[0] == TargetType.Enemy)
             {
@@ -228,6 +239,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 7, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 1;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else
                 {
@@ -243,6 +255,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 2;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else
                 {
@@ -264,6 +277,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 7, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 3;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
                 {
@@ -299,6 +313,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 7, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 1;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else // skill affected self and >1 enemy
                 {
@@ -317,6 +332,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 2;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else
                 {
@@ -333,6 +349,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 7, priorityStat, true);
                     canSelectTarget = true;
                     selectType = 5;
+                    autoFindTargets.TurnOnShowTargets();
                 }
                 else // skill affected self and >1 enemy
                 {
@@ -352,6 +369,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.AutoFindTargetsBasedOnPriority(1, 7, priorityStat, true);
                 canSelectTarget = true;
                 selectType = 3;
+                autoFindTargets.TurnOnShowTargets();
             }
             // skill affected self, > 1 ally, 1 enemy
             else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
@@ -388,6 +406,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
     private void OpenChoosePriorityDialog(int layer)
     {
+        isChoosePriorityOpen = true;
         this.layer = layer;
 
         string targets = "";

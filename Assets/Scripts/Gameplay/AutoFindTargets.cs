@@ -81,19 +81,17 @@ public class AutoFindTargets : MonoBehaviour
         else enemyTargets.Clear(); // layer = 7 - enemy
 
         // find all On-field character by searching for its script 
-        OnFieldCharacter[] onFieldCharacters = FindObjectsOfType<OnFieldCharacter>();
-
-        foreach (OnFieldCharacter onFieldCharacter in onFieldCharacters)
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
         {
-            if (onFieldCharacter.gameObject.layer == layer)
+            if (character.gameObject.layer == layer)
             {
                 if (layer == 6) // ally
                 {
-                    allyTargets.Add(onFieldCharacter);
+                    allyTargets.Add(character);
                 }
                 else // layer == 7 -> enemy
                 {
-                    enemyTargets.Add(onFieldCharacter);
+                    enemyTargets.Add(character);
                 }
             }
         }
@@ -109,6 +107,29 @@ public class AutoFindTargets : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public void TurnOnShowTargets()
+    {
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if(enemyTargets.Contains(character) || allyTargets.Contains(character) || selfTarget == character)
+            {
+                character.gameObject.GetComponent<Renderer>().material.color = Color.red;
+            }
+            else
+            {
+                character.gameObject.GetComponent<Renderer>().material.color = Color.white;
+            }
+        }
+    }
+
+    public void TurnOffShowTargets()
+    {
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            character.gameObject.GetComponent<Renderer>().material.color = Color.white;
         }
     }
 }

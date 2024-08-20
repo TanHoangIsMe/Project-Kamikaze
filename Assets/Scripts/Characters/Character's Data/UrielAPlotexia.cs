@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 public class UrielAPlotexia : Character
 {
     public UrielAPlotexia()
@@ -17,7 +14,7 @@ public class UrielAPlotexia : Character
         maxBurst = 100f;
         skills = new Skill[] {
             new LionSpirit(),
-            new SwingTheSword(),
+            new testskill(),
             new SwingTheSword()
         };
     }

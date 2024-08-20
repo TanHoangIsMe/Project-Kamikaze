@@ -7,6 +7,7 @@ public class SwingTheSword : Skill
         name = "Swing The Sword";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
         manaCost = 50f;
+        burstCost = 0f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
         numberOfSelfTarget = 0;

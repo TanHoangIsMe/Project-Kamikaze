@@ -7,6 +7,7 @@ public abstract class Skill
     protected string name;
     protected string description;
     protected float manaCost;
+    protected float burstCost;
     protected int numberOfEnemyTargets;
     protected int numberOfAllyTargets;
     protected int numberOfSelfTarget;
@@ -23,6 +24,7 @@ public abstract class Skill
     public string Name { get { return name; } }
     public string Description {  get { return description; } }
     public float ManaCost { get {  return manaCost; } }
+    public float BurstCost { get { return burstCost; } }
     public int NumberOfEnemyTargets { get { return numberOfEnemyTargets; } }
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
     public int NumberOfSelfTarget { get { return numberOfSelfTarget; } }
