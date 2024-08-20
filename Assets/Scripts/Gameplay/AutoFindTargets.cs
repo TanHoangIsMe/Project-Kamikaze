@@ -112,24 +112,24 @@ public class AutoFindTargets : MonoBehaviour
 
     public void TurnOnShowTargets()
     {
-        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-        {
-            if(enemyTargets.Contains(character) || allyTargets.Contains(character) || selfTarget == character)
-            {
-                character.gameObject.GetComponent<Renderer>().material.color = Color.red;
-            }
-            else
-            {
-                character.gameObject.GetComponent<Renderer>().material.color = Color.white;
-            }
-        }
+        //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        //{
+        //    if(enemyTargets.Contains(character) || allyTargets.Contains(character) || selfTarget == character)
+        //    {
+        //        character.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        //    }
+        //    else
+        //    {
+        //        character.gameObject.GetComponent<Renderer>().material.color = Color.white;
+        //    }
+        //}
     }
 
     public void TurnOffShowTargets()
     {
-        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-        {
-            character.gameObject.GetComponent<Renderer>().material.color = Color.white;
-        }
+        //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        //{
+        //    character.gameObject.GetComponent<Renderer>().material.color = Color.white;
+        //}
     }
 }
