@@ -18,20 +18,20 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-3.5f,-1f,-4f) ,"UrielAPlotexia" },
-        { new Vector3(-1.5f,-1f,-4f) ,"UrielAPlotexia" },
-        { new Vector3(0f,-1f,-4f) ,"Maria" },
-        { new Vector3(1.5f,-1f,-4f) ,"UrielAPlotexia" },
-        { new Vector3(3.5f,-1f,-4f) ,"UrielAPlotexia" },
+        { new Vector3(-5.5f,-1f,-4f) ,"UrielAPlotexia" },
+        { new Vector3(-3f,-1f,-2f) ,"UrielAPlotexia" },
+        { new Vector3(0f,0f,-4f) ,"Maria" },
+        { new Vector3(3f,-1f,-2f) ,"UrielAPlotexia" },
+        { new Vector3(5.5f,-1f,-4f) ,"UrielAPlotexia" },
     };
 
     private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-3.5f,-1f,4f) ,"Maria" },
-        { new Vector3(-1.5f,-1f,4f) ,"UrielAPlotexia" },
-        { new Vector3(0f,-1f,4f) ,"UrielAPlotexia" },
-        { new Vector3(1.5f,-1f,4f) ,"UrielAPlotexia" },
-        { new Vector3(3.5f,-1f,4f) ,"UrielAPlotexia" },
+        { new Vector3(-5.5f,-1f,8f) ,"UrielAPlotexia" },
+        { new Vector3(-3f,-1f,6f) ,"UrielAPlotexia" },
+        { new Vector3(0f,-1f,8f) ,"UrielAPlotexia" },
+        { new Vector3(3f,-1f,6f) ,"UrielAPlotexia" },
+        { new Vector3(5.5f,-1f,8f) ,"UrielAPlotexia" },
     };
 
     private void Awake()

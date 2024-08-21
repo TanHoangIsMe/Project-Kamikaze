@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 
 public class SwingTheSword : Skill
 {
@@ -24,13 +25,12 @@ public class SwingTheSword : Skill
     {
         if (enemyTargets != null)
         {
-            foreach (OnFieldCharacter target in enemyTargets)
-            {
-                float trueAttackDamage = character.CurrentAttack - target.CurrentArmor;
+           float trueAttackDamage = character.CurrentAttack 
+                - enemyTargets[0].CurrentArmor;
 
-                if (trueAttackDamage > 0)
-                    target.CurrentHealth -= trueAttackDamage;
-            }
+           if (trueAttackDamage > 0)
+                enemyTargets[0].CurrentHealth -= trueAttackDamage;
+            
         }
     }
 }

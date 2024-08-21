@@ -36,6 +36,7 @@ public abstract class Skill
     #endregion
 
     #region Methods
+
     public abstract void SkillFunction(OnFieldCharacter character, 
         List<OnFieldCharacter> enemyTargets = null, 
         List<OnFieldCharacter> allyTargets = null);
