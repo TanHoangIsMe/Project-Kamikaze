@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public abstract class Skill 
 {
@@ -28,7 +27,7 @@ public abstract class Skill
     public int NumberOfEnemyTargets { get { return numberOfEnemyTargets; } }
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
     public int NumberOfSelfTarget { get { return numberOfSelfTarget; } }
-    public int NumberOfSelforAllyTarget { get { return numberOfSelfTarget; } }
+    public int NumberOfSelfOrAllyTarget { get { return numberOfSelfOrAllyTarget; } }
     public StatType PriorityStat { get { return priorityStat; } }
     public SkillType[] SkillTypes { get { return skillTypes; } }
     public ActivateType[] ActivateTypes { get { return activateTypes; } }

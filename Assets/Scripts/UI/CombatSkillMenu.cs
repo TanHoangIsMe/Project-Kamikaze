@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 public class CombatSkillMenu : MonoBehaviour
 {
@@ -96,8 +96,8 @@ public class CombatSkillMenu : MonoBehaviour
 
     public void AttackConfirm()
     {
-        Debug.Log(autoFindTargets.EnemyTargets.Count() + "-"
-        + autoFindTargets.AllyTargets.Count()+ "-" + autoFindTargets.SelfTarget);
+        //Debug.Log(autoFindTargets.EnemyTargets.Count() + "-"
+        //+ autoFindTargets.AllyTargets.Count()+ "-" + autoFindTargets.SelfTarget);
         if ( autoFindTargets.EnemyTargets.Count() > 0 || 
             autoFindTargets.AllyTargets.Count() > 0 || 
             autoFindTargets.SelfTarget != null )
@@ -116,6 +116,17 @@ public class CombatSkillMenu : MonoBehaviour
             }
             else if (checkNumberOfTargets.WhichSkill == 1) // using skill 2
             {
+               UnityEngine.Component[] components = 
+                    champion.gameObject.GetComponents<UnityEngine.Component>();
+                if (components.Length >= 4)
+                {
+                    UnityEngine.Component skillAnimationController = components[3];
+                    if(skillAnimationController is MariaSkillAnimationController mariaSkillAnimationController)
+                    {
+                        mariaSkillAnimationController.EnemyTargets = enemies;
+                        mariaSkillAnimationController.PlaySecondSkillAnimation();
+                    }
+                }
                 if (enemies.Count() > 0 && allies.Count() > 0)
                     champion.UsingSecondSkill(enemyTargets: enemies, allyTargets: allies);
                 else if (enemies.Count() > 0 && allies.Count() == 0)
@@ -134,13 +145,13 @@ public class CombatSkillMenu : MonoBehaviour
             }
 
             ResetThings();
-            foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-            {
-                Debug.Log(character.gameObject.name + " - "
-                    + character.gameObject.layer + " - "
-                    + character.CurrentHealth + " - "
-                    + character.CurrentArmor + " - ");
-            }
+            //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+            //{
+            //    Debug.Log(character.gameObject.name + " - "
+            //        + character.gameObject.layer + " - "
+            //        + character.CurrentHealth + " - "
+            //        + character.CurrentArmor + " - ");
+            //}
         }
         else
         {
