@@ -116,7 +116,8 @@ public class AutoFindTargets : MonoBehaviour
         {
             if (enemyTargets.Contains(character) || allyTargets.Contains(character) || selfTarget == character)
             {
-                
+                Debug.Log(character.gameObject.name
+                    +" - "+character.gameObject.transform.position);
             }
             else
             {

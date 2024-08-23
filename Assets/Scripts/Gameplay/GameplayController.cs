@@ -27,9 +27,9 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-7f,0f,10f) ,"Maria" },
-        { new Vector3(-4f,0f,13f) ,"Maria" },
-        { new Vector3(0f,0f,10f) ,"Maria" },
+        //{ new Vector3(-7f,0f,10f) ,"Maria" },
+        //{ new Vector3(-4f,0f,13f) ,"Maria" },
+        //{ new Vector3(0f,0f,10f) ,"Maria" },
         { new Vector3(4f,0f,13f) ,"Maria" },
         { new Vector3(7f,0f,10f) ,"Maria" },
     };
@@ -72,16 +72,17 @@ public class GameplayController : MonoBehaviour
         {
             skillMenuCanvas.SetActive(true);
             combatSkillMenu.Champion = whoTurn;
-            combatSkillMenu.UsingSkill1();
-            if (checkNumberOfTargets.IsChoosePriorityOpen)
-            {
-                checkNumberOfTargets.ChoosingLowestPriority();
-            }
-            if (checkNumberOfTargets.IsChoosePriorityOpen)
-            {
-                checkNumberOfTargets.ChoosingLowestPriority();
-            }
-            combatSkillMenu.AttackConfirm();
+            //combatSkillMenu.UsingSkill1();
+            //if (checkNumberOfTargets.IsChoosePriorityOpen)
+            //{
+            //    checkNumberOfTargets.ChoosingLowestPriority();
+            //}
+            //if (checkNumberOfTargets.IsChoosePriorityOpen)
+            //{
+            //    checkNumberOfTargets.ChoosingLowestPriority();
+            //}
+            //combatSkillMenu.AttackConfirm();
+
         }
     }
 

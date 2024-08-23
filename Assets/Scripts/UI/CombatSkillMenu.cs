@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 public class CombatSkillMenu : MonoBehaviour
@@ -12,14 +11,16 @@ public class CombatSkillMenu : MonoBehaviour
     private GameplayController gameplayController;
     private CheckNumberOfTargets checkNumberOfTargets;
     private AutoFindTargets autoFindTargets;
+    private CheckSkillAnimationController checkSkillAnimationController;
 
     private int championLayer;
 
     private void Awake()
     {
         gameplayController = FindObjectOfType<GameplayController>();
-        checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
-        autoFindTargets = FindObjectOfType<AutoFindTargets>();
+        checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
+        autoFindTargets = GetComponent<AutoFindTargets>();
+        checkSkillAnimationController = GetComponent<CheckSkillAnimationController>();
         
         championLayer = 0;
     }
@@ -47,12 +48,7 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentMana > champion.Skills[0].ManaCost)
         {
-            ChangeLayerToSelf();
-            chooseTargetText.SetActive(true);
-            checkNumberOfTargets.Champion = champion;
-            checkNumberOfTargets.WhichSkill = 0;
-            checkNumberOfTargets.CheckInfoToAutoFindTargets();
-            autoFindTargets.TurnOnShowTargets();
+            SetUpToAutoFindTargets(0);
         }
         else
         {
@@ -65,11 +61,7 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentMana > champion.Skills[1].ManaCost)
         {
-            ChangeLayerToSelf();
-            chooseTargetText.SetActive(true);
-            checkNumberOfTargets.Champion = champion;
-            checkNumberOfTargets.WhichSkill = 1;
-            checkNumberOfTargets.CheckInfoToAutoFindTargets();
+            SetUpToAutoFindTargets(1);
         }
         else
         {
@@ -82,11 +74,7 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentBurst == champion.Skills[2].BurstCost)
         {
-            ChangeLayerToSelf();
-            chooseTargetText.SetActive(true);
-            checkNumberOfTargets.Champion = champion;
-            checkNumberOfTargets.WhichSkill = 2;
-            checkNumberOfTargets.CheckInfoToAutoFindTargets();
+            SetUpToAutoFindTargets(2);
         }
         else
         {
@@ -94,64 +82,44 @@ public class CombatSkillMenu : MonoBehaviour
         }
     }
 
+    private void SetUpToAutoFindTargets(int whichSkill)
+    {
+        ChangeLayerToSelf();
+        chooseTargetText.SetActive(true);
+        checkNumberOfTargets.Champion = champion;
+        checkNumberOfTargets.WhichSkill = whichSkill;
+        checkNumberOfTargets.CheckInfoToAutoFindTargets();
+        autoFindTargets.TurnOnShowTargets();
+    }
+
     public void AttackConfirm()
     {
-        //Debug.Log(autoFindTargets.EnemyTargets.Count() + "-"
-        //+ autoFindTargets.AllyTargets.Count()+ "-" + autoFindTargets.SelfTarget);
         if ( autoFindTargets.EnemyTargets.Count() > 0 || 
             autoFindTargets.AllyTargets.Count() > 0 || 
             autoFindTargets.SelfTarget != null )
         {
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
-            List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
 
             if (checkNumberOfTargets.WhichSkill == 0) // using skill 1
             {
-                if (enemies.Count() > 0 && allies.Count() > 0)
-                    champion.UsingFirstSkill(enemyTargets: enemies, allyTargets: allies);
-                else if (enemies.Count() > 0 && allies.Count() == 0)
-                    champion.UsingFirstSkill(enemyTargets: enemies);
-                else
-                    champion.UsingFirstSkill(allyTargets: allies);
+                // play animation
+                checkSkillAnimationController.
+                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 0);
+
             }
             else if (checkNumberOfTargets.WhichSkill == 1) // using skill 2
             {
-               UnityEngine.Component[] components = 
-                    champion.gameObject.GetComponents<UnityEngine.Component>();
-                if (components.Length >= 4)
-                {
-                    UnityEngine.Component skillAnimationController = components[3];
-                    if(skillAnimationController is MariaSkillAnimationController mariaSkillAnimationController)
-                    {
-                        mariaSkillAnimationController.EnemyTargets = enemies;
-                        mariaSkillAnimationController.PlaySecondSkillAnimation();
-                    }
-                }
-                if (enemies.Count() > 0 && allies.Count() > 0)
-                    champion.UsingSecondSkill(enemyTargets: enemies, allyTargets: allies);
-                else if (enemies.Count() > 0 && allies.Count() == 0)
-                    champion.UsingSecondSkill(enemyTargets: enemies);
-                else
-                    champion.UsingSecondSkill(allyTargets: allies);
+                // play animation
+                checkSkillAnimationController.
+                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 1);
             }
             else // using burst
             {
-                if (enemies.Count() > 0 && allies.Count() > 0)
-                    champion.UsingBurstSkill(enemyTargets: enemies, allyTargets: allies);
-                else if (enemies.Count() > 0 && allies.Count() == 0)
-                    champion.UsingBurstSkill(enemyTargets: enemies);
-                else
-                    champion.UsingBurstSkill(allyTargets: allies);
-            }
+                // play animation
+                checkSkillAnimationController.
+                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 2);
 
-            ResetThings();
-            //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-            //{
-            //    Debug.Log(character.gameObject.name + " - "
-            //        + character.gameObject.layer + " - "
-            //        + character.CurrentHealth + " - "
-            //        + character.CurrentArmor + " - ");
-            //}
+            }           
         }
         else
         {
@@ -160,6 +128,51 @@ public class CombatSkillMenu : MonoBehaviour
             + autoFindTargets.AllyTargets.Count() + "-"
             + autoFindTargets.SelfTarget);
         }
+    }
+
+    public void SendInfoToUsingFirstSkill()
+    {
+        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
+        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+
+        if (enemies.Count() > 0 && allies.Count() > 0)
+            champion.UsingFirstSkill(enemyTargets: enemies, allyTargets: allies);
+        else if (enemies.Count() > 0 && allies.Count() == 0)
+            champion.UsingFirstSkill(enemyTargets: enemies);
+        else
+            champion.UsingFirstSkill(allyTargets: allies);
+
+        ResetThings();
+    }
+
+    public void SendInfoToUsingSecondSkill()
+    {
+        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
+        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+
+        if (enemies.Count() > 0 && allies.Count() > 0)
+            champion.UsingSecondSkill(enemyTargets: enemies, allyTargets: allies);
+        else if (enemies.Count() > 0 && allies.Count() == 0)
+            champion.UsingSecondSkill(enemyTargets: enemies);
+        else
+            champion.UsingSecondSkill(allyTargets: allies);
+
+        ResetThings();
+    }
+
+    public void SendInfoToUsingBurstSkill()
+    {   
+        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
+        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+        
+        if (enemies.Count() > 0 && allies.Count() > 0)
+            champion.UsingBurstSkill(enemyTargets: enemies, allyTargets: allies);
+        else if (enemies.Count() > 0 && allies.Count() == 0)
+            champion.UsingBurstSkill(enemyTargets: enemies);
+        else
+            champion.UsingBurstSkill(allyTargets: allies);
+
+        ResetThings();
     }
 
     private void ResetThings()

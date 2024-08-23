@@ -1808,6 +1808,7 @@ GameObject:
   - component: {fileID: 1464223458}
   - component: {fileID: 1464223460}
   - component: {fileID: 1464223459}
+  - component: {fileID: 1464223461}
   m_Layer: 5
   m_Name: ' Skill Menu Canvas'
   m_TagString: Untagged
@@ -1939,6 +1940,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1278a915e27150245ade20935e87f33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1464223461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464223453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe1551a21bfa3b409ae36abf4d4a155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1699481563

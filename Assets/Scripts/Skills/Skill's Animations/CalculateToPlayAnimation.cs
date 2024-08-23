@@ -1,41 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MariaSkillAnimationController : MonoBehaviour
+public class CalculateToPlayAnimation : MonoBehaviour
 {
-    private Animator animator;
-
-    private List<OnFieldCharacter> enemyTargets;
-    public List<OnFieldCharacter> EnemyTargets { set { enemyTargets = value; } }
-
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
-
-    public void PlayFirstSkillAnimation()
-    {
-
-    }
-
-    public void PlaySecondSkillAnimation()
-    {
-        if (enemyTargets != null)
-        {
-            Debug.Log(enemyTargets[0].gameObject.transform.position);
-            StartCoroutine(MoveToPointAndBack(gameObject.transform.position, 
-                enemyTargets[0].gameObject.transform.position,3.5f));
-        }
-    }
-
-    public void PlayBurstSkillAnimation()
-    {
-
-    }
-
     //character move to target for attack and back to original position
-    private IEnumerator MoveToPointAndBack(Vector3 startPosition, Vector3 endPosition, float distanceFromEnd)
+    public IEnumerator MoveToPointAndBack(Vector3 startPosition, Vector3 endPosition,
+        float distanceFromEnd, string triggerName, Animator animator)
     {
         // store champion start position
         Vector3 originalPosition = startPosition;
@@ -45,22 +15,21 @@ public class MariaSkillAnimationController : MonoBehaviour
         Vector3 targetPosition = endPosition - directionToEnd * distanceFromEnd;
 
         // Run to end point
-        yield return StartCoroutine(MoveToPoint(originalPosition, targetPosition));
+        yield return StartCoroutine(MoveToPoint(originalPosition, targetPosition,animator));
 
-        animator.SetTrigger("Using Second Skill");
+        animator.SetTrigger(triggerName);
         yield return new WaitForSeconds(2f);
 
         // Back to start point
-        yield return StartCoroutine(MoveToPoint(targetPosition, originalPosition));
+        yield return StartCoroutine(MoveToPoint(targetPosition, originalPosition, animator));
 
         // reset transform
         gameObject.transform.position = originalPosition;
         gameObject.transform.localEulerAngles = Vector3.zero;
     }
 
-
     // character move to target for attack
-    private IEnumerator MoveToPoint(Vector3 startPosition, Vector3 endPosition)
+    private IEnumerator MoveToPoint(Vector3 startPosition, Vector3 endPosition, Animator animator)
     {
         // set start position
         gameObject.transform.position = startPosition;
@@ -77,13 +46,13 @@ public class MariaSkillAnimationController : MonoBehaviour
 
         while (Vector3.Distance(gameObject.transform.position, endPosition) > 0.5f)
         {
-            float distanceCovered = (Time.time - startTime) * 5f;
+            float distanceCovered = (Time.time - startTime) * 9f;
             float fractionOfJourney = distanceCovered / journeyLength;
 
             gameObject.transform.position = Vector3.Lerp(startPosition, endPosition, fractionOfJourney);
 
             gameObject.transform.LookAt(endPosition);
-            
+
             yield return null;
         }
 
@@ -95,5 +64,12 @@ public class MariaSkillAnimationController : MonoBehaviour
         {
             animator.SetBool("Running", false);
         }
+    }
+
+    public IEnumerator UsingSkillAndBackToIdle(string parameterName, float animationDuration, Animator animator)
+    {
+        animator.SetBool(parameterName, true); // play skill animation
+        yield return new WaitForSeconds(animationDuration);
+        animator.SetBool(parameterName, false); // play idle animation
     }
 }
