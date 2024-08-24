@@ -5,7 +5,6 @@ using UnityEngine;
 public class MariaSkillController : MonoBehaviour
 {
     CombatSkillMenu combatSkillMenu;
-
     CalculateToPlayAnimation calculateToPlayAnimation;
 
     private Animator animator;
@@ -15,15 +14,22 @@ public class MariaSkillController : MonoBehaviour
 
     private void Awake()
     {
-        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         animator = GetComponent<Animator>();
         calculateToPlayAnimation = GetComponent<CalculateToPlayAnimation>();
+    }
+
+    private void Start()
+    {
+        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
     }
 
     public void PlayFirstSkillAnimation()
     {
         if (enemyTargets != null)
         {
+            // turn off combat skill menu canvas
+            combatSkillMenu.gameObject.SetActive(false);
+
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position,
                 enemyTargets[0].gameObject.transform.position, 5f, "Using First Skill", animator));
         }
@@ -33,6 +39,9 @@ public class MariaSkillController : MonoBehaviour
     {
         if (enemyTargets != null)
         {
+            // turn off combat skill menu canvas
+            combatSkillMenu.gameObject.SetActive(false);
+
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position, 
                 enemyTargets[0].gameObject.transform.position,3.5f,"Using Second Skill", animator));
         }
@@ -42,6 +51,9 @@ public class MariaSkillController : MonoBehaviour
     {
         if (enemyTargets != null)
         {
+            // turn off combat skill menu canvas
+            combatSkillMenu.gameObject.SetActive(false);
+
             StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle("Using Burst Skill", 4.30f,animator));
         }
     }

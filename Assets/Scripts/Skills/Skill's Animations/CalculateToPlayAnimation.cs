@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
+    private GameplayController gameplayController;
+
+    private void Awake()
+    {
+        gameplayController = FindObjectOfType<GameplayController>();
+    }
+
     //character move to target for attack and back to original position
     public IEnumerator MoveToPointAndBack(Vector3 startPosition, Vector3 endPosition,
         float distanceFromEnd, string triggerName, Animator animator)
@@ -26,6 +33,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
         // reset transform
         gameObject.transform.position = originalPosition;
         gameObject.transform.localEulerAngles = Vector3.zero;
+
+        // start new turn
+        gameplayController.StartTurn();
     }
 
     // character move to target for attack
@@ -44,6 +54,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         float journeyLength = Vector3.Distance(startPosition, endPosition);
         float startTime = Time.time;
 
+        // move to end point while distance > 0.5f
         while (Vector3.Distance(gameObject.transform.position, endPosition) > 0.5f)
         {
             float distanceCovered = (Time.time - startTime) * 9f;
@@ -70,6 +81,11 @@ public class CalculateToPlayAnimation : MonoBehaviour
     {
         animator.SetBool(parameterName, true); // play skill animation
         yield return new WaitForSeconds(animationDuration);
+
         animator.SetBool(parameterName, false); // play idle animation
+        yield return new WaitForSeconds(0.5f);
+
+        // start new turn
+        gameplayController.StartTurn();
     }
 }

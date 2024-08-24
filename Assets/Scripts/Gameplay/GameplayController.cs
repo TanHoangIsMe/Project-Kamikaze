@@ -39,6 +39,7 @@ public class GameplayController : MonoBehaviour
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
         turnList = new List<OnFieldCharacter>();
+        skillMenuCanvas.SetActive(false);
         whoTurn = null;
         phase = 0;
     }
@@ -57,8 +58,8 @@ public class GameplayController : MonoBehaviour
             StartNewPhase();
             return;
         }
-        //Debug.Log(turnList.Count);
-        //Debug.Log(turnList[0]);
+        Debug.Log(turnList.Count);
+        Debug.Log(turnList[0].gameObject.transform.position);
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
@@ -70,8 +71,9 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            skillMenuCanvas.SetActive(true);
-            combatSkillMenu.Champion = whoTurn;
+            StartTurn();
+            //skillMenuCanvas.SetActive(true);
+            //combatSkillMenu.Champion = whoTurn;
             //combatSkillMenu.UsingSkill1();
             //if (checkNumberOfTargets.IsChoosePriorityOpen)
             //{

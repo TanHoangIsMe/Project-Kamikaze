@@ -177,9 +177,6 @@ public class CombatSkillMenu : MonoBehaviour
 
     private void ResetThings()
     {
-        // turn off using skill panel
-        gameObject.SetActive(false);
-
         // turn off can select target
         checkNumberOfTargets.IsFinish = false;
         checkNumberOfTargets.CanSelectTarget = false;
@@ -197,8 +194,5 @@ public class CombatSkillMenu : MonoBehaviour
 
         // turn off choose targets text
         chooseTargetText.SetActive(false);
-
-        // start next character turn
-        gameplayController.StartTurn();
     }
 }
