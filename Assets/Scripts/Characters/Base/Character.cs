@@ -5,6 +5,7 @@ public abstract class Character
 {
     #region Fields
     protected string fullName;
+    protected string avatar;
 
     // Character's Attribute
     protected RoleType[] roleTypes;
@@ -26,6 +27,7 @@ public abstract class Character
     #region Properties
     // Get Character Info
     public string FullName { get { return fullName; } }
+    public string Avatar { get { return avatar; } }
     public RoleType[] RoleTypes { get { return roleTypes; } }
     public ClassType[] ClassTypes { get { return classTypes; } }
     public ElementType[] ElementTypes { get { return elementTypes; } }

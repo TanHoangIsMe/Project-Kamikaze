@@ -2,7 +2,8 @@ public class Maria : Character
 {
     public Maria()
     {
-        fullName = "Maria"; 
+        fullName = "Maria";
+        avatar = "Art/UI/Character Avatars/Maria Avatar"; ;
         roleTypes = new RoleType[] { RoleType.Attacker };
         classTypes = new ClassType[] { ClassType.Warrior };
         elementTypes = new ElementType[] { ElementType.Fire };

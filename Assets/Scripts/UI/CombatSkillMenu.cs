@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CombatSkillMenu : MonoBehaviour
 {
     [SerializeField] private GameObject chooseTargetText;
+    [SerializeField] private Image characterAvatar;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private Image manaBarFill;
     [SerializeField] private TextMeshProUGUI healthText;
@@ -36,7 +37,19 @@ public class CombatSkillMenu : MonoBehaviour
     {
         chooseTargetText.SetActive(false);
 
-        // set up character bars UI
+        /// <summary>
+        /// Set up character choosing skill canvas UI
+        /// </summary>
+
+        // load character avatar image
+        Sprite avatarSprite = Resources.Load<Sprite>(champion.CurrentCharacter.Avatar);
+        Debug.Log(avatarSprite);
+        Debug.Log(champion.CurrentCharacter.Avatar);
+        if (avatarSprite != null)
+        {
+            characterAvatar.sprite = avatarSprite;
+        }
+
         healthBarFill.fillAmount = champion.CurrentHealth / champion.CurrentCharacter.Health;
         manaBarFill.fillAmount = champion.CurrentMana / champion.CurrentCharacter.MaxMana;
 

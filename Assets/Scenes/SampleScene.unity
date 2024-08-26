@@ -586,8 +586,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 18.024, y: -11.6557}
-  m_SizeDelta: {x: 126.95, y: 129.1578}
+  m_AnchoredPosition: {x: 18, y: -12}
+  m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133423452
 MonoBehaviour:
@@ -2491,6 +2491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chooseTargetText: {fileID: 343180393}
+  characterAvatar: {fileID: 133423452}
   healthBarFill: {fileID: 1452504503}
   manaBarFill: {fileID: 1669912454}
   healthText: {fileID: 2143650666}
