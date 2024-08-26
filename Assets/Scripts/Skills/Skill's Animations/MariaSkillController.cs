@@ -8,6 +8,7 @@ public class MariaSkillController : MonoBehaviour
     CalculateToPlayAnimation calculateToPlayAnimation;
 
     private Animator animator;
+    public Animator Animator {  get { return animator; } }
 
     private List<OnFieldCharacter> enemyTargets;
     public List<OnFieldCharacter> EnemyTargets { set { enemyTargets = value; } }
@@ -20,11 +21,12 @@ public class MariaSkillController : MonoBehaviour
 
     private void Start()
     {
-        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();       
     }
 
     public void PlayFirstSkillAnimation()
     {
+        Debug.Log("Start enemi:" + enemyTargets.Count);
         if (enemyTargets != null)
         {
             // turn off combat skill menu canvas
@@ -62,7 +64,10 @@ public class MariaSkillController : MonoBehaviour
     {
         if(combatSkillMenu != null)
         {
-            combatSkillMenu.SendInfoToUsingFirstSkill();
+            // play target being attacked animation
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+
+            combatSkillMenu.SendInfoToUsingFirstSkill();           
         }
     }
 
@@ -70,6 +75,9 @@ public class MariaSkillController : MonoBehaviour
     {
         if (combatSkillMenu != null)
         {
+            // play target being attacked animation
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+
             combatSkillMenu.SendInfoToUsingSecondSkill();
         }
     }
@@ -78,6 +86,9 @@ public class MariaSkillController : MonoBehaviour
     {
         if (combatSkillMenu != null)
         {
+            // play target being attacked animation
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+
             combatSkillMenu.SendInfoToUsingBurstSkill();
         }
     }

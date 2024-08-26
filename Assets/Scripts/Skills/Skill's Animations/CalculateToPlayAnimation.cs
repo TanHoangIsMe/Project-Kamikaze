@@ -1,13 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
     private GameplayController gameplayController;
+    private CheckSkillAnimationController checkSkillAnimationController;
 
     private void Awake()
     {
         gameplayController = FindObjectOfType<GameplayController>();
+    }
+
+    private void Start()
+    {
+        checkSkillAnimationController = FindObjectOfType<CheckSkillAnimationController>();
     }
 
     //character move to target for attack and back to original position
@@ -87,5 +94,30 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // start new turn
         gameplayController.StartTurn();
+    }
+
+    public IEnumerator BeingAttackedAndBackToIdle(string parameterName, float animationDuration, List<OnFieldCharacter> enemyTargets)
+    {
+        // enemy targets list will be clear when finish using skill
+        // so make a clone list to not encounter bug
+        List<OnFieldCharacter> targets = new List<OnFieldCharacter>(enemyTargets);
+
+        if (checkSkillAnimationController != null)
+        {
+            foreach (var target in targets)
+            {
+                // get target skill controller script and animator controller
+                Component targetSkillController = checkSkillAnimationController.GetCharacterSkillController(target);
+                Animator targetAnimator = checkSkillAnimationController.CheckWhoseAnimationControllerToGetAnimator(targetSkillController);
+
+                if (targetSkillController != null && targetAnimator != null)
+                {
+                    targetAnimator.SetBool(parameterName, true); // play being attacked animation
+                    yield return new WaitForSeconds(animationDuration);
+                    targetAnimator.SetBool(parameterName, false); // play idle animation
+                    yield return new WaitForSeconds(0.5f);
+                }
+            }
+        }
     }
 }

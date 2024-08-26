@@ -1,9 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 public class CombatSkillMenu : MonoBehaviour
 {
     [SerializeField] private GameObject chooseTargetText;
+    [SerializeField] private Image healthBarFill;
+    [SerializeField] private Image manaBarFill;
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI manaText;
+    [SerializeField] private TextMeshProUGUI burstText;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
@@ -28,6 +35,14 @@ public class CombatSkillMenu : MonoBehaviour
     private void Start()
     {
         chooseTargetText.SetActive(false);
+
+        // set up character bars UI
+        healthBarFill.fillAmount = champion.CurrentHealth / champion.CurrentCharacter.Health;
+        manaBarFill.fillAmount = champion.CurrentMana / champion.CurrentCharacter.MaxMana;
+
+        healthText.text = $"{champion.CurrentHealth} / {champion.CurrentCharacter.Health}";
+        manaText.text = $"{champion.CurrentMana} / {champion.CurrentCharacter.MaxMana}";
+        burstText.text = $"Burst: {champion.CurrentBurst / champion.CurrentCharacter.MaxBurst * 100}%";
     }
 
     private void ChangeLayerToSelf()

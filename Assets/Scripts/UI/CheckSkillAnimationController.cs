@@ -5,19 +5,29 @@ public class CheckSkillAnimationController : MonoBehaviour
 {
     public void GetSkillAnimationControllerForPlayAnimation(OnFieldCharacter champion, List<OnFieldCharacter> enemies, int whichSkill)
     {
+        Component skillAnimationController = GetCharacterSkillController(champion);
+
+        if (skillAnimationController != null)
+        {
+            CheckWhoseAnimationControllerToPlayAnimation(enemies, skillAnimationController,whichSkill);
+        }
+    }
+
+    public Component GetCharacterSkillController(OnFieldCharacter champion)
+    {
         // get all components of character
-        UnityEngine.Component[] components =
-                    champion.gameObject.GetComponents<UnityEngine.Component>();
+        Component[] components =
+                    champion.gameObject.GetComponents<Component>();
 
         // get 4th component (animation controller script)
         if (components.Length >= 4)
         {
-            UnityEngine.Component skillAnimationController = components[3];
-            CheckWhoseAnimationController(enemies, skillAnimationController,whichSkill);
+            return components[3];
         }
+        return null;
     }
 
-    private void CheckWhoseAnimationController(List<OnFieldCharacter> enemies, Component skillAnimationController, int whichSkill)
+    private void CheckWhoseAnimationControllerToPlayAnimation(List<OnFieldCharacter> enemies, Component skillAnimationController, int whichSkill)
     {
         // check whose skill animation controller
         if (skillAnimationController is MariaSkillController mariaSkillAnimationController)
@@ -30,5 +40,14 @@ public class CheckSkillAnimationController : MonoBehaviour
             else
                 mariaSkillAnimationController.PlayBurstSkillAnimation();
         }
+    }
+
+    public Animator CheckWhoseAnimationControllerToGetAnimator(Component skillAnimationController)
+    {
+        if (skillAnimationController is MariaSkillController mariaSkillAnimationController)
+        {
+            return mariaSkillAnimationController.Animator;
+        }
+        return null;
     }
 }
