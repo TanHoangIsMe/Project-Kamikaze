@@ -170,6 +170,11 @@ public class CombatSkillMenu : MonoBehaviour
         else
             champion.UsingFirstSkill(allyTargets: allies);
 
+        foreach (var enemy in enemies)
+        {
+            enemy.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+        }
+
         ResetThings();
     }
 
