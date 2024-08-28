@@ -170,10 +170,9 @@ public class CombatSkillMenu : MonoBehaviour
         else
             champion.UsingFirstSkill(allyTargets: allies);
 
-        foreach (var enemy in enemies)
-        {
-            enemy.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
-        }
+        // play health bar reduce or increase animation
+        // when champion current health change
+        PlayHealthBarEffect(enemies, allies);
 
         ResetThings();
     }
@@ -190,6 +189,10 @@ public class CombatSkillMenu : MonoBehaviour
         else
             champion.UsingSecondSkill(allyTargets: allies);
 
+        // play health bar reduce or increase animation
+        // when champion current health change
+        PlayHealthBarEffect(enemies, allies);
+
         ResetThings();
     }
 
@@ -204,6 +207,10 @@ public class CombatSkillMenu : MonoBehaviour
             champion.UsingBurstSkill(enemyTargets: enemies);
         else
             champion.UsingBurstSkill(allyTargets: allies);
+
+        // play health bar reduce or increase animation
+        // when champion current health change
+        PlayHealthBarEffect(enemies, allies);
 
         ResetThings();
     }
@@ -227,5 +234,18 @@ public class CombatSkillMenu : MonoBehaviour
 
         // turn off choose targets text
         chooseTargetText.SetActive(false);
+    }
+
+    private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies)
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+        }
+
+        foreach (var ally in allies)
+        {
+            ally.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+        }
     }
 }

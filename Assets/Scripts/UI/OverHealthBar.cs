@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class OverHealthBar : MonoBehaviour
 {
-    [SerializeField] private Transform healthBar;
+    [SerializeField] private Image healthBackground;
     [SerializeField] private Image healthFill;
     [SerializeField] private Image healthLoseFill;
 
@@ -20,7 +20,14 @@ public class OverHealthBar : MonoBehaviour
 
     private void Update()
     {
-        //healthBar.LookAt(cam.transform.forward + healthBar.position);
+        SetHealthBarLookAtCam();
+    }
+
+    private void SetHealthBarLookAtCam()
+    {
+        healthBackground.transform.rotation = cam.transform.rotation;
+        healthFill.transform.rotation = cam.transform.rotation;
+        healthLoseFill.transform.rotation = cam.transform.rotation;
     }
 
     public void UpdateHealthFill()
