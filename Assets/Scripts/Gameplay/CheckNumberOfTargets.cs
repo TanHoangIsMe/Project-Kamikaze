@@ -118,6 +118,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         // can select enemy 
         if ((selectType == 1) && clickedObject.layer == 7)
         {
+            autoFindTargets.TurnOffShowTargets();
             autoFindTargets.EnemyTargets.Clear();
             autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
         }
@@ -125,6 +126,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         // can select ally
         if ((selectType == 2) && clickedObject.layer == 6)
         {
+            autoFindTargets.TurnOffShowTargets();
             autoFindTargets.AllyTargets.Clear();
             autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
         }
@@ -134,6 +136,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         { 
             if(clickedObject.layer == 7)
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.EnemyTargets.Clear();
                 autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
             }
@@ -141,6 +144,7 @@ public class CheckNumberOfTargets : MonoBehaviour
             if(clickedObject.layer == 6)
             {
                 autoFindTargets.AllyTargets.Clear();
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
             }
         }
@@ -150,12 +154,14 @@ public class CheckNumberOfTargets : MonoBehaviour
         {
             if (clickedObject.layer == 8) // select self
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.SelfTarget = champion;
                 autoFindTargets.AllyTargets.Clear();
             }
 
             if (clickedObject.layer == 6) // select ally
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.AllyTargets.Clear();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
                 autoFindTargets.SelfTarget = null;
@@ -167,12 +173,14 @@ public class CheckNumberOfTargets : MonoBehaviour
         {
             if (clickedObject.layer == 8) // select self
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.SelfTarget = champion;
                 autoFindTargets.AllyTargets.Clear();
             }
 
             if (clickedObject.layer == 6) // select ally
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.AllyTargets.Clear();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
                 autoFindTargets.SelfTarget = null;
@@ -180,6 +188,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
             if (clickedObject.layer == 7)
             {
+                autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.EnemyTargets.Clear();
                 autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class CheckSkillAnimationController : MonoBehaviour
 {
     public void GetSkillAnimationControllerForPlayAnimation(OnFieldCharacter champion, List<OnFieldCharacter> enemies, int whichSkill)
-    {
+    {       
         Component skillAnimationController = GetCharacterSkillController(champion);
 
         if (skillAnimationController != null)
@@ -20,9 +20,9 @@ public class CheckSkillAnimationController : MonoBehaviour
                     champion.gameObject.GetComponents<Component>();
 
         // get 4th component (animation controller script)
-        if (components.Length >= 4)
+        if (components.Length >= 5)
         {
-            return components[3];
+            return components[4];
         }
         return null;
     }

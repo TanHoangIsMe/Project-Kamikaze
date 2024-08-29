@@ -117,6 +117,9 @@ public class CombatSkillMenu : MonoBehaviour
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
         checkNumberOfTargets.CheckInfoToAutoFindTargets();
+
+        // clear all selected ring and turn on based on targets
+        autoFindTargets.TurnOffShowTargets();
         autoFindTargets.TurnOnShowTargets();
     }
 
@@ -127,7 +130,7 @@ public class CombatSkillMenu : MonoBehaviour
             autoFindTargets.SelfTarget != null )
         {
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
-
+            
             if (checkNumberOfTargets.WhichSkill == 0) // using skill 1
             {
                 // play animation
@@ -136,7 +139,7 @@ public class CombatSkillMenu : MonoBehaviour
 
             }
             else if (checkNumberOfTargets.WhichSkill == 1) // using skill 2
-            {
+            {                
                 // play animation
                 checkSkillAnimationController.
                     GetSkillAnimationControllerForPlayAnimation(champion, enemies, 1);

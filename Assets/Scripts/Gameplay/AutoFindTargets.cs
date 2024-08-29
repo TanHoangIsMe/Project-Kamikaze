@@ -110,27 +110,55 @@ public class AutoFindTargets : MonoBehaviour
         }
     }
 
+    #region Targets Selected UI
     public void TurnOnShowTargets()
     {
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
         {
-            if (enemyTargets.Contains(character) || allyTargets.Contains(character) || selfTarget == character)
+            if (enemyTargets.Contains(character)) // enemy target
             {
-                Debug.Log(character.gameObject.name
-                    +" - "+character.gameObject.transform.position);
+                // active enemy selected ring
+                ActiveOrDeActiveSelectedRing(character, "Enemy Selected Ring", true);
             }
-            else
+            else if (allyTargets.Contains(character))
             {
-                
+                // active ally selected ring
+                ActiveOrDeActiveSelectedRing(character, "Ally Selected Ring", true);
+            }
+            else if(selfTarget == character)
+            {
+                // active self selected ring
+                ActiveOrDeActiveSelectedRing(character, "Self Selected Ring", true);
             }
         }
     }
 
     public void TurnOffShowTargets()
     {
-        //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-        //{
-        //    character.gameObject.GetComponent<Renderer>().material.color = Color.white;
-        //}
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            ActiveOrDeActiveSelectedRing(character, "Enemy Selected Ring", false);
+            ActiveOrDeActiveSelectedRing(character, "Ally Selected Ring", false);
+            ActiveOrDeActiveSelectedRing(character, "Self Selected Ring", false);
+        }
     }
+
+    private void ActiveOrDeActiveSelectedRing(OnFieldCharacter character,string ringName,bool turnOn)
+    {        
+        foreach (Transform child in character.gameObject.transform)
+        {
+            if (child.name == "Selected Rings")
+            {
+                foreach (Transform grandchild in child)
+                {
+                    if (grandchild.name == ringName)
+                    {
+                        grandchild.gameObject.SetActive(turnOn);
+                    }
+                }
+            }
+        }
+            
+    }
+    #endregion
 }

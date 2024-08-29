@@ -134,6 +134,18 @@ public class GameplayController : MonoBehaviour
 
             // set up champion layer
             champion.layer = layer;
+
+            // disable selected ring
+            foreach(Transform child in champion.transform)
+            {
+                if(child.name == "Selected Rings") 
+                {
+                    foreach(Transform grandchild in child.transform)
+                    {
+                        grandchild.gameObject.SetActive(false);
+                    }
+                }
+            }
         }
         else
         {
