@@ -29,7 +29,7 @@ public class SwingTheSword : Skill
         {
             List<float> damages = new List<float>();
 
-            float trueAttackDamage = character.CurrentAttack 
+            float trueAttackDamage = character.CurrentAttack
                 - enemyTargets[0].CurrentArmor;
 
             if (trueAttackDamage > 0)

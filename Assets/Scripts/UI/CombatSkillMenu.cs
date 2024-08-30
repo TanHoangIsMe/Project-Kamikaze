@@ -300,9 +300,28 @@ public class CombatSkillMenu : MonoBehaviour
         {
             // get over head position of enemy 
             Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position + Vector3.up * 3.2f;
+            Vector3 randomOverHeadPosition = overHeadEnemyPosition + new Vector3(Random.Range(-0.2f, 0.2f), 0, 0);
+
             // spawn damage text
-            GameObject popUp = Instantiate(popUpDamageText, overHeadEnemyPosition, Quaternion.identity);
-            popUp.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = skillValues[i].ToString();
+            GameObject popUp = Instantiate(popUpDamageText, randomOverHeadPosition, Quaternion.identity);
+            TextMeshProUGUI popUpText = popUp.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+            popUpText.text = skillValues[i].ToString();
+
+            float percentOfHealth = skillValues[i] / enemies[i].CurrentCharacter.Health;
+            if(percentOfHealth <= 0.3f)
+            {
+                popUpText.color = Color.white;
+            }
+            else if(percentOfHealth > 0.3f && percentOfHealth <= 0.6f)
+            {
+                popUpText.color = Color.grey;
+            }
+            else
+            {
+                popUpText.color =Color.red;
+            }
+            Debug.Log(percentOfHealth);
+            // Play Update Health Bar Animation
             enemies[i].gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
         }
 
