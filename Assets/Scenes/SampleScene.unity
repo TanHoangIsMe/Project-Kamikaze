@@ -2500,6 +2500,7 @@ MonoBehaviour:
   healthText: {fileID: 2143650666}
   manaText: {fileID: 510415648}
   burstText: {fileID: 499571869}
+  popUpDamageText: {fileID: 8847024633125801646, guid: 6d1d62e43a7c4bb4daeb6c5df4538fc7, type: 3}
 --- !u!114 &1464223459
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -32,7 +32,6 @@ public class OverHealthBar : MonoBehaviour
 
     public void UpdateHealthFill()
     {
-        Debug.Log(champion);
         if (champion != null)
         {
             // calculate health fill amount 

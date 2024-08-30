@@ -4,7 +4,7 @@ public class HeavensEdge: Skill
 {
     public HeavensEdge()
     {
-        name = "Heaven's Edge";
+        skillName = "Heaven's Edge";
         avatar = "Art/UI/Skill Avatars/Maria/Heaven's Edge Avatar";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 50f;
@@ -19,6 +19,7 @@ public class HeavensEdge: Skill
     }
 
     public override void SkillFunction(OnFieldCharacter character,
+        CombatSkillMenu combatSkillMenu,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {

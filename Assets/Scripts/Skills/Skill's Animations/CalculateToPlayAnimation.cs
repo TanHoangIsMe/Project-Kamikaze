@@ -104,6 +104,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         if (checkSkillAnimationController != null)
         {
+            // List to hold the animators of the targets
+            List<Animator> animators = new List<Animator>();
+
             foreach (var target in targets)
             {
                 // get target skill controller script and animator controller
@@ -112,12 +115,27 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
                 if (targetSkillController != null && targetAnimator != null)
                 {
-                    targetAnimator.SetBool(parameterName, true); // play being attacked animation
-                    yield return new WaitForSeconds(animationDuration);
-                    targetAnimator.SetBool(parameterName, false); // play idle animation
-                    yield return new WaitForSeconds(0.5f);
+                    animators.Add(targetAnimator);
                 }
             }
+
+            // Start animations on all animators
+            foreach (var animator in animators)
+            {
+                animator.SetBool(parameterName, true); // Play being attacked animation
+            }
+
+            // Wait for the duration of the animation
+            yield return new WaitForSeconds(animationDuration);
+
+            // Stop animations on all animators
+            foreach (var animator in animators)
+            {
+                animator.SetBool(parameterName, false); // Play idle animation
+            }
+
+            // Optionally, wait a short period for idle animation to transition
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

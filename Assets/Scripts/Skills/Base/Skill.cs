@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class Skill 
+public abstract class Skill : MonoBehaviour 
 {
     #region Fields
-    protected string name;
+    protected string skillName;
     protected string avatar;
     protected string description;
     protected float manaCost;
@@ -21,7 +22,7 @@ public abstract class Skill
     #endregion
 
     #region Properties
-    public string Name { get { return name; } }
+    public string SkillName { get { return skillName; } }
     public string Avatar { get { return avatar; } }
     public string Description {  get { return description; } }
     public float ManaCost { get {  return manaCost; } }
@@ -38,7 +39,8 @@ public abstract class Skill
 
     #region Methods
 
-    public abstract void SkillFunction(OnFieldCharacter character, 
+    public abstract void SkillFunction(OnFieldCharacter character,
+        CombatSkillMenu combatSkillMenu,
         List<OnFieldCharacter> enemyTargets = null, 
         List<OnFieldCharacter> allyTargets = null);
     #endregion

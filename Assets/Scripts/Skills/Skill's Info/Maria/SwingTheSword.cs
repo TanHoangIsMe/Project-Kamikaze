@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SwingTheSword : Skill
 {
     public SwingTheSword()
     {
-        name = "Swing The Sword";
+        skillName = "Swing The Sword";
         avatar = "Art/UI/Skill Avatars/Maria/Swing The Sword Avatar";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
         manaCost = 50f;
@@ -20,17 +21,23 @@ public class SwingTheSword : Skill
     }
 
     public override void SkillFunction(OnFieldCharacter character,
+        CombatSkillMenu combatSkillMenu,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
         if (enemyTargets != null)
         {
-           float trueAttackDamage = character.CurrentAttack 
+            List<float> damages = new List<float>();
+
+            float trueAttackDamage = character.CurrentAttack 
                 - enemyTargets[0].CurrentArmor;
 
-           if (trueAttackDamage > 0)
+            if (trueAttackDamage > 0)
                 enemyTargets[0].CurrentHealth -= trueAttackDamage;
-            
+
+            damages.Add(trueAttackDamage);
+
+            combatSkillMenu.SkillValues = damages;
         }
     }
 }

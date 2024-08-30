@@ -19,6 +19,7 @@ public class LionSpirit : Skill
     }
 
     public override void SkillFunction(OnFieldCharacter character,
+        CombatSkillMenu skillMenu,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {

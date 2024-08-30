@@ -15,6 +15,7 @@ public class CombatSkillMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI manaText;
     [SerializeField] private TextMeshProUGUI burstText;
+    [SerializeField] private GameObject popUpDamageText;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
@@ -25,6 +26,8 @@ public class CombatSkillMenu : MonoBehaviour
     private CheckSkillAnimationController checkSkillAnimationController;
 
     private int championLayer;
+    private List<float> skillValues;
+    public List<float> SkillValues { set { skillValues = value; } }
 
     private void Awake()
     {
@@ -34,6 +37,7 @@ public class CombatSkillMenu : MonoBehaviour
         checkSkillAnimationController = GetComponent<CheckSkillAnimationController>();
         
         championLayer = 0;
+        skillValues = new List<float>();
     }
 
     private void ChangeLayerToSelf()
@@ -212,11 +216,11 @@ public class CombatSkillMenu : MonoBehaviour
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingFirstSkill(enemyTargets: enemies, allyTargets: allies);
+            champion.UsingFirstSkill(this, enemyTargets: enemies, allyTargets: allies);
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingFirstSkill(enemyTargets: enemies);
+            champion.UsingFirstSkill(this, enemyTargets: enemies);
         else
-            champion.UsingFirstSkill(allyTargets: allies);
+            champion.UsingFirstSkill(this, allyTargets: allies);
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -231,11 +235,11 @@ public class CombatSkillMenu : MonoBehaviour
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingSecondSkill(enemyTargets: enemies, allyTargets: allies);
+            champion.UsingSecondSkill(this, enemyTargets: enemies, allyTargets: allies);
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingSecondSkill(enemyTargets: enemies);
+            champion.UsingSecondSkill(this, enemyTargets: enemies);
         else
-            champion.UsingSecondSkill(allyTargets: allies);
+            champion.UsingSecondSkill(this, allyTargets: allies);
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -250,11 +254,11 @@ public class CombatSkillMenu : MonoBehaviour
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
         
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingBurstSkill(enemyTargets: enemies, allyTargets: allies);
+            champion.UsingBurstSkill(this, enemyTargets: enemies, allyTargets: allies);
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingBurstSkill(enemyTargets: enemies);
+            champion.UsingBurstSkill(this, enemyTargets: enemies);
         else
-            champion.UsingBurstSkill(allyTargets: allies);
+            champion.UsingBurstSkill(this, allyTargets: allies);
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -291,9 +295,15 @@ public class CombatSkillMenu : MonoBehaviour
 
     private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies)
     {
-        foreach (var enemy in enemies)
+        int totalEnemies = enemies.Count();
+        for (int i = 0; i < totalEnemies; i++)
         {
-            enemy.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+            // get over head position of enemy 
+            Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position + Vector3.up * 3.2f;
+            // spawn damage text
+            GameObject popUp = Instantiate(popUpDamageText, overHeadEnemyPosition, Quaternion.identity);
+            popUp.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = skillValues[i].ToString();
+            enemies[i].gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
         }
 
         foreach (var ally in allies)
