@@ -5,6 +5,7 @@ public class SwingTheSword : Skill
     public SwingTheSword()
     {
         name = "Swing The Sword";
+        avatar = "Art/UI/Skill Avatars/Maria/Swing The Sword Avatar";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
         manaCost = 50f;
         burstCost = 0f;

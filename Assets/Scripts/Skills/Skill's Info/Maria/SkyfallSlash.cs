@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 
-public class testskill : Skill
+public class SkyfallSlash: Skill
 {
-    public testskill()
+    public SkyfallSlash()
     {
-        name = "Lion's Spirit";
+        name = "Skyfall Slash";
+        avatar = "Art/UI/Skill Avatars/Maria/Skyfall Slash Avatar";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 50f;
         numberOfEnemyTargets = 3;

@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class CombatSkillMenu : MonoBehaviour
 {
     [SerializeField] private GameObject chooseTargetText;
+    [SerializeField] private Image skill1Avatar;
+    [SerializeField] private Image skill2Avatar;
+    [SerializeField] private Image skillBurstAvatar;
     [SerializeField] private Image characterAvatar;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private Image manaBarFill;
@@ -33,31 +36,6 @@ public class CombatSkillMenu : MonoBehaviour
         championLayer = 0;
     }
 
-    private void Start()
-    {
-        chooseTargetText.SetActive(false);
-
-        /// <summary>
-        /// Set up character choosing skill canvas UI
-        /// </summary>
-
-        // load character avatar image
-        Sprite avatarSprite = Resources.Load<Sprite>(champion.CurrentCharacter.Avatar);
-        Debug.Log(avatarSprite);
-        Debug.Log(champion.CurrentCharacter.Avatar);
-        if (avatarSprite != null)
-        {
-            characterAvatar.sprite = avatarSprite;
-        }
-
-        healthBarFill.fillAmount = champion.CurrentHealth / champion.CurrentCharacter.Health;
-        manaBarFill.fillAmount = champion.CurrentMana / champion.CurrentCharacter.MaxMana;
-
-        healthText.text = $"{champion.CurrentHealth} / {champion.CurrentCharacter.Health}";
-        manaText.text = $"{champion.CurrentMana} / {champion.CurrentCharacter.MaxMana}";
-        burstText.text = $"Burst: {champion.CurrentBurst / champion.CurrentCharacter.MaxBurst * 100}%";
-    }
-
     private void ChangeLayerToSelf()
     {
         if (champion != null)
@@ -71,11 +49,63 @@ public class CombatSkillMenu : MonoBehaviour
         }
     }
 
+    public void SetUpBarsUI()
+    {
+        /// <summary>
+        /// Set up character choosing skill canvas UI
+        /// </summary>
+
+        // load character avatar image
+        Sprite avatarSprite = Resources.Load<Sprite>(champion.CurrentCharacter.Avatar);
+
+        if (avatarSprite != null)
+        {
+            characterAvatar.sprite = avatarSprite;
+        }
+
+        healthBarFill.fillAmount = champion.CurrentHealth / champion.CurrentCharacter.Health;
+        manaBarFill.fillAmount = champion.CurrentMana / champion.CurrentCharacter.MaxMana;
+
+        healthText.text = $"{champion.CurrentHealth} / {champion.CurrentCharacter.Health}";
+        manaText.text = $"{champion.CurrentMana} / {champion.CurrentCharacter.MaxMana}";
+        burstText.text = $"Burst: {champion.CurrentBurst / champion.CurrentCharacter.MaxBurst * 100}%";
+    }
+
+    public void SetUpSkillAvatar()
+    {
+        // load skill avatars
+        Sprite skill1Sprite = Resources.Load<Sprite>(champion.Skills[0].Avatar);
+        Sprite skill2Sprite = Resources.Load<Sprite>(champion.Skills[1].Avatar);
+        Sprite skillBurstSprite = Resources.Load<Sprite>(champion.Skills[2].Avatar);
+
+        // set avatar to skill button
+
+        if(skill1Sprite != null)
+        {
+            skill1Avatar.sprite = skill1Sprite;
+        }
+
+        if (skill2Sprite != null)
+        {
+            skill2Avatar.sprite = skill2Sprite;
+        }
+
+        if (skillBurstSprite != null)
+        {
+            skillBurstAvatar.sprite = skillBurstSprite;
+        }
+    }
+
     // Function for pressing Skill 1 button
     public void UsingSkill1()
     {
         if (champion.CurrentMana > champion.Skills[0].ManaCost)
         {
+            // clear choose priority panel and targets list
+            // when choosing other skill
+            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            ClearTargetsList();
+
             SetUpToAutoFindTargets(0);
         }
         else
@@ -89,6 +119,11 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentMana > champion.Skills[1].ManaCost)
         {
+            // clear choose priority panel and targets list
+            // when choosing other skill
+            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            ClearTargetsList();
+
             SetUpToAutoFindTargets(1);
         }
         else
@@ -102,6 +137,11 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentBurst == champion.Skills[2].BurstCost)
         {
+            // clear choose priority panel and targets list
+            // when choosing other skill
+            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            ClearTargetsList();
+
             SetUpToAutoFindTargets(2);
         }
         else
@@ -225,9 +265,7 @@ public class CombatSkillMenu : MonoBehaviour
         checkNumberOfTargets.CanSelectTarget = false;
 
         // reset target lists
-        autoFindTargets.AllyTargets.Clear();
-        autoFindTargets.EnemyTargets.Clear();
-        autoFindTargets.SelfTarget = null;
+        ClearTargetsList();
 
         // set champion layer back
         champion.gameObject.layer = championLayer;
@@ -237,6 +275,13 @@ public class CombatSkillMenu : MonoBehaviour
 
         // turn off choose targets text
         chooseTargetText.SetActive(false);
+    }
+
+    private void ClearTargetsList()
+    {
+        autoFindTargets.AllyTargets.Clear();
+        autoFindTargets.EnemyTargets.Clear();
+        autoFindTargets.SelfTarget = null;
     }
 
     private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies)

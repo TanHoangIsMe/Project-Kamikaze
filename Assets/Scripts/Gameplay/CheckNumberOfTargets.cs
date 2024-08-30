@@ -6,6 +6,7 @@ using UnityEngine;
 public class CheckNumberOfTargets : MonoBehaviour
 {
     [SerializeField] private Transform choosePriorityPanel;
+    public Transform ChoosePriorityPanel { get { return choosePriorityPanel; } }
 
     private TextMeshProUGUI choosePriorityText;
 

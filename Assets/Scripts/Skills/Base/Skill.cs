@@ -4,6 +4,7 @@ public abstract class Skill
 {
     #region Fields
     protected string name;
+    protected string avatar;
     protected string description;
     protected float manaCost;
     protected float burstCost;
@@ -21,6 +22,7 @@ public abstract class Skill
 
     #region Properties
     public string Name { get { return name; } }
+    public string Avatar { get { return avatar; } }
     public string Description {  get { return description; } }
     public float ManaCost { get {  return manaCost; } }
     public float BurstCost { get { return burstCost; } }

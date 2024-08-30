@@ -13,10 +13,10 @@ public class Maria : Character
         health = 700f;
         maxMana = 80f;
         maxBurst = 100f;
-        skills = new Skill[] { 
+        skills = new Skill[] {
+            new SkyfallSlash(),
             new SwingTheSword(), 
-            new SwingTheSword(), 
-            new SwingTheSword() 
+            new HeavensEdge() 
         };
     }
 }

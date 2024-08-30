@@ -68,6 +68,8 @@ public class GameplayController : MonoBehaviour
         {
             skillMenuCanvas.SetActive(true);
             combatSkillMenu.Champion = whoTurn;
+            combatSkillMenu.SetUpSkillAvatar();
+            combatSkillMenu.SetUpBarsUI();
         }
         else // enemy turn
         {

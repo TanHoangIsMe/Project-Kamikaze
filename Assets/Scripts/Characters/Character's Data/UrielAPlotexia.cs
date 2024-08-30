@@ -14,7 +14,7 @@ public class UrielAPlotexia : Character
         maxBurst = 100f;
         skills = new Skill[] {
             new LionSpirit(),
-            new testskill(),
+            new SwingTheSword(),
             new SwingTheSword()
         };
     }
