@@ -101,9 +101,8 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentMana > champion.Skills[0].ManaCost)
         {
-            // clear choose priority panel and targets list
-            // when choosing other skill
-            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            // Clear targets list and reset flag properties
+            ResetCheckNumberOfTargetsFlag();
             ClearTargetsList();
 
             SetUpToAutoFindTargets(0);
@@ -119,9 +118,8 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentMana > champion.Skills[1].ManaCost)
         {
-            // clear choose priority panel and targets list
-            // when choosing other skill
-            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            // Clear targets list and reset flag properties
+            ResetCheckNumberOfTargetsFlag();
             ClearTargetsList();
 
             SetUpToAutoFindTargets(1);
@@ -137,9 +135,8 @@ public class CombatSkillMenu : MonoBehaviour
     {
         if (champion.CurrentBurst == champion.Skills[2].BurstCost)
         {
-            // clear choose priority panel and targets list
-            // when choosing other skill
-            checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+            // Clear targets list and reset flag properties
+            ResetCheckNumberOfTargetsFlag();
             ClearTargetsList();
 
             SetUpToAutoFindTargets(2);
@@ -148,6 +145,14 @@ public class CombatSkillMenu : MonoBehaviour
         {
             Debug.Log("Not enough burst to use skill");
         }
+    }
+
+    private void ResetCheckNumberOfTargetsFlag()
+    {
+        checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+        checkNumberOfTargets.IsFinish = false;
+        checkNumberOfTargets.IsChoosePriorityOpen = false;
+        checkNumberOfTargets.CanSelectTarget = false;
     }
 
     private void SetUpToAutoFindTargets(int whichSkill)

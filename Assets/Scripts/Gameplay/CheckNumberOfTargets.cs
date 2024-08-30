@@ -19,7 +19,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     public int WhichSkill { get { return whichSkill; } set { whichSkill = value; } }
 
     private bool isChoosePriorityOpen; // value to know if choose priority panel open
-    public bool IsChoosePriorityOpen { get { return isChoosePriorityOpen; } }
+    public bool IsChoosePriorityOpen { get { return isChoosePriorityOpen; } set { isChoosePriorityOpen = value; } }
 
     // skill info
     private TargetType[] targetType;
