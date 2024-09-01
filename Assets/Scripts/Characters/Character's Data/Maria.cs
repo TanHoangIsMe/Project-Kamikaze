@@ -6,7 +6,7 @@ public class Maria : Character
         avatar = "Art/UI/Character Avatars/Maria Avatar"; ;
         roleTypes = new RoleType[] { RoleType.Attacker };
         classTypes = new ClassType[] { ClassType.Warrior };
-        elementTypes = new ElementType[] { ElementType.Fire };
+        elementTypes = new ElementType[] { ElementType.Dark };
         attack = 80f;
         armor = 50f;
         speed = 40f;

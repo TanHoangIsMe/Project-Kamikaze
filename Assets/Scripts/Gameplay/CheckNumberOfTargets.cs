@@ -86,27 +86,22 @@ public class CheckNumberOfTargets : MonoBehaviour
 
     public void ChoosingLowestPriority()
     {
-        if(layer == 6)
-            autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfAllyTargets,6,priorityStat,true);
-        else
-            autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfEnemyTargets, 7, priorityStat, true);
-
-        choosePriorityPanel.gameObject.SetActive(false);
-        isFinish = true;
-        autoFindTargets.TurnOnShowTargets();
-        isChoosePriorityOpen = false;
+        AutoFindTargetsBasedOnPriority(true);
     }
 
     public void ChoosingHighestPriority()
     {
+        AutoFindTargetsBasedOnPriority(false);
+    }
+
+    private void AutoFindTargetsBasedOnPriority(bool isLow)
+    {
         if (layer == 6)
             autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfAllyTargets, 6, priorityStat, false);
+                (numberOfAllyTargets, 6, priorityStat, isLow);
         else
             autoFindTargets.AutoFindTargetsBasedOnPriority
-                (numberOfEnemyTargets, 7, priorityStat, false);
+                (numberOfEnemyTargets, 7, priorityStat, isLow);
 
         choosePriorityPanel.gameObject.SetActive(false);
         isFinish = true;
@@ -414,6 +409,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         }
     }
 
+    #region Open Priority Dialog 2 times
     private void OpenChoosePriorityDialog(int layer)
     {
         isChoosePriorityOpen = true;
@@ -441,4 +437,5 @@ public class CheckNumberOfTargets : MonoBehaviour
             yield return null;
         }
     }
+    #endregion
 }

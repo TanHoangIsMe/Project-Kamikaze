@@ -293,41 +293,92 @@ public class CombatSkillMenu : MonoBehaviour
         autoFindTargets.SelfTarget = null;
     }
 
+    #region OverHead Champion UI
     private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies)
     {
+        // play health bar fill animation on enemies
         int totalEnemies = enemies.Count();
         for (int i = 0; i < totalEnemies; i++)
         {
-            // get over head position of enemy 
-            Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position + Vector3.up * 3.2f;
-            Vector3 randomOverHeadPosition = overHeadEnemyPosition + new Vector3(Random.Range(-0.2f, 0.2f), 0, 0);
+            PlayPopUpDamageText(enemies, i);
 
-            // spawn damage text
-            GameObject popUp = Instantiate(popUpDamageText, randomOverHeadPosition, Quaternion.identity);
-            TextMeshProUGUI popUpText = popUp.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-            popUpText.text = skillValues[i].ToString();
-
-            float percentOfHealth = skillValues[i] / enemies[i].CurrentCharacter.Health;
-            if(percentOfHealth <= 0.3f)
-            {
-                popUpText.color = Color.white;
-            }
-            else if(percentOfHealth > 0.3f && percentOfHealth <= 0.6f)
-            {
-                popUpText.color = Color.grey;
-            }
-            else
-            {
-                popUpText.color =Color.red;
-            }
-            Debug.Log(percentOfHealth);
             // Play Update Health Bar Animation
             enemies[i].gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
         }
 
+        // play health bar fill animation on allies
         foreach (var ally in allies)
         {
             ally.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
         }
     }
+
+    private void PlayPopUpDamageText(List<OnFieldCharacter> enemies, int i)
+    {
+        // get over head position of enemy 
+        Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position + Vector3.up * 3.2f;
+        Vector3 randomOverHeadPosition = overHeadEnemyPosition + new Vector3(Random.Range(-0.2f, 0.2f), 0, 0);
+
+        // spawn damage text
+        GameObject popUp = Instantiate(popUpDamageText, randomOverHeadPosition, Quaternion.identity);
+        TextMeshProUGUI popUpText = popUp.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+        popUpText.text = skillValues[i].ToString();
+
+        ChangeTextColorBasedOnElement(i, popUpText);
+    }
+
+    private void ChangeTextColorBasedOnElement( int i, TextMeshProUGUI popUpText)
+    {
+        // get character elements info
+        ElementType[] elementTypes = champion.CurrentCharacter.ElementTypes;
+        ElementType elementType = new ElementType();
+        int numberOfElements = elementTypes.Length;
+
+        if (numberOfElements == 1) // character has 1 element
+        {
+            elementType = elementTypes[0];
+        }
+        else // character has > 1 elements
+        {
+            GetRandomElement(elementTypes, elementType, numberOfElements);
+        }
+
+        ChangeTextColor(popUpText, elementType);
+    }
+
+    private static void ChangeTextColor(TextMeshProUGUI popUpText, ElementType elementType)
+    {
+        switch (elementType)
+        {
+            case ElementType.Fire:
+                popUpText.color = Color.red;
+                break;
+            case ElementType.Water:
+                popUpText.color = Color.blue;
+                break;
+            case ElementType.Nature:
+                popUpText.color = Color.green;
+                break;
+            case ElementType.Light:
+                popUpText.color = Color.yellow;
+                break;
+            case ElementType.Dark: // purple color
+                popUpText.color = new Color(180f / 255f, 0f / 255f, 255f / 255f);
+                break;
+            case ElementType.Mystic:
+                popUpText.color = Color.magenta;
+                break;
+        }
+    }
+
+    private void GetRandomElement(ElementType[] elementTypes,ElementType elementType, int numberOfElements)
+    {
+        // create random object
+        System.Random random = new System.Random();
+        // create random number based on number of element
+        int index = random.Next(numberOfElements);
+        // get random element
+        elementType = elementTypes[index];
+    }
+    #endregion
 }
