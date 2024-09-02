@@ -381,4 +381,19 @@ public class CombatSkillMenu : MonoBehaviour
         elementType = elementTypes[index];
     }
     #endregion
+
+    #region Skill Description UI
+    public void SendInfoToSkillDescription(char whichSkill)
+    {
+        if (whichSkill == '1')
+            skill1Avatar.gameObject
+                .GetComponent<SkillDescription>().Champion = champion;
+        else if (whichSkill == '2')
+            skill2Avatar.gameObject
+                .GetComponent<SkillDescription>().Champion = champion;
+        else if (whichSkill == 't') // burst skill
+            skillBurstAvatar.gameObject
+                .GetComponent<SkillDescription>().Champion = champion;
+    }
+    #endregion
 }
