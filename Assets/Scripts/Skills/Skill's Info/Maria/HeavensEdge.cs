@@ -20,7 +20,7 @@ public class HeavensEdge: Skill
     }
 
     public override void SkillFunction(OnFieldCharacter character,
-        CombatSkillMenu combatSkillMenu,
+        SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {

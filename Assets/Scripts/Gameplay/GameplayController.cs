@@ -14,7 +14,7 @@ public class GameplayController : MonoBehaviour
     private List<OnFieldCharacter> turnList;
     private OnFieldCharacter whoTurn; // variable to know whose turn
     private CombatSkillMenu combatSkillMenu;
-    private CheckNumberOfTargets checkNumberOfTargets;
+    private EnemyAI enemyAI;
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
@@ -37,11 +37,16 @@ public class GameplayController : MonoBehaviour
     private void Awake()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
-        checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
+        enemyAI = GetComponent<EnemyAI>();
         turnList = new List<OnFieldCharacter>();
         skillMenuCanvas.SetActive(false);
         whoTurn = null;
         phase = 0;
+
+        if (enemyAI != null)
+        {
+            enemyAI.enabled = false;
+        }
     }
 
     #region Turn
@@ -73,20 +78,8 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            StartTurn();
-            //skillMenuCanvas.SetActive(true);
-            //combatSkillMenu.Champion = whoTurn;
-            //combatSkillMenu.UsingSkill1();
-            //if (checkNumberOfTargets.IsChoosePriorityOpen)
-            //{
-            //    checkNumberOfTargets.ChoosingLowestPriority();
-            //}
-            //if (checkNumberOfTargets.IsChoosePriorityOpen)
-            //{
-            //    checkNumberOfTargets.ChoosingLowestPriority();
-            //}
-            //combatSkillMenu.AttackConfirm();
-
+            enemyAI.enabled = true;
+            enemyAI.Champion = whoTurn;
         }
     }
 

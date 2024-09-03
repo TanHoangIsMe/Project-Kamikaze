@@ -19,7 +19,7 @@ public class SkyfallSlash: Skill
     }
 
     public override void SkillFunction(OnFieldCharacter character,
-        CombatSkillMenu combatSkillMenu,
+        SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
@@ -37,7 +37,7 @@ public class SkyfallSlash: Skill
 
                 damages.Add(trueAttackDamage);
 
-                combatSkillMenu.SkillValues = damages;
+                skillHandler.SkillValues = damages;
             }
         }
     }

@@ -40,7 +40,7 @@ public abstract class Skill : MonoBehaviour
     #region Methods
 
     public abstract void SkillFunction(OnFieldCharacter character,
-        CombatSkillMenu combatSkillMenu,
+        SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null, 
         List<OnFieldCharacter> allyTargets = null);
     #endregion

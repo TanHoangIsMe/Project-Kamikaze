@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MariaSkillController : MonoBehaviour
 {
     CombatSkillMenu combatSkillMenu;
+    SkillHandler skillHandler;
     CalculateToPlayAnimation calculateToPlayAnimation;
 
     private Animator animator;
@@ -21,7 +21,8 @@ public class MariaSkillController : MonoBehaviour
 
     private void Start()
     {
-        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();       
+        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        skillHandler = FindObjectOfType<SkillHandler>();       
     }
 
     public void PlayFirstSkillAnimation()
@@ -62,34 +63,34 @@ public class MariaSkillController : MonoBehaviour
 
     public void SendInfoFirstSkill()
     {
-        if(combatSkillMenu != null)
+        if(skillHandler != null)
         {
             // play target being attacked animation
             StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
 
-            combatSkillMenu.SendInfoToUsingFirstSkill();           
+            skillHandler.SendInfoToUsingFirstSkill();           
         }
     }
 
     public void SendInfoSecondSkill()
     {
-        if (combatSkillMenu != null)
+        if (skillHandler != null)
         {
             // play target being attacked animation
             StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
 
-            combatSkillMenu.SendInfoToUsingSecondSkill();
+            skillHandler.SendInfoToUsingFirstSkill();
         }
     }
 
     public void SendInfoBurstSkill()
     {
-        if (combatSkillMenu != null)
+        if (skillHandler != null)
         {
             // play target being attacked animation
             StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
 
-            combatSkillMenu.SendInfoToUsingBurstSkill();
+            skillHandler.SendInfoToUsingBurstSkill();
         }
     }
 }

@@ -22,28 +22,28 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
     public Skill[] Skills { get { return skills; } }
 
-    public void UsingFirstSkill(CombatSkillMenu combatSkillMenu,
+    public void UsingFirstSkill(SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null , 
         List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[0]
-            .SkillFunction(this, combatSkillMenu, enemyTargets, allyTargets);
+            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
     }
 
-    public void UsingSecondSkill(CombatSkillMenu combatSkillMenu,
+    public void UsingSecondSkill(SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[1]
-            .SkillFunction(this, combatSkillMenu, enemyTargets, allyTargets);
+            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
     }
 
-    public void UsingBurstSkill(CombatSkillMenu combatSkillMenu,
+    public void UsingBurstSkill(SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
         currentCharacter.Skills[2]
-            .SkillFunction(this, combatSkillMenu, enemyTargets, allyTargets);
+            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
     }
 
     private void Awake()
