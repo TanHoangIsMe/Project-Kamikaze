@@ -9,34 +9,38 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake()
     {
-        skillHandler = GetComponent<SkillHandler>();
+        skillHandler = FindObjectOfType<SkillHandler>();
     }
 
-    private void Start()
+    public void StartEnemyTurn()
     {
-        skillHandler.Champion = champion;
-        skillHandler.IsCombatSkillMenu = false;
-
-        SwapChampionsLayer();
-
-        if (skillHandler.UsingSkillBurst(2))
-        {
-            skillHandler.AttackConfirm();
-        }
+        if (skillHandler == null) Debug.LogWarning("Skill Handler Null On AI");
         else
         {
-            if (skillHandler.UsingSkill2(1))
+            skillHandler.Champion = champion;
+            skillHandler.IsCombatSkillMenu = false;
+
+            SwapChampionsLayer();
+
+            if (skillHandler.UsingSkillBurst())
             {
                 skillHandler.AttackConfirm();
             }
             else
             {
-                skillHandler.UsingSkill1(0);
-                skillHandler.AttackConfirm();
+                if (skillHandler.UsingSkill2())
+                {
+                    skillHandler.AttackConfirm();
+                }
+                else
+                {
+                    skillHandler.UsingSkill1();
+                    skillHandler.AttackConfirm();
+                }
             }
-        }
 
-        SwapChampionsLayer();
+            SwapChampionsLayer();
+        }
     }
 
     // swap champion layer (enemy -> ally) (ally -> enemy)

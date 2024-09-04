@@ -546,9 +546,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
-        m_MethodName: UsingSkillBurst
+      - m_Target: {fileID: 2132432323}
+        m_TargetAssemblyTypeName: SkillHandler, Assembly-CSharp
+        m_MethodName: UsingSkillBurstClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -691,8 +691,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
+      - m_Target: {fileID: 2132432323}
+        m_TargetAssemblyTypeName: SkillHandler, Assembly-CSharp
         m_MethodName: AttackConfirm
         m_Mode: 1
         m_Arguments:
@@ -825,9 +825,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
-        m_MethodName: UsingSkill1
+      - m_Target: {fileID: 2132432323}
+        m_TargetAssemblyTypeName: SkillHandler, Assembly-CSharp
+        m_MethodName: UsingSkill1Click
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2219,10 +2219,6 @@ GameObject:
   - component: {fileID: 636227417}
   - component: {fileID: 636227416}
   - component: {fileID: 636227421}
-  - component: {fileID: 636227422}
-  - component: {fileID: 636227420}
-  - component: {fileID: 636227419}
-  - component: {fileID: 636227418}
   m_Layer: 0
   m_Name: Gameplay Controller
   m_TagString: Untagged
@@ -2259,43 +2255,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &636227418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636227415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe1551a21bfa3b409ae36abf4d4a155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &636227419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636227415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce17496c5873ff64ba5b654c62ec1266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  choosePriorityPanel: {fileID: 1699481564}
---- !u!114 &636227420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636227415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1278a915e27150245ade20935e87f33f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &636227421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2308,20 +2267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d9bfd447d2d91a41999832e287cdab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &636227422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636227415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b611b284c8dc6b1499e32b9ecadfba6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chooseTargetText: {fileID: 343180393}
-  popUpDamageText: {fileID: 8847024633125801646, guid: 6d1d62e43a7c4bb4daeb6c5df4538fc7, type: 3}
 --- !u!1 &638031096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2405,7 +2350,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223459}
+      - m_Target: {fileID: 2132432322}
         m_TargetAssemblyTypeName: CheckNumberOfTargets, Assembly-CSharp
         m_MethodName: ChoosingLowestPriority
         m_Mode: 1
@@ -3148,9 +3093,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223458}
-        m_TargetAssemblyTypeName: CombatSkillMenu, Assembly-CSharp
-        m_MethodName: UsingSkill2
+      - m_Target: {fileID: 2132432323}
+        m_TargetAssemblyTypeName: SkillHandler, Assembly-CSharp
+        m_MethodName: UsingSkill2Click
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4263,10 +4208,6 @@ GameObject:
   - component: {fileID: 1464223456}
   - component: {fileID: 1464223455}
   - component: {fileID: 1464223458}
-  - component: {fileID: 1464223462}
-  - component: {fileID: 1464223459}
-  - component: {fileID: 1464223460}
-  - component: {fileID: 1464223461}
   m_Layer: 5
   m_Name: ' Skill Menu Canvas'
   m_TagString: Untagged
@@ -4381,57 +4322,6 @@ MonoBehaviour:
   healthText: {fileID: 2143650666}
   manaText: {fileID: 510415648}
   burstText: {fileID: 499571869}
---- !u!114 &1464223459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464223453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce17496c5873ff64ba5b654c62ec1266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  choosePriorityPanel: {fileID: 1699481564}
---- !u!114 &1464223460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464223453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1278a915e27150245ade20935e87f33f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1464223461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464223453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe1551a21bfa3b409ae36abf4d4a155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1464223462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464223453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b611b284c8dc6b1499e32b9ecadfba6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chooseTargetText: {fileID: 343180393}
-  popUpDamageText: {fileID: 8847024633125801646, guid: 6d1d62e43a7c4bb4daeb6c5df4538fc7, type: 3}
 --- !u!1 &1470775895
 GameObject:
   m_ObjectHideFlags: 0
@@ -4813,7 +4703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1699481564
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5234,7 +5124,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464223459}
+      - m_Target: {fileID: 2132432322}
         m_TargetAssemblyTypeName: CheckNumberOfTargets, Assembly-CSharp
         m_MethodName: ChoosingHighestPriority
         m_Mode: 1
@@ -5418,6 +5308,92 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1992018335}
   m_CullTransparentMesh: 1
+--- !u!1 &2132432319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132432324}
+  - component: {fileID: 2132432323}
+  - component: {fileID: 2132432322}
+  - component: {fileID: 2132432321}
+  - component: {fileID: 2132432320}
+  m_Layer: 0
+  m_Name: Skill Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2132432320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132432319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe1551a21bfa3b409ae36abf4d4a155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2132432321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132432319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1278a915e27150245ade20935e87f33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2132432322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132432319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce17496c5873ff64ba5b654c62ec1266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choosePriorityPanel: {fileID: 1699481564}
+--- !u!114 &2132432323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132432319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b611b284c8dc6b1499e32b9ecadfba6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillMenu: {fileID: 1464223453}
+  popUpDamageText: {fileID: 8847024633125801646, guid: 6d1d62e43a7c4bb4daeb6c5df4538fc7, type: 3}
+--- !u!4 &2132432324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132432319}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2142195703
 GameObject:
   m_ObjectHideFlags: 0
@@ -5694,5 +5670,6 @@ SceneRoots:
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 636227417}
+  - {fileID: 2132432324}
   - {fileID: 10881086}
   - {fileID: 1427432226}

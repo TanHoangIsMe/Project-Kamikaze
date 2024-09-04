@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SkillHandler : MonoBehaviour
 {
-    [SerializeField] private GameObject chooseTargetText;
+    [SerializeField] private GameObject skillMenu;
     [SerializeField] private GameObject popUpDamageText;
 
     private OnFieldCharacter champion;
@@ -47,13 +47,10 @@ public class SkillHandler : MonoBehaviour
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isCombatSkillMenu);
-
+        
         // if player champion using skill show UI
         if (isCombatSkillMenu) 
         {
-            // show choose target text        
-            chooseTargetText.SetActive(true);
-
             // clear all selected ring and turn on based on targets
             autoFindTargets.TurnOffShowTargets();
             autoFindTargets.TurnOnShowTargets();
@@ -75,10 +72,7 @@ public class SkillHandler : MonoBehaviour
         if (isCombatSkillMenu)
         {
             // set champion layer back
-            champion.gameObject.layer = 6;
-
-            // turn off choose targets text
-            chooseTargetText.SetActive(false);
+            champion.gameObject.layer = 6;           
         }
         else
         {
@@ -103,7 +97,22 @@ public class SkillHandler : MonoBehaviour
     }
 
     #region Using Skill
-    public bool UsingSkill1(int whichSkill)
+    public void UsingSkill1Click()
+    {
+        UsingSkill1();
+    }
+
+    public void UsingSkill2Click()
+    {
+        UsingSkill2();
+    }
+
+    public void UsingSkillBurstClick()
+    {
+        UsingSkillBurst();
+    }
+
+    public bool UsingSkill1()
     {
         if (champion.CurrentMana > champion.Skills[0].ManaCost)
         {
@@ -121,7 +130,7 @@ public class SkillHandler : MonoBehaviour
         }
     }
 
-    public bool UsingSkill2(int whichSkill)
+    public bool UsingSkill2()
     {
         if (champion.CurrentMana > champion.Skills[1].ManaCost)
         {
@@ -139,7 +148,7 @@ public class SkillHandler : MonoBehaviour
         }
     }
 
-    public bool UsingSkillBurst(int whichSkill)
+    public bool UsingSkillBurst()
     {
         if (champion.CurrentBurst == champion.Skills[2].BurstCost)
         {
@@ -163,6 +172,10 @@ public class SkillHandler : MonoBehaviour
             autoFindTargets.AllyTargets.Count() > 0 ||
             autoFindTargets.SelfTarget != null)
         {
+            if(isCombatSkillMenu)
+                // turn off skill menu
+                skillMenu.SetActive(false);
+
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
 
             if (checkNumberOfTargets.WhichSkill == 0) // using skill 1

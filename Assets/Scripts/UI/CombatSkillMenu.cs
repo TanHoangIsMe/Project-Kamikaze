@@ -20,13 +20,17 @@ public class CombatSkillMenu : MonoBehaviour
 
     private void Awake()
     {
-        skillHandler = GetComponent<SkillHandler>();
+        skillHandler = FindObjectOfType<SkillHandler>();
     }
 
-    private void Start()
+   public void StartAllyTurn()
     {
-        skillHandler.Champion = champion;
-        skillHandler.IsCombatSkillMenu = true;
+        if (skillHandler == null) Debug.LogWarning("Skill Handler Null On Skill Menu");
+        else
+        {
+            skillHandler.Champion = champion;
+            skillHandler.IsCombatSkillMenu = true;
+        }
     }
 
     public void SetUpBarsUI()
@@ -74,29 +78,6 @@ public class CombatSkillMenu : MonoBehaviour
         {
             skillBurstAvatar.sprite = skillBurstSprite;
         }
-    }
-
-    // Function for pressing Skill 1 button
-    public void UsingSkill1()
-    {
-        skillHandler.UsingSkill1(0);
-    }
-
-    // Function for pressing Skill 2 button
-    public void UsingSkill2()
-    {
-        skillHandler.UsingSkill2(1);
-    }
-
-    // Function for pressing Skill Burst button
-    public void UsingSkillBurst()
-    {
-        skillHandler.UsingSkillBurst(2);
-    }
-
-    public void AttackConfirm()
-    {
-        skillHandler.AttackConfirm();
     }
 
     #region Skill Description UI

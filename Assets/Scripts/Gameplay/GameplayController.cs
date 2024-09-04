@@ -42,11 +42,6 @@ public class GameplayController : MonoBehaviour
         skillMenuCanvas.SetActive(false);
         whoTurn = null;
         phase = 0;
-
-        if (enemyAI != null)
-        {
-            enemyAI.enabled = false;
-        }
     }
 
     #region Turn
@@ -72,14 +67,16 @@ public class GameplayController : MonoBehaviour
         if (whoTurn.gameObject.layer == 6) // ally turn
         {
             skillMenuCanvas.SetActive(true);
+
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
             combatSkillMenu.SetUpBarsUI();
+            combatSkillMenu.StartAllyTurn();
         }
         else // enemy turn
         {
-            enemyAI.enabled = true;
             enemyAI.Champion = whoTurn;
+            enemyAI.StartEnemyTurn();
         }
     }
 

@@ -13,7 +13,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     private AutoFindTargets autoFindTargets;
 
     private OnFieldCharacter champion; // who using skill
-    public OnFieldCharacter Champion { set {  champion = value; } }
+    public OnFieldCharacter Champion { get { return champion; } set {  champion = value; } }
 
     private int whichSkill; // which skill
     public int WhichSkill { get { return whichSkill; } set { whichSkill = value; } }
@@ -27,7 +27,6 @@ public class CheckNumberOfTargets : MonoBehaviour
     private int numberOfTargetType;
     private int numberOfAllyTargets;
     private int numberOfEnemyTargets;
-    private int numberOfSelfTarget;
     private int layer;
 
     // value to know what type of target can select
@@ -209,10 +208,6 @@ public class CheckNumberOfTargets : MonoBehaviour
         numberOfAllyTargets = champion.CurrentCharacter
             .Skills[whichSkill].NumberOfAllyTargets;
 
-        // count how many ally
-        numberOfSelfTarget = champion.CurrentCharacter
-            .Skills[whichSkill].NumberOfSelfTarget;
-
         // which type of target skill affected to
         targetType = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
     }
@@ -220,7 +215,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu)
     {
         GetSkillInfo();
-
+        
         if (numberOfTargetType == 1)
         {
             if (targetType[0] == TargetType.Self) // skill just affected self
@@ -232,7 +227,7 @@ public class CheckNumberOfTargets : MonoBehaviour
             {
                 // auto find 1 enemy but can select self
                 // layer should be 6 or 7
-                // but i set 0 cause self dont need layer
+                // but i set 0 cause self don't need layer
                 AutoFind1EnemyOrAlly(true, 0, 4, true);
             }
             else if (targetType[0] == TargetType.Enemy)
@@ -241,7 +236,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     // auto find 1 target which low priority
                     // 1 target - enemy layer - priority stat - lowest stat
-                    AutoFind1EnemyOrAlly(false, 7, 2, true);
+                    AutoFind1EnemyOrAlly(false, 7, 1, true);
                 }
                 else
                 {
@@ -394,7 +389,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     private void AutoFind1EnemyOrAlly(bool isSelf,int layer, int selectType, bool canTurnOnShowTargets)
     {
         // check if target is self or other
-        if(isSelf)
+        if (isSelf)
             autoFindTargets.SelfTarget = champion;
         else
             autoFindTargets.AutoFindTargetsBasedOnPriority(1, layer, priorityStat, true);

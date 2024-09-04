@@ -61,7 +61,6 @@ public class SkillDescription : MonoBehaviour, IPointerEnterHandler, IPointerExi
     // when player click mouse 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("click");
         StartCoroutine(HandleClickDelay());
     }
 
