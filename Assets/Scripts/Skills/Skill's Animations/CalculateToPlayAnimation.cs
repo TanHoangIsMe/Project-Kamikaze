@@ -6,10 +6,19 @@ public class CalculateToPlayAnimation : MonoBehaviour
 {
     private GameplayController gameplayController;
     private CheckSkillAnimationController checkSkillAnimationController;
+    private List<OnFieldCharacter> targets;
+    private List<Animator> animators;
 
     private void Awake()
     {
         gameplayController = FindObjectOfType<GameplayController>();
+
+        // enemy targets list will be clear when finish using skill
+        // so make a clone list to not encounter bug
+        targets = new List<OnFieldCharacter>();
+
+        // List to hold the animators of the targets
+        animators = new List<Animator>();
     }
 
     private void Start()
@@ -96,16 +105,13 @@ public class CalculateToPlayAnimation : MonoBehaviour
         gameplayController.StartTurn();
     }
 
-    public IEnumerator BeingAttackedAndBackToIdle(string parameterName, float animationDuration, List<OnFieldCharacter> enemyTargets)
+    public IEnumerator BeingAttackedAndBackToIdle(float animationDuration, List<OnFieldCharacter> enemyTargets)
     {
-        // enemy targets list will be clear when finish using skill
-        // so make a clone list to not encounter bug
-        List<OnFieldCharacter> targets = new List<OnFieldCharacter>(enemyTargets);
+        targets = new List<OnFieldCharacter>(enemyTargets);
 
         if (checkSkillAnimationController != null)
         {
-            // List to hold the animators of the targets
-            List<Animator> animators = new List<Animator>();
+            animators = new List<Animator>();
 
             foreach (var target in targets)
             {
@@ -122,7 +128,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
             // Start animations on all animators
             foreach (var animator in animators)
             {
-                animator.SetBool(parameterName, true); // Play being attacked animation
+                animator.SetBool("Being Attacked", true); // Play being attacked animation
             }
 
             // Wait for the duration of the animation
@@ -131,11 +137,17 @@ public class CalculateToPlayAnimation : MonoBehaviour
             // Stop animations on all animators
             foreach (var animator in animators)
             {
-                animator.SetBool(parameterName, false); // Play idle animation
-            }
-
-            // Optionally, wait a short period for idle animation to transition
-            yield return new WaitForSeconds(0.5f);
+                animator.SetBool("Being Attacked", false); // Play idle animation
+            }          
         }
+    }
+
+    public void PlayDeathAnimation()
+    {
+        // check enemy death to play death animation
+        foreach (var target in targets)
+            if (target.CurrentHealth <= 0)
+                foreach (var animator in animators)
+                    animator.SetTrigger("Death");
     }
 }

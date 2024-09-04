@@ -29,7 +29,7 @@ public class SkyfallSlash: Skill
 
             foreach (var target in enemyTargets)
             {
-                float trueAttackDamage = character.CurrentAttack
+                float trueAttackDamage = character.CurrentAttack + 1000f
                 - target.CurrentArmor;
 
                 if (trueAttackDamage > 0)

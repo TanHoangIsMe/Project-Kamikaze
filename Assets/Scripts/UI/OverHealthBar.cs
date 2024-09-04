@@ -20,7 +20,7 @@ public class OverHealthBar : MonoBehaviour
 
     private void Update()
     {
-        SetHealthBarLookAtCam();
+        SetHealthBarLookAtCam(); // make health bar look at cam 
     }
 
     private void SetHealthBarLookAtCam()
@@ -28,6 +28,13 @@ public class OverHealthBar : MonoBehaviour
         healthBackground.transform.rotation = cam.transform.rotation;
         healthFill.transform.rotation = cam.transform.rotation;
         healthLoseFill.transform.rotation = cam.transform.rotation;
+    }
+
+    private void TurnOffOverHeadBar()
+    {           
+        healthBackground.gameObject.SetActive(false);
+        healthFill.gameObject.SetActive(false);
+        healthLoseFill .gameObject.SetActive(false);
     }
 
     public void UpdateHealthFill()
@@ -61,5 +68,10 @@ public class OverHealthBar : MonoBehaviour
 
         // make sure health lose fill = health fill
         healthLoseFill.fillAmount = targetFillAmount;
+        yield return new WaitForSeconds(0.5f);
+
+        // turn off health bar if character dead
+        if (champion.CurrentHealth <= 0)
+            TurnOffOverHeadBar();
     }
 }

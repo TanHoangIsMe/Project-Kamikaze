@@ -58,8 +58,11 @@ public class GameplayController : MonoBehaviour
             StartNewPhase();
             return;
         }
-        Debug.Log(turnList.Count);
-        Debug.Log(turnList[0].gameObject.transform.position);
+
+        // remove turn list of dead champion       
+        for(int i = 0; i < turnList.Count; i++)
+            if (turnList[i].CurrentHealth < 0)
+                turnList.Remove(turnList[i]);
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
@@ -93,7 +96,10 @@ public class GameplayController : MonoBehaviour
     private void CreateTurnList()
     {
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-            turnList.Add(character);
+        {
+            if(character.CurrentHealth > 0)
+                turnList.Add(character);
+        }
     }
     #endregion
 

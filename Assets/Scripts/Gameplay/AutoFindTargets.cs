@@ -83,7 +83,7 @@ public class AutoFindTargets : MonoBehaviour
         // find all On-field character by searching for its script 
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
         {
-            if (character.gameObject.layer == layer)
+            if (character.gameObject.layer == layer && character.CurrentHealth > 0)
             {
                 if (layer == 6) // ally
                 {

@@ -68,9 +68,11 @@ public class MariaSkillController : MonoBehaviour
         if(skillHandler != null)
         {
             // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
 
-            skillHandler.SendInfoToUsingFirstSkill();           
+            skillHandler.SendInfoToUsingFirstSkill();
+
+            calculateToPlayAnimation.PlayDeathAnimation();
         }
     }
 
@@ -79,9 +81,11 @@ public class MariaSkillController : MonoBehaviour
         if (skillHandler != null)
         {
             // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
 
             skillHandler.SendInfoToUsingFirstSkill();
+
+            calculateToPlayAnimation.PlayDeathAnimation();
         }
     }
 
@@ -90,7 +94,7 @@ public class MariaSkillController : MonoBehaviour
         if (skillHandler != null)
         {
             // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle("Being Attacked", 1f, enemyTargets));
+            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
 
             skillHandler.SendInfoToUsingBurstSkill();
         }
