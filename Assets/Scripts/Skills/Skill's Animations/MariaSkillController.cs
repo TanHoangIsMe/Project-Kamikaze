@@ -97,6 +97,8 @@ public class MariaSkillController : MonoBehaviour
             StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
 
             skillHandler.SendInfoToUsingBurstSkill();
+
+            calculateToPlayAnimation.PlayDeathAnimation();
         }
     }
 }
