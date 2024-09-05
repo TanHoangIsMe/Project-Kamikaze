@@ -37,6 +37,8 @@ public class SwingTheSword : Skill
 
             damages.Add(trueAttackDamage);
 
+            // send damage list to skill handler
+            // for make pop up damage text 
             skillHandler.SkillValues = damages;
         }
     }

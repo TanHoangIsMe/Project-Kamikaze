@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -62,12 +62,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_Name
-      value: Uriel A Plotexia
+      value: UrielAPlotexia
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_TagString
       value: UrielAPlotexia
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: bc843fa64a331ea43a3717067911427f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 67c527e365c872649a475b0f36cd5f60, type: 2}
     - target: {fileID: 6394150233397965752, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -95,6 +99,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2500947664119820010}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6616191164683481789}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1130614706461445605}
@@ -155,6 +162,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 846c5067ab42afe4db3cf58f4944cc8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6616191164683481789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3106011776487497518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 976f4e1a22ade2546b6a41cee886dba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1130614706461445605

@@ -88,7 +88,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Maria Second Attack
+  m_Name: Maria Second Skill
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -205,7 +205,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Maria First Attack
+  m_Name: Maria First Skill
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -365,7 +365,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Maria Burst Attack
+  m_Name: Maria Burst Skill
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

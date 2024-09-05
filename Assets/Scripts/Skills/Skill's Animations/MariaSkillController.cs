@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class MariaSkillController : MonoBehaviour
 {
-    CombatSkillMenu combatSkillMenu;
-    SkillHandler skillHandler;
-    CalculateToPlayAnimation calculateToPlayAnimation;
+    private CombatSkillMenu combatSkillMenu;
+    private SkillHandler skillHandler;
+    private CalculateToPlayAnimation calculateToPlayAnimation;
+    private PlayLastAnimation playLastAnimation;
 
     private Animator animator;
     public Animator Animator {  get { return animator; } }
@@ -17,6 +18,7 @@ public class MariaSkillController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         calculateToPlayAnimation = GetComponent<CalculateToPlayAnimation>();
+        playLastAnimation = GetComponent<PlayLastAnimation>();
     }
 
     private void Start()
@@ -35,6 +37,8 @@ public class MariaSkillController : MonoBehaviour
 
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position,
                 enemyTargets[0].gameObject.transform.position, 5f, "Using First Skill", animator));
+
+            playLastAnimation.EnemyTargets = enemyTargets;
         }
     }
 
@@ -48,6 +52,8 @@ public class MariaSkillController : MonoBehaviour
 
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position, 
                 enemyTargets[0].gameObject.transform.position,3.5f,"Using Second Skill", animator));
+
+            playLastAnimation.EnemyTargets = enemyTargets;
         }
     }
 
@@ -60,45 +66,8 @@ public class MariaSkillController : MonoBehaviour
                 combatSkillMenu.gameObject.SetActive(false);
 
             StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle("Using Burst Skill", 4.30f,animator));
-        }
-    }
 
-    public void SendInfoFirstSkill()
-    {
-        if(skillHandler != null)
-        {
-            // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
-
-            skillHandler.SendInfoToUsingFirstSkill();
-
-            calculateToPlayAnimation.PlayDeathAnimation();
-        }
-    }
-
-    public void SendInfoSecondSkill()
-    {
-        if (skillHandler != null)
-        {
-            // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
-
-            skillHandler.SendInfoToUsingFirstSkill();
-
-            calculateToPlayAnimation.PlayDeathAnimation();
-        }
-    }
-
-    public void SendInfoBurstSkill()
-    {
-        if (skillHandler != null)
-        {
-            // play target being attacked animation
-            StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
-
-            skillHandler.SendInfoToUsingBurstSkill();
-
-            calculateToPlayAnimation.PlayDeathAnimation();
+            playLastAnimation.EnemyTargets = enemyTargets;
         }
     }
 }

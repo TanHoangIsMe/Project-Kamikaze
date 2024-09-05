@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class SkyfallSlash: Skill
 {
@@ -29,16 +30,18 @@ public class SkyfallSlash: Skill
 
             foreach (var target in enemyTargets)
             {
-                float trueAttackDamage = character.CurrentAttack + 1000f
+                float trueAttackDamage = character.CurrentAttack
                 - target.CurrentArmor;
 
                 if (trueAttackDamage > 0)
                     target.CurrentHealth -= trueAttackDamage;
 
-                damages.Add(trueAttackDamage);
-
-                skillHandler.SkillValues = damages;
+                damages.Add(trueAttackDamage);               
             }
+
+            // send damage list to skill handler
+            // for make pop up damage text 
+            skillHandler.SkillValues = damages;
         }
     }
 }

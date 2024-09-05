@@ -3,6 +3,7 @@ public class UrielAPlotexia : Character
     public UrielAPlotexia()
     {
         fullName = "Uriel A Plotexia";
+        avatar = "Art/UI/Character Avatars/Uriel A Plotexia Avatar"; ;
         roleTypes = new RoleType[] { RoleType.Tanker };
         classTypes = new ClassType[] { ClassType.Defender };
         elementTypes = new ElementType[] { ElementType.Light };
@@ -13,7 +14,7 @@ public class UrielAPlotexia : Character
         maxMana = 80f;
         maxBurst = 100f;
         skills = new Skill[] {
-            new LionSpirit(),
+            new SwingTheSword(),
             new SwingTheSword(),
             new SwingTheSword()
         };

@@ -20,7 +20,7 @@ public class GameplayController : MonoBehaviour
     {
         { new Vector3(-7f,0f,-2f) ,"Maria" },
         { new Vector3(-4f,0f,-5f) ,"Maria" },
-        { new Vector3(0f,0f,-2f) ,"Maria" },
+        { new Vector3(0f,0f,-2f) ,"UrielAPlotexia" },//UrielAPlotexia
         { new Vector3(4f,0f,-5f) ,"Maria" },
         { new Vector3(7f,0f,-2f) ,"Maria" },
     };
@@ -80,6 +80,7 @@ public class GameplayController : MonoBehaviour
         {
             enemyAI.Champion = whoTurn;
             enemyAI.StartEnemyTurn();
+            //StartTurn(); // for debug
         }
     }
 
@@ -134,11 +135,11 @@ public class GameplayController : MonoBehaviour
             champion.layer = layer;
 
             // disable selected ring
-            foreach(Transform child in champion.transform)
+            foreach (Transform child in champion.transform)
             {
-                if(child.name == "Selected Rings") 
+                if (child.name == "Selected Rings")
                 {
-                    foreach(Transform grandchild in child.transform)
+                    foreach (Transform grandchild in child.transform)
                     {
                         grandchild.gameObject.SetActive(false);
                     }
