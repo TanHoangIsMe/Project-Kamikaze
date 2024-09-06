@@ -201,8 +201,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBackground: {fileID: 4228866304485663389}
-  healthFill: {fileID: 6970720219672828216}
-  healthLoseFill: {fileID: 6368275594565554369}
+  healthFill: {fileID: 6368275594565554369}
+  healthLoseFill: {fileID: 6970720219672828216}
 --- !u!1001 &3465886500427908697
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,7 +213,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 68699898902511725, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.2
+      value: 2.15
       objectReference: {fileID: 0}
     - target: {fileID: 4585404235141025057, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_Pivot.x
@@ -297,11 +297,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4734376464816879609, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.2
+      value: 2.15
       objectReference: {fileID: 0}
     - target: {fileID: 5934322241198601164, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7547435044612287607, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.15
       objectReference: {fileID: 0}
     - target: {fileID: 7791159197451300004, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_Name
@@ -309,7 +313,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8963699561758584376, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.2
+      value: 2.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -372,7 +376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8510186429996676441, guid: eb7460f49072a874c809d110607fdecd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8510186429996676441, guid: eb7460f49072a874c809d110607fdecd, type: 3}
       propertyPath: m_LocalPosition.z

@@ -30,11 +30,13 @@ public class SkyfallSlash: Skill
 
             foreach (var target in enemyTargets)
             {
+                // calculate the real damage deal to enemy 
                 float trueAttackDamage = character.CurrentAttack
                 - target.CurrentArmor;
+                if (trueAttackDamage < 0) // make sure damage deal not negative
+                    trueAttackDamage = 0;
 
-                if (trueAttackDamage > 0)
-                    target.CurrentHealth -= trueAttackDamage;
+                target.CurrentHealth -= trueAttackDamage;
 
                 damages.Add(trueAttackDamage);               
             }

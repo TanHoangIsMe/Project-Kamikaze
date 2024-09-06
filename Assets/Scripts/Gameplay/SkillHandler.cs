@@ -161,7 +161,7 @@ public class SkillHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log("Not enough burst to use skill");
+            //Debug.Log("Not enough burst to use skill");
             return false;
         }
     }
@@ -209,6 +209,7 @@ public class SkillHandler : MonoBehaviour
     {
         List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+        OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
             champion.UsingFirstSkill(this, enemyTargets: enemies, allyTargets: allies);
@@ -219,7 +220,7 @@ public class SkillHandler : MonoBehaviour
 
         // play health bar reduce or increase animation
         // when champion current health change
-        PlayHealthBarEffect(enemies, allies);
+        PlayHealthBarEffect(enemies, allies, self);
 
         ResetThings();
     }
@@ -228,6 +229,7 @@ public class SkillHandler : MonoBehaviour
     {
         List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+        OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
             champion.UsingSecondSkill(this, enemyTargets: enemies, allyTargets: allies);
@@ -238,7 +240,7 @@ public class SkillHandler : MonoBehaviour
 
         // play health bar reduce or increase animation
         // when champion current health change
-        PlayHealthBarEffect(enemies, allies);
+        PlayHealthBarEffect(enemies, allies, self);
 
         ResetThings();
     }
@@ -247,6 +249,7 @@ public class SkillHandler : MonoBehaviour
     {
         List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+        OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
             champion.UsingBurstSkill(this, enemyTargets: enemies, allyTargets: allies);
@@ -257,14 +260,14 @@ public class SkillHandler : MonoBehaviour
 
         // play health bar reduce or increase animation
         // when champion current health change
-        PlayHealthBarEffect(enemies, allies);
+        PlayHealthBarEffect(enemies, allies, self);
 
         ResetThings();
     }
     #endregion
 
     #region OverHead Champion UI
-    private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies)
+    private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
     {
         // play health bar fill animation on enemies
         int totalEnemies = enemies.Count();
@@ -278,15 +281,19 @@ public class SkillHandler : MonoBehaviour
 
         // play health bar fill animation on allies
         foreach (var ally in allies)
-        {
             ally.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
-        }
+
+        // play health bar fill animation on self
+        if (self != null)
+            self.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
     }
 
     private void PlayPopUpDamageText(List<OnFieldCharacter> enemies, int i)
     {
         // get over head position of enemy 
-        Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position + Vector3.up * 3.2f;
+        Vector3 overHeadEnemyPosition = enemies[i].gameObject.transform.position 
+            + Vector3.up * enemies[i].gameObject.transform.localScale.y * 2.3f;
+
         Vector3 randomOverHeadPosition = overHeadEnemyPosition + new Vector3(Random.Range(-0.2f, 0.2f), 0, 0);
 
         // spawn damage text

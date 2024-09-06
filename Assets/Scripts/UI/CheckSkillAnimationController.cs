@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,9 +28,12 @@ public class CheckSkillAnimationController : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Check whose animation controller 
+    /// </summary>
     private void CheckWhoseAnimationControllerToPlayAnimation(List<OnFieldCharacter> enemies, Component skillAnimationController, int whichSkill)
     {
-        // check whose skill animation controller
+        // Maria
         if (skillAnimationController is MariaSkillController mariaSkillAnimationController)
         {
             mariaSkillAnimationController.EnemyTargets = enemies;
@@ -40,14 +44,34 @@ public class CheckSkillAnimationController : MonoBehaviour
             else
                 mariaSkillAnimationController.PlayBurstSkillAnimation();
         }
+
+        // Uriel A Plotexia
+        if (skillAnimationController is UrielAPlotexiaSkillController urielAPlotexiaSkillController)
+        {
+            urielAPlotexiaSkillController.EnemyTargets = enemies;
+            if (whichSkill == 0)
+                urielAPlotexiaSkillController.PlayFirstSkillAnimation();
+            else if (whichSkill == 1)
+                urielAPlotexiaSkillController.PlaySecondSkillAnimation();
+            else
+                urielAPlotexiaSkillController.PlayBurstSkillAnimation();
+        }
     }
 
     public Animator CheckWhoseAnimationControllerToGetAnimator(Component skillAnimationController)
     {
+        // Maria
         if (skillAnimationController is MariaSkillController mariaSkillAnimationController)
         {
             return mariaSkillAnimationController.Animator;
         }
+
+        // Uriel A Plotexia
+        if (skillAnimationController is UrielAPlotexiaSkillController urielAPlotexiaSkillController)
+        {
+            return urielAPlotexiaSkillController.Animator;
+        }
+        
         return null;
     }
 }

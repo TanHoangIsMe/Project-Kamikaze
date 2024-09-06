@@ -18,11 +18,11 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
     {
-        { new Vector3(-7f,0f,-2f) ,"Maria" },
-        { new Vector3(-4f,0f,-5f) ,"Maria" },
+        //{ new Vector3(-7f,0f,-2f) ,"Maria" },
+        //{ new Vector3(-4f,0f,-5f) ,"UrielAPlotexia" },
         { new Vector3(0f,0f,-2f) ,"UrielAPlotexia" },//UrielAPlotexia
-        { new Vector3(4f,0f,-5f) ,"Maria" },
-        { new Vector3(7f,0f,-2f) ,"Maria" },
+        //{ new Vector3(4f,0f,-5f) ,"Maria" },
+        //{ new Vector3(7f,0f,-2f) ,"Maria" },
     };
 
     private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
@@ -53,16 +53,16 @@ public class GameplayController : MonoBehaviour
 
     public void StartTurn()
     {
+        // remove turn list of dead champion       
+        for(int i = 0; i < turnList.Count; i++)
+            if (turnList[i].CurrentHealth < 0)
+                turnList.Remove(turnList[i]);
+
         if (turnList.Count == 0)
         {
             StartNewPhase();
             return;
         }
-
-        // remove turn list of dead champion       
-        for(int i = 0; i < turnList.Count; i++)
-            if (turnList[i].CurrentHealth < 0)
-                turnList.Remove(turnList[i]);
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
@@ -89,7 +89,7 @@ public class GameplayController : MonoBehaviour
         phase++; // Next phase
         phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
         turnList.Clear();
-        CreateTurnList(); // Create new turn list
+        CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
         StartTurn(); // Start character turn
     }

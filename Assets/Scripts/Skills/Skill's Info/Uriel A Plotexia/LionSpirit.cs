@@ -4,7 +4,8 @@ public class LionSpirit : Skill
 {
     public LionSpirit()
     {
-        name = "Lion's Spirit";
+        skillName = "Lion's Spirit";
+        avatar = "Art/UI/Skill Avatars/Uriel A Plotexia/Lion's Spirit Avatar";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 50f;
         burstCost = 0f;
@@ -28,16 +29,6 @@ public class LionSpirit : Skill
         if (character.CurrentMana < 0)
         { 
             character.CurrentMana = 0;
-        }
-
-        //  skill function
-        if(allyTargets.Count != 0)
-        {
-            allyTargets[0].CurrentArmor += 30f;
-        }
-        else
-        {
-            character.CurrentArmor += 30f;
         }
     }
 }
