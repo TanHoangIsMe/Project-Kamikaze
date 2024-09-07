@@ -8,7 +8,7 @@ public class UrielAPlotexia : Character
         classTypes = new ClassType[] { ClassType.Defender };
         elementTypes = new ElementType[] { ElementType.Light };
         attack = 200f;
-        armor = 100f;
+        armor = 1000f;
         speed = 20f;
         health = 1000f;
         maxMana = 80f;

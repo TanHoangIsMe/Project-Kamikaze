@@ -21,7 +21,7 @@ public class GameplayController : MonoBehaviour
         //{ new Vector3(-7f,0f,-2f) ,"Maria" },
         //{ new Vector3(-4f,0f,-5f) ,"UrielAPlotexia" },
         { new Vector3(0f,0f,-2f) ,"UrielAPlotexia" },//UrielAPlotexia
-        //{ new Vector3(4f,0f,-5f) ,"Maria" },
+        { new Vector3(4f,0f,-5f) ,"Maria" },
         //{ new Vector3(7f,0f,-2f) ,"Maria" },
     };
 
@@ -133,6 +133,14 @@ public class GameplayController : MonoBehaviour
 
             // set up champion layer
             champion.layer = layer;
+
+            if(layer == 7)
+            {
+                champion.transform.eulerAngles = new Vector3(
+                    transform.eulerAngles.x, 
+                    180f, 
+                    transform.eulerAngles.z);
+            }
 
             // disable selected ring
             foreach (Transform child in champion.transform)

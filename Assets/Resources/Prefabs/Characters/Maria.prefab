@@ -195,6 +195,7 @@ MonoBehaviour:
   healthBackground: {fileID: 6205469825555192488}
   healthFill: {fileID: 3805852278175131892}
   healthLoseFill: {fileID: 868433356207464717}
+  shieldFill: {fileID: 8737688529704632484}
 --- !u!1001 &5833111893502664919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -412,3 +413,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4585404235141025057, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
   m_PrefabInstance: {fileID: 6676867899068530284}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8737688529704632484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2732135310476246728, guid: 7af9c5a44705b194c9d98ea64ff36583, type: 3}
+  m_PrefabInstance: {fileID: 6676867899068530284}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

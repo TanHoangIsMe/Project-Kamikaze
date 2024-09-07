@@ -43,7 +43,18 @@ public class HitFirstTalkLater : Skill
             skillHandler.SkillValues = damages;
 
             // heal character by 70% damage deal
-            character.CurrentHealth += trueAttackDamage * 0.7f;           
-        }
+            float healAmount = trueAttackDamage * 0.7f;
+            float loseHealth = character.CurrentCharacter.Health
+                - character.CurrentHealth;
+            float needHealAmount = healAmount - loseHealth;
+
+            if (needHealAmount <= 0)
+                character.CurrentHealth += healAmount;
+            else
+            {
+                character.CurrentHealth += loseHealth;
+                character.CurrentShield += needHealAmount;
+            }
+        }   
     }
 }

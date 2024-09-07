@@ -78,6 +78,11 @@ public class SkillHandler : MonoBehaviour
         {
             // set champion layer back
             champion.gameObject.layer = 7;
+            champion.gameObject.transform.eulerAngles = 
+                new Vector3(
+                    transform.eulerAngles.x,
+                    180f,
+                    transform.eulerAngles.z);
         }
     }
 

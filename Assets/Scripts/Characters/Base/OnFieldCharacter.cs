@@ -11,6 +11,7 @@ public class OnFieldCharacter : MonoBehaviour
     private float currentHealth;
     private float currentMana;
     private float currentBurst;
+    private float currentShield;
     private Skill[] skills;
 
     public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
@@ -20,6 +21,7 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
     public float CurrentMana { get { return currentMana; } set { currentMana = value; } }
     public float CurrentBurst { get { return currentBurst; } set { currentBurst = value; } }
+    public float CurrentShield { get { return currentShield; } set { currentShield = value; } }
     public Skill[] Skills { get { return skills; } }
 
     public void UsingFirstSkill(SkillHandler skillHandler,

@@ -48,7 +48,11 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // reset transform
         gameObject.transform.position = originalPosition;
-        gameObject.transform.localEulerAngles = Vector3.zero;
+        if (gameObject.layer == 7)
+            gameObject.transform.eulerAngles =
+                new Vector3(0, 180f, 0);
+        else
+            gameObject.transform.eulerAngles = Vector3.zero;
 
         // start new turn
         gameplayController.StartTurn();
