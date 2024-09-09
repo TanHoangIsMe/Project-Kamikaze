@@ -48,12 +48,25 @@ public class OverHealthBar : MonoBehaviour
             float fillAmount = champion.CurrentHealth 
                 / champion.CurrentCharacter.Health;
 
+            // calculate shield amount 
+            float shieldAmount = champion.CurrentShield
+                / champion.CurrentCharacter.Health;
+
             // update health fill images
             healthFill.fillAmount = fillAmount;
             StartCoroutine(UpdateHealthLoseFill(fillAmount));
 
+            // calculate shield image position 
+            RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
+
+            float newX = (0.9f * fillAmount) - (0.9f * shieldAmount) + 0.09f;
+            float newY = rectTransform.position.y;
+            float newZ = 0;
+
+            rectTransform.anchoredPosition = new Vector3(newX, newY, newZ);
+
             // update shield fill image
-            StartCoroutine(UpdateShieldFill());
+            StartCoroutine(UpdateShieldFill(shieldAmount));
         }       
     }
 
@@ -82,13 +95,9 @@ public class OverHealthBar : MonoBehaviour
     }
 
     // Using coroutine to reduce lose health fill slowly 
-    private IEnumerator UpdateShieldFill()
+    private IEnumerator UpdateShieldFill(float shieldAmount)
     {
         float elapsedTime = 0f;
-
-        // calculate shield amount 
-        float shieldAmount = champion.CurrentShield
-            / champion.CurrentCharacter.Health;
 
         while (elapsedTime < 1f)
         {
