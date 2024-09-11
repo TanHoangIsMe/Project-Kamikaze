@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.LightingExplorerTableColumn;
 
 public class AutoFindTargets : MonoBehaviour
 {
@@ -16,8 +17,45 @@ public class AutoFindTargets : MonoBehaviour
     {
         enemyTargets = new List<OnFieldCharacter>();
         allyTargets = new List<OnFieldCharacter>();
-
         selfTarget = null;
+    }
+
+    public void AutoFindGroupTargetsBasedOnPriority(int numberOfTargets,int layer, StatType priorityStat)
+    {
+        // find 1 target with lowest stat
+        AutoFindTargetsBasedOnPriority(1, layer, priorityStat, true);
+        int position = -1;
+        if(layer == 7) position = enemyTargets[0].Position;
+        else position = allyTargets[0].Position;
+
+        List<OnFieldCharacter> targets = new List<OnFieldCharacter>();
+        OnFieldCharacter rightTarget = null;
+        OnFieldCharacter leftTarget = null;
+
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (character.gameObject.layer == layer && character.CurrentHealth > 0)
+            {
+                targets.Add(character);
+            }
+        }
+
+        for (int i = 1; i < numberOfTargets - 1; i++)
+        {
+            foreach (var character in targets)
+            { 
+                if(character.Position == position + 1 && character.CurrentHealth > 0)
+                    rightTarget = character;
+                if(character.Position == position - 1 && character.CurrentHealth > 0)
+                    leftTarget = character;
+            }
+            
+            int remainSlot = numberOfTargets - enemyTargets.Count;
+            if (remainSlot == 1)
+            {
+
+            }
+        }       
     }
 
     public void AutoFindTargetsBasedOnPriority(int numberOfTargets, int layer, StatType priorityStat, bool isLow)

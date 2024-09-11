@@ -27,6 +27,8 @@ public class CheckNumberOfTargets : MonoBehaviour
     private int numberOfTargetType;
     private int numberOfAllyTargets;
     private int numberOfEnemyTargets;
+    private bool isGroupEnemy;
+    private bool isGroupAlly;
     private int layer;
 
     // value to know what type of target can select
@@ -193,20 +195,22 @@ public class CheckNumberOfTargets : MonoBehaviour
     private void GetSkillInfo()
     {
         // count how many type of target that skill can affect to
-        numberOfTargetType = champion.CurrentCharacter
-            .Skills[whichSkill].TargetTypes.Count();
+        numberOfTargetType = champion.Skills[whichSkill].TargetTypes.Count();
 
         // priority stat for auto find
-        priorityStat = champion.CurrentCharacter
-            .Skills[whichSkill].PriorityStat;
+        priorityStat = champion.Skills[whichSkill].PriorityStat;
 
         // count how many enemies
-        numberOfEnemyTargets = champion.CurrentCharacter
-            .Skills[whichSkill].NumberOfEnemyTargets;
+        numberOfEnemyTargets = champion.Skills[whichSkill].NumberOfEnemyTargets;
 
         // count how many ally
-        numberOfAllyTargets = champion.CurrentCharacter
-            .Skills[whichSkill].NumberOfAllyTargets;
+        numberOfAllyTargets = champion.Skills[whichSkill].NumberOfAllyTargets;
+
+        // check group enemy
+        isGroupEnemy = champion.Skills[whichSkill].IsGroupEnemy;
+
+        // check group ally
+        isGroupAlly = champion.Skills[whichSkill].IsGroupAlly;
 
         // which type of target skill affected to
         targetType = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
@@ -240,8 +244,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                 }
                 else
                 {
-                    // auto find enemies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    if(!isGroupEnemy) // enemies not next to others
+                        // auto find enemies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    else // enemies next to others
+                    {
+                        // TODO: fix auto find group targets
+                        canSelectTarget = true;
+                        selectType = 1;
+                    }
                 }
             }
             else // target type = ally

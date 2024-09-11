@@ -16,22 +16,22 @@ public class GameplayController : MonoBehaviour
     private CombatSkillMenu combatSkillMenu;
     private EnemyAI enemyAI;
 
-    private Dictionary<Vector3, string> playerChampions = new Dictionary<Vector3, string>
+    private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
-        //{ new Vector3(-7f,0f,-2f) ,"Maria" },
-        //{ new Vector3(-4f,0f,-5f) ,"UrielAPlotexia" },
-        { new Vector3(0f,0f,-2f) ,"UrielAPlotexia" },//UrielAPlotexia
-        { new Vector3(4f,0f,-5f) ,"Maria" },
-        //{ new Vector3(7f,0f,-2f) ,"Maria" },
+        //{ 6 ,"Maria" },
+        //{ 7 ,"UrielAPlotexia" },
+        { 8 ,"UrielAPlotexia" },//UrielAPlotexia
+        { 9 ,"Maria" },
+        //{ 10 ,"Maria" },
     };
 
-    private Dictionary<Vector3, string> enemyChampions = new Dictionary<Vector3, string>
+    private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
-        //{ new Vector3(-7f,0f,10f) ,"Maria" },
-        //{ new Vector3(-4f,0f,13f) ,"Maria" },
-        //{ new Vector3(0f,0f,10f) ,"Maria" },
-        { new Vector3(4f,0f,13f) ,"Maria" },
-        { new Vector3(7f,0f,10f) ,"Maria" },
+        //{ 0 ,"Maria" },
+        //{ 1 ,"Maria" },
+        //{ 2 ,"Maria" },
+        { 3 ,"Maria" },
+        { 4 ,"Maria" },
     };
 
     private void Awake()
@@ -106,21 +106,21 @@ public class GameplayController : MonoBehaviour
 
     #region SpawnChampions
     private void SpawnEnemiesAndHeroes()
-    {
+    { 
         // spawn enemies
-        foreach (KeyValuePair<Vector3, string> enemyChampion in enemyChampions)
+        foreach (KeyValuePair<int, string> enemyChampion in enemyChampions)
         {
-            CreateCharacter(enemyChampion.Key, enemyChampion.Value, 7);
+             CreateCharacter(enemyChampion.Key, enemyChampion.Value, 7);
         }
 
         // spawn player's champions
-        foreach (KeyValuePair<Vector3, string> playerChampion in playerChampions)
+        foreach (KeyValuePair<int, string> playerChampion in playerChampions)
         {
             CreateCharacter(playerChampion.Key, playerChampion.Value, 6);
         }
     }
 
-    private void CreateCharacter(Vector3 spawnPosition, string characterName, int layer)
+    private void CreateCharacter(int position, string characterName, int layer)
     {
         prefabPath = $"Prefabs/Characters/{characterName}";
 
@@ -129,10 +129,13 @@ public class GameplayController : MonoBehaviour
         if (prefab != null)
         {
             // create champion
-            GameObject champion = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            GameObject champion = Instantiate(prefab, GetPosition(position), Quaternion.identity);
 
             // set up champion layer
             champion.layer = layer;
+
+            // set on field character position
+            champion.GetComponent<OnFieldCharacter>().Position = position;
 
             if(layer == 7)
             {
@@ -157,6 +160,28 @@ public class GameplayController : MonoBehaviour
         else
         {
             Debug.LogError("Prefab not found at path: " + prefabPath);
+        }
+    }
+
+    private Vector3 GetPosition(int position)
+    {
+        switch (position)
+        {
+            // enemy positions
+            case 0: return new Vector3(-7f, 0f, 10f);
+            case 1: return new Vector3(-4f, 0f, 13f);
+            case 2: return new Vector3(0f, 0f, 10f);
+            case 3: return new Vector3(4f, 0f, 13f);
+            case 4: return new Vector3(7f, 0f, 10f);
+
+            // ally positions
+            case 6: return new Vector3(-7f, 0f, -2f);
+            case 7: return new Vector3(-4f, 0f, -5f);
+            case 8: return new Vector3(0f, 0f, -2f);
+            case 9: return new Vector3(4f, 0f, -5f);
+            case 10: return new Vector3(7f, 0f, -2f);
+
+            default: return Vector3.zero;
         }
     }
     #endregion

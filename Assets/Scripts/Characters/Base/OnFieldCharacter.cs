@@ -5,6 +5,7 @@ using UnityEngine;
 public class OnFieldCharacter : MonoBehaviour 
 {
     private Character currentCharacter;
+    private int position;
     private float currentAttack;
     private float currentArmor;
     private float currentSpeed;
@@ -15,6 +16,7 @@ public class OnFieldCharacter : MonoBehaviour
     private Skill[] skills;
 
     public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
+    public int Position { get { return position; } set { position = value; } }
     public float CurrentAttack { get { return currentAttack; } set { currentAttack = value; } }
     public float CurrentArmor { get { return currentArmor; } set { currentArmor = value; } }
     public float CurrentSpeed { get { return currentSpeed; } set { currentSpeed = value; } }

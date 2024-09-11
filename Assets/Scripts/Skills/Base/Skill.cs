@@ -13,6 +13,8 @@ public abstract class Skill : MonoBehaviour
     protected int numberOfAllyTargets;
     protected int numberOfSelfTarget;
     protected int numberOfSelfOrAllyTarget;
+    protected bool isGroupEnemy;
+    protected bool isGroupAlly;
 
     protected StatType priorityStat;
 
@@ -31,6 +33,8 @@ public abstract class Skill : MonoBehaviour
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
     public int NumberOfSelfTarget { get { return numberOfSelfTarget; } }
     public int NumberOfSelfOrAllyTarget { get { return numberOfSelfOrAllyTarget; } }
+    public bool IsGroupEnemy { get { return isGroupEnemy; } }
+    public bool IsGroupAlly { get { return isGroupAlly; } }
     public StatType PriorityStat { get { return priorityStat; } }
     public SkillType[] SkillTypes { get { return skillTypes; } }
     public ActivateType[] ActivateTypes { get { return activateTypes; } }

@@ -22,6 +22,23 @@ public class OverHealthBar : MonoBehaviour
     private void Update()
     {
         SetHealthBarLookAtCam(); // make health bar look at cam 
+        
+        //// calculate health fill amount 
+        //float fillAmount = champion.CurrentHealth
+        //    / champion.CurrentCharacter.Health;
+
+        //// calculate shield amount 
+        //float shieldAmount = champion.CurrentShield
+        //    / champion.CurrentCharacter.Health;
+
+        //// calculate shield image position 
+        //RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
+
+        //float newX = 0.3f * fillAmount + 0.3f * shieldAmount + 0.4f;
+        //float newY = 2.15f;
+        //float newZ = 0.2f * fillAmount + 0.5f * shieldAmount + 0.3f; ;
+
+        //rectTransform.anchoredPosition = new Vector3(newX, newY, newZ);
     }
 
     private void SetHealthBarLookAtCam()
@@ -30,6 +47,7 @@ public class OverHealthBar : MonoBehaviour
         healthFill.transform.rotation = cam.transform.rotation;
         healthLoseFill.transform.rotation = cam.transform.rotation;
         shieldFill.transform.rotation = cam.transform.rotation;
+
     }
 
     private void TurnOffOverHeadBar()
@@ -37,7 +55,7 @@ public class OverHealthBar : MonoBehaviour
         healthBackground.gameObject.SetActive(false);
         healthFill.gameObject.SetActive(false);
         healthLoseFill.gameObject.SetActive(false);
-        shieldFill .gameObject.SetActive(false);
+        shieldFill.gameObject.SetActive(false);
     }
 
     public void UpdateHealthFill()
@@ -56,16 +74,16 @@ public class OverHealthBar : MonoBehaviour
             healthFill.fillAmount = fillAmount;
             StartCoroutine(UpdateHealthLoseFill(fillAmount));
 
-            // calculate shield image position 
+            //calculate shield image position
             RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
 
-            float newX = (0.9f * fillAmount) - (0.9f * shieldAmount) + 0.09f;
-            float newY = rectTransform.position.y;
-            float newZ = 0;
+            float newX = 0.3f * fillAmount + 0.3f * shieldAmount + 0.3f;
+            float newY = 2.15f;
+            float newZ = 0.2f * fillAmount + 0.5f * shieldAmount + 0.3f; ;
+            Debug.Log($"{fillAmount} {shieldAmount} {newX} {newZ}");
+            rectTransform.localPosition = new Vector3(newX, newY, newZ);
 
-            rectTransform.anchoredPosition = new Vector3(newX, newY, newZ);
-
-            // update shield fill image
+            //update shield fill image
             StartCoroutine(UpdateShieldFill(shieldAmount));
         }       
     }

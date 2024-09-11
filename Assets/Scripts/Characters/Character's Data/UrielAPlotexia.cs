@@ -15,7 +15,7 @@ public class UrielAPlotexia : Character
         maxBurst = 100f;
         skills = new Skill[] {
             new HitFirstTalkLater(),
-            new LionSpirit(),
+            new testskill(),
             new AllEyesOnMe()
         };
     }
