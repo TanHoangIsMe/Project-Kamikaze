@@ -18,8 +18,8 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
-        //{ 6 ,"Maria" },
-        //{ 7 ,"UrielAPlotexia" },
+        { 6 ,"Maria" },
+        { 7 ,"Maria" },
         { 8 ,"UrielAPlotexia" },//UrielAPlotexia
         { 9 ,"Maria" },
         //{ 10 ,"Maria" },
@@ -27,9 +27,9 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
-        //{ 0 ,"Maria" },
-        //{ 1 ,"Maria" },
-        //{ 2 ,"Maria" },
+        { 0 ,"Maria" },
+        { 1 ,"Maria" },
+        { 2 ,"Maria" },
         { 3 ,"Maria" },
         { 4 ,"Maria" },
     };
@@ -78,9 +78,9 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            enemyAI.Champion = whoTurn;
-            enemyAI.StartEnemyTurn();
-            //StartTurn(); // for debug
+            //enemyAI.Champion = whoTurn;
+            //enemyAI.StartEnemyTurn();
+            StartTurn(); // for debug
         }
     }
 

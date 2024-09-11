@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -118,6 +119,8 @@ public class CheckNumberOfTargets : MonoBehaviour
             autoFindTargets.TurnOffShowTargets();
             autoFindTargets.EnemyTargets.Clear();
             autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
+            if (isGroupEnemy)
+                autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfEnemyTargets, 7, priorityStat);
         }
 
         // can select ally
@@ -126,6 +129,9 @@ public class CheckNumberOfTargets : MonoBehaviour
             autoFindTargets.TurnOffShowTargets();
             autoFindTargets.AllyTargets.Clear();
             autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
+            if (isGroupAlly)
+                autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfAllyTargets, 6, priorityStat);
+
         }
 
         // can select ally or enemy
@@ -136,6 +142,8 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.EnemyTargets.Clear();
                 autoFindTargets.EnemyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
+                if (isGroupEnemy)
+                    autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfEnemyTargets, 7, priorityStat);
             }
 
             if(clickedObject.layer == 6)
@@ -143,6 +151,8 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.AllyTargets.Clear();
                 autoFindTargets.TurnOffShowTargets();
                 autoFindTargets.AllyTargets.Add(clickedObject.GetComponent<OnFieldCharacter>());
+                if (isGroupAlly)
+                    autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfAllyTargets, 6, priorityStat);
             }
         }
 
@@ -232,7 +242,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 // auto find 1 enemy but can select self
                 // layer should be 6 or 7
                 // but i set 0 cause self don't need layer
-                AutoFind1EnemyOrAlly(true, 0, 4, true);
+                AutoFind1EnemyOrAllyOrGroup(true, 0, 4, true, false);
             }
             else if (targetType[0] == TargetType.Enemy)
             {
@@ -240,7 +250,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     // auto find 1 target which low priority
                     // 1 target - enemy layer - priority stat - lowest stat
-                    AutoFind1EnemyOrAlly(false, 7, 1, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, false);
                 }
                 else
                 {
@@ -248,11 +258,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         // auto find enemies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
                     else // enemies next to others
-                    {
-                        // TODO: fix auto find group targets
-                        canSelectTarget = true;
-                        selectType = 1;
-                    }
+                        AutoFind1EnemyOrAllyOrGroup(false,7,1,true, true);
                 }
             }
             else // target type = ally
@@ -260,12 +266,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (numberOfAllyTargets == 1)
                 {
                     // auto find 1 target which low priority
-                    AutoFind1EnemyOrAlly(false, 6, 2, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, false);
                 }
                 else
                 {
-                    // auto find allies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    if(!isGroupAlly)
+                        // auto find allies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    else
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
             }
         }
@@ -279,28 +288,51 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     // auto find 1 enemy 1 ally which low priority
                     autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
-                    AutoFind1EnemyOrAlly(false, 7, 3, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
                 }
                 else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
                 {
                     // auto find 1 enemy
-                    AutoFind1EnemyOrAlly(false, 7, 1, false);
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, false);
 
-                    // auto find allies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    if(!isGroupAlly)
+                        // auto find allies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    else
+                        // auto find 1 enemy
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
                 else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
                 {
                     // auto find 1 ally
-                    AutoFind1EnemyOrAlly(false, 6, 2, false);
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, false);
 
-                    // auto find enemies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    if(!isGroupEnemy)
+                        // auto find enemies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    else
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
                 else // number of enemy > 1 and number of ally > 1
                 {
-                    // auto find targets (allies and enemies)
-                    AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                    if (!isGroupEnemy && !isGroupAlly)
+                        // auto find targets (allies and enemies)
+                        AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                    else if (!isGroupEnemy && isGroupAlly)
+                    {
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    }
+                    else if(isGroupEnemy && !isGroupAlly)
+                    {
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    }
+                    else // group enemies and allies
+                    {
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 3, false, true);
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
+                    }
                 }
             }
             //skill affected self and enemy
@@ -311,12 +343,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (numberOfEnemyTargets == 1) // skill affected self and 1 enemy
                 {
                     // auto find 1 enemy
-                    AutoFind1EnemyOrAlly(false, 7, 1, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, false);
                 }
                 else // skill affected self and >1 enemy
                 {
-                    // auto find enemies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    if (!isGroupEnemy) // enemies not next to others
+                        // auto find enemies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    else // enemies next to others
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
             }
             // skill affected self and ally
@@ -327,12 +362,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (numberOfAllyTargets == 1)
                 {
                     // auto find 1 target which low priority
-                    AutoFind1EnemyOrAlly(false, 6, 2, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, false);
                 }
                 else
                 {
-                    // auto find allies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    if (!isGroupAlly)
+                        // auto find allies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    else
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
             }
             else // skill affected self or ally and enemy
@@ -342,12 +380,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (numberOfEnemyTargets == 1) // skill affected self and 1 enemy
                 {
                     // auto find 1 enemy
-                    AutoFind1EnemyOrAlly(false, 7, 5, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 5, true, false);
                 }
                 else // skill affected self and >1 enemy
                 {
-                    // auto find enemies
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    if (!isGroupEnemy) // enemies not next to others
+                        // auto find enemies
+                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    else // enemies next to others
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
             }
         }
@@ -360,7 +401,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                 // auto find 1 enemy 1 ally which low priority
                 autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
-                AutoFind1EnemyOrAlly(false, 7, 3, true);
+                AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
             }
             // skill affected self, > 1 ally, 1 enemy
             else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
@@ -368,7 +409,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 // auto find 1 enemy
-                AutoFind1EnemyOrAlly(false, 7, 1, false);
+                AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, false);
 
                 // auto find allies
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
@@ -379,7 +420,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 // auto find 1 ally
-                AutoFind1EnemyOrAlly(false, 6, 2, false);
+                AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, false);
 
                 // auto find enemies
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
@@ -388,8 +429,24 @@ public class CheckNumberOfTargets : MonoBehaviour
             {
                 autoFindTargets.SelfTarget = champion;
 
-                // auto find targets (allies and enemies)
-                AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                if (!isGroupEnemy && !isGroupAlly)
+                    // auto find targets (allies and enemies)
+                    AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                else if (!isGroupEnemy && isGroupAlly)
+                {
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
+                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                }
+                else if (isGroupEnemy && !isGroupAlly)
+                {
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
+                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                }
+                else // group enemies and allies
+                {
+                    AutoFind1EnemyOrAllyOrGroup(false, 7, 3, false, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
+                }
             }
         }
     }
@@ -397,13 +454,20 @@ public class CheckNumberOfTargets : MonoBehaviour
     #region Reduce Code For Check Info For Auto Find Targets
 
     // auto find 1 target (Enemy or Ally) with lowest priority stat
-    private void AutoFind1EnemyOrAlly(bool isSelf,int layer, int selectType, bool canTurnOnShowTargets)
+    private void AutoFind1EnemyOrAllyOrGroup(bool isSelf,int layer, int selectType, bool canTurnOnShowTargets,bool isGroup)
     {
         // check if target is self or other
         if (isSelf)
             autoFindTargets.SelfTarget = champion;
         else
             autoFindTargets.AutoFindTargetsBasedOnPriority(1, layer, priorityStat, true);
+
+        // check if targets next to each orther
+        if (isGroup)
+            if(layer == 7)
+                autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfEnemyTargets, 7, priorityStat);
+            else
+                autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfAllyTargets, 6, priorityStat);
 
         // check if can select target and which type of target can select
         canSelectTarget = true;

@@ -10,16 +10,16 @@ public class testskill : Skill
         description = "Not yet";
         manaCost = 50f;
         burstCost = 0f;
-        numberOfEnemyTargets = 2;
-        numberOfAllyTargets = 0;
+        numberOfEnemyTargets = 3;
+        numberOfAllyTargets = 3;
         numberOfSelfTarget = 0;
         numberOfSelfOrAllyTarget = 0;
-        isGroupEnemy = true;
-        isGroupAlly = false;
+        isGroupEnemy = false;
+        isGroupAlly = true;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack, SkillType.Heal };
         activateTypes = new ActivateType[] { ActivateType.Active };
-        targetTypes = new TargetType[] { TargetType.Enemy, TargetType.Self };
+        targetTypes = new TargetType[] { TargetType.Enemy, TargetType.Ally };
     }
 
     public override void SkillFunction(OnFieldCharacter character,

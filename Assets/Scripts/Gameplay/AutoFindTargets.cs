@@ -22,45 +22,38 @@ public class AutoFindTargets : MonoBehaviour
 
     public void AutoFindGroupTargetsBasedOnPriority(int numberOfTargets,int layer, StatType priorityStat)
     {
-        // find 1 target with lowest stat
-        AutoFindTargetsBasedOnPriority(1, layer, priorityStat, true);
-        int position = -1;
+        List<OnFieldCharacter> targets = new List<OnFieldCharacter>();
+
+        int position;
+
         if(layer == 7) position = enemyTargets[0].Position;
         else position = allyTargets[0].Position;
 
-        List<OnFieldCharacter> targets = new List<OnFieldCharacter>();
-        OnFieldCharacter rightTarget = null;
-        OnFieldCharacter leftTarget = null;
-
-        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-        {
-            if (character.gameObject.layer == layer && character.CurrentHealth > 0)
-            {
-                targets.Add(character);
-            }
+        for (int i = -2; i < 3; i++)
+        { 
+            if(i != 0)
+                foreach(var champion in FindObjectsOfType<OnFieldCharacter>())
+                    if (champion.Position == position + i)
+                        if(layer == 7)
+                            targets.Add(champion);
+                        else
+                            if(champion.gameObject.layer == 6)
+                                targets.Add(champion);
         }
 
-        for (int i = 1; i < numberOfTargets - 1; i++)
-        {
-            foreach (var character in targets)
-            { 
-                if(character.Position == position + 1 && character.CurrentHealth > 0)
-                    rightTarget = character;
-                if(character.Position == position - 1 && character.CurrentHealth > 0)
-                    leftTarget = character;
-            }
-            
-            int remainSlot = numberOfTargets - enemyTargets.Count;
-            if (remainSlot == 1)
-            {
-
-            }
-        }       
+        SortTargetsList(numberOfTargets - 1, priorityStat, true, targets);
+        
+        if(layer == 7)
+            foreach (var target in targets)
+                enemyTargets.Add(target);
+        else
+            foreach (var target in targets)
+                allyTargets.Add(target);       
     }
 
     public void AutoFindTargetsBasedOnPriority(int numberOfTargets, int layer, StatType priorityStat, bool isLow)
     {
-        CreateTargetsList(layer);
+        CreateTargetsList(layer); // create all enemies or allies list 
 
         List<OnFieldCharacter> targetsToSort = null;
 
@@ -73,6 +66,12 @@ public class AutoFindTargets : MonoBehaviour
             targetsToSort = enemyTargets;
         }
 
+        // sort list based on skill number of targets
+        SortTargetsList(numberOfTargets, priorityStat, isLow, targetsToSort);
+    }
+
+    private void SortTargetsList(int numberOfTargets, StatType priorityStat, bool isLow, List<OnFieldCharacter> targetsToSort)
+    {
         if (targetsToSort != null)
         {
             // Sort the target list based on the priorityStat
