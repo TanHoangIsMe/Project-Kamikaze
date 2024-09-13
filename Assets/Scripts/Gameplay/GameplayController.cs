@@ -18,10 +18,10 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
-        { 6 ,"Maria" },
-        { 7 ,"Maria" },
+        //{ 6 ,"Maria" },
+        //{ 7 ,"Maria" },
         { 8 ,"UrielAPlotexia" },//UrielAPlotexia
-        { 9 ,"Maria" },
+        //{ 9 ,"Maria" },
         //{ 10 ,"Maria" },
     };
 

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class OverHealthBar : MonoBehaviour
 {
+    [SerializeField] private GameObject overHeadBars;
     [SerializeField] private Image healthBackground;
     [SerializeField] private Image healthFill;
     [SerializeField] private Image healthLoseFill;
@@ -22,32 +23,11 @@ public class OverHealthBar : MonoBehaviour
     private void Update()
     {
         SetHealthBarLookAtCam(); // make health bar look at cam 
-        
-        //// calculate health fill amount 
-        //float fillAmount = champion.CurrentHealth
-        //    / champion.CurrentCharacter.Health;
-
-        //// calculate shield amount 
-        //float shieldAmount = champion.CurrentShield
-        //    / champion.CurrentCharacter.Health;
-
-        //// calculate shield image position 
-        //RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
-
-        //float newX = 0.3f * fillAmount + 0.3f * shieldAmount + 0.4f;
-        //float newY = 2.15f;
-        //float newZ = 0.2f * fillAmount + 0.5f * shieldAmount + 0.3f; ;
-
-        //rectTransform.anchoredPosition = new Vector3(newX, newY, newZ);
     }
 
     private void SetHealthBarLookAtCam()
     {
-        healthBackground.transform.rotation = cam.transform.rotation;
-        healthFill.transform.rotation = cam.transform.rotation;
-        healthLoseFill.transform.rotation = cam.transform.rotation;
-        shieldFill.transform.rotation = cam.transform.rotation;
-
+        overHeadBars.transform.rotation = cam.transform.rotation;
     }
 
     private void TurnOffOverHeadBar()
@@ -63,7 +43,7 @@ public class OverHealthBar : MonoBehaviour
         if (champion != null)
         {
             // calculate health fill amount 
-            float fillAmount = champion.CurrentHealth 
+            float fillAmount = champion.CurrentHealth
                 / champion.CurrentCharacter.Health;
 
             // calculate shield amount 
@@ -75,17 +55,11 @@ public class OverHealthBar : MonoBehaviour
             StartCoroutine(UpdateHealthLoseFill(fillAmount));
 
             //calculate shield image position
-            RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
-
-            float newX = 0.3f * fillAmount + 0.3f * shieldAmount + 0.3f;
-            float newY = 2.15f;
-            float newZ = 0.2f * fillAmount + 0.5f * shieldAmount + 0.3f; ;
-            Debug.Log($"{fillAmount} {shieldAmount} {newX} {newZ}");
-            rectTransform.localPosition = new Vector3(newX, newY, newZ);
+            SetShieldImageNewPosition(fillAmount, shieldAmount);
 
             //update shield fill image
             StartCoroutine(UpdateShieldFill(shieldAmount));
-        }       
+        }
     }
 
     // Using coroutine to reduce lose health fill slowly 
@@ -125,5 +99,14 @@ public class OverHealthBar : MonoBehaviour
             shieldFill.fillAmount = Mathf.Lerp(shieldFill.fillAmount, shieldAmount, duration);
             yield return null;
         }
+    }
+
+    private void SetShieldImageNewPosition(float fillAmount, float shieldAmount)
+    {
+        RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
+
+        float newX = (0.9f * fillAmount) - (0.9f * shieldAmount);
+
+        rectTransform.localPosition = new Vector3(newX, 0, 0);
     }
 }
