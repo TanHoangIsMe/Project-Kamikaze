@@ -6,17 +6,17 @@ public class LionSpirit : Skill
     {
         skillName = "Lion's Spirit";
         avatar = "Art/UI/Skill Avatars/Uriel A Plotexia/Lion's Spirit Avatar";
-        description = "Uriel A Plotexia increase his or an ally's armor by 30";
+        description = "Uriel A Plotexia gain a shield for himself equal to 30% of his lost health.";
         manaCost = 50f;
         burstCost = 0f;
         numberOfEnemyTargets = 0;
         numberOfAllyTargets = 0;
-        numberOfSelfTarget = 0;
-        numberOfSelfOrAllyTarget = 1;
-        priorityStat = StatType.CurrentArmor;
-        skillTypes = new SkillType[] { SkillType.Defend };
+        numberOfSelfTarget = 1;
+        numberOfSelfOrAllyTarget = 0;
+        priorityStat = StatType.CurrentHealth;
+        skillTypes = new SkillType[] { SkillType.Shield };
         activateTypes = new ActivateType[] { ActivateType.Active };
-        targetTypes = new TargetType[] { TargetType.SelfOrAlly};
+        targetTypes = new TargetType[] { TargetType.Self};
     }
 
     public override void SkillFunction(OnFieldCharacter character,
@@ -30,5 +30,10 @@ public class LionSpirit : Skill
         { 
             character.CurrentMana = 0;
         }
+
+        Effect temporaryShield = new TemporaryShield();
+        temporaryShield.Duration = 2;
+        temporaryShield.EffectFunction(character);
+        character.Effects.Add(temporaryShield);
     }
 }

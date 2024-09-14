@@ -14,7 +14,7 @@ public class SkyfallSlash: Skill
         numberOfSelfTarget = 0;
         numberOfSelfOrAllyTarget = 0;
         priorityStat = StatType.CurrentHealth;
-        skillTypes = new SkillType[] { SkillType.Defend };
+        skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };
         targetTypes = new TargetType[] { TargetType.Enemy};
     }

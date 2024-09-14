@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.LightingExplorerTableColumn;
 
 public class AutoFindTargets : MonoBehaviour
 {
@@ -181,7 +180,7 @@ public class AutoFindTargets : MonoBehaviour
     }
 
     private void ActiveOrDeActiveSelectedRing(OnFieldCharacter character,string ringName,bool turnOn)
-    {        
+    {       
         foreach (Transform child in character.gameObject.transform)
         {
             if (child.name == "Selected Rings")
