@@ -9,6 +9,7 @@ public class GameplayController : MonoBehaviour
 
     private string prefabPath; // path to character in Prefabs folder
     private int phase; // combat turn
+    public int Phase {  get { return phase; } }
 
     // place to hold all champion that exist on battle field
     private List<OnFieldCharacter> turnList;
@@ -78,9 +79,9 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            //enemyAI.Champion = whoTurn;
-            //enemyAI.StartEnemyTurn();
-            StartTurn(); // for debug
+            enemyAI.Champion = whoTurn;
+            enemyAI.StartEnemyTurn();
+            //StartTurn(); // for debug
         }
     }
 
@@ -89,6 +90,17 @@ public class GameplayController : MonoBehaviour
         phase++; // Next phase
         phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
         turnList.Clear();
+        foreach(var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (character.Effects.Count > 0)
+            {
+                var effectKeys = character.Effects.Keys;
+                List<string> effectNames = new List<string>(effectKeys);
+
+                for (int i = 0; i < effectNames.Count; i++)
+                    UpdateEffectRemainTurn(effectNames[i], character);
+            }
+        }
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
         StartTurn(); // Start character turn
@@ -198,4 +210,18 @@ public class GameplayController : MonoBehaviour
         turnList.Reverse();
     }
     #endregion
+
+    #region Update Effect Remain Turn
+    private void UpdateEffectRemainTurn(string effectName, OnFieldCharacter character)
+    {
+        switch (effectName)
+        {
+            case "Temporary Shield":
+                character.gameObject.GetComponent<TemporaryShield>().UpdateEffect();
+                break;
+            default:
+                break;
+        }
+    }
+    #endregion  
 }

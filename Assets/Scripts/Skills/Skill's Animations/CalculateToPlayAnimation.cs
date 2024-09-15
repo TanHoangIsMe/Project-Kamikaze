@@ -142,7 +142,17 @@ public class CalculateToPlayAnimation : MonoBehaviour
             foreach (var animator in animators)
             {
                 animator.SetBool("Being Attacked", false); // Play idle animation
-            }          
+            }   
+            
+            // reset enemies position.y
+            foreach (var target in targets)
+            {
+                target.gameObject.transform.position =
+                    new Vector3(
+                        target.gameObject.transform.position.x,
+                        0,
+                        target.gameObject.transform.position.z);
+            }
         }
     }
 

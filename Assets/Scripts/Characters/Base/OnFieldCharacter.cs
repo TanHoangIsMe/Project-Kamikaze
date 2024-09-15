@@ -14,7 +14,7 @@ public class OnFieldCharacter : MonoBehaviour
     private float currentBurst;
     private float currentShield;
     private Skill[] skills;
-    private List<Effect> effects;
+    private Dictionary<string, string> effects;
 
     public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
     public int Position { get { return position; } set { position = value; } }
@@ -27,7 +27,7 @@ public class OnFieldCharacter : MonoBehaviour
     public float CurrentShield { get { return currentShield; } set { currentShield = value; } }
     public Skill[] Skills { get { return skills; } }
 
-    public List<Effect> Effects { get { return effects; } set { effects = value; } }
+    public Dictionary<string, string> Effects { get { return effects; } set { effects = value; } }
 
     public void UsingFirstSkill(SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null , 
@@ -43,7 +43,6 @@ public class OnFieldCharacter : MonoBehaviour
     {
         currentCharacter.Skills[1]
             .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
-        Debug.Log(effects.Count + " " + effects[0]);
     }
 
     public void UsingBurstSkill(SkillHandler skillHandler,
@@ -101,6 +100,6 @@ public class OnFieldCharacter : MonoBehaviour
         currentMana = currentCharacter.MaxMana;
         currentBurst = 0f;
         skills = currentCharacter.Skills;
-        effects = new List<Effect>();
+        effects = new Dictionary<string, string>();
     }
 }

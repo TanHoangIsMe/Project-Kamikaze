@@ -3,32 +3,28 @@ using UnityEngine;
 public abstract class Effect : MonoBehaviour
 {
     protected string effectAvatar;
-    protected int duration;
     protected float effectValue;
     protected int startTurn;
+    protected int endTurn;
 
-    public string EffectAvatar {  get { return effectAvatar; } }
-    public int Duration { get { return duration; } set { duration = value; } }
+    public string EffectAvatar { get { return effectAvatar; } }
     public float EffectValue { get { return effectValue; } set { effectValue = value; } }
     public int StartTurn { get { return startTurn; } set { startTurn = value; } }
+    public int EndTurn { get { return endTurn; } set { endTurn = value; } }
 
-    public abstract void EffectFunction(OnFieldCharacter champ);
+    public abstract void EffectFunction();
 
-    public void UpdateEffect(OnFieldCharacter champ)
+    public void UpdateEffect()
     {
-        int endTurn = startTurn + duration;
         if (endTurn > 0)
         {
             endTurn--;
             if (endTurn == 0)
             {
-                RemoveEffect(champ);
+                RemoveEffect();
             }
         }
     }
 
-    public void RemoveEffect(OnFieldCharacter champ) 
-    {
-        champ.Effects.Remove(this);
-    }
+    public abstract void RemoveEffect();
 }

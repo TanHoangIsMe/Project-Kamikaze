@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SwingTheSword : Skill
 {
@@ -34,6 +33,29 @@ public class SwingTheSword : Skill
                 - enemyTargets[0].CurrentArmor;
             if (trueAttackDamage < 0) // make sure damage deal not negative
                 trueAttackDamage = 0;
+
+            // reduce champion shield before health
+            if (enemyTargets[0].CurrentShield > 0)
+            {
+                float damageAfterShield = character.CurrentShield - trueAttackDamage;
+                float shieldLost;
+
+                if (damageAfterShield >= 0) 
+                {
+                    character.CurrentShield -= trueAttackDamage;
+                    shieldLost = trueAttackDamage;
+                }
+                else
+                {
+                    shieldLost = character.CurrentShield;
+                    character.CurrentShield = 0;
+                    character.CurrentHealth += damageAfterShield;
+                }
+
+                TemporaryShield temporaryShield = character.GetComponent<TemporaryShield>();
+                if (temporaryShield != null)
+                    temporaryShield.RemainShield -= shieldLost; 
+            }
 
             enemyTargets[0].CurrentHealth -= trueAttackDamage;
             

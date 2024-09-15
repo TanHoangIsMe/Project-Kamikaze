@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class LionSpirit : Skill
 {
@@ -25,15 +26,27 @@ public class LionSpirit : Skill
         List<OnFieldCharacter> allyTargets = null)
     {
         // decrease champion mana
-        character.CurrentMana -= manaCost;
-        if (character.CurrentMana < 0)
-        { 
-            character.CurrentMana = 0;
-        }
+        //character.CurrentMana -= manaCost;
+        //if (character.CurrentMana < 0)
+        //{ 
+        //    character.CurrentMana = 0;
+        //}
 
-        Effect temporaryShield = new TemporaryShield();
-        temporaryShield.Duration = 2;
-        temporaryShield.EffectFunction(character);
-        character.Effects.Add(temporaryShield);
+        character.AddComponent<TemporaryShield>();
+        TemporaryShield temporaryShield = character.GetComponent<TemporaryShield>();
+        if (temporaryShield != null)
+        {
+            temporaryShield.EffectValue = 200f;
+            temporaryShield.EffectFunction();
+
+            GameplayController gameplayController = FindAnyObjectByType<GameplayController>();
+            if (gameplayController != null)
+            {
+                temporaryShield.StartTurn = gameplayController.Phase;
+                temporaryShield.EndTurn = temporaryShield.StartTurn + 1;
+            }
+
+            character.Effects.Add("Temporary Shield",temporaryShield.EffectAvatar);
+        }
     }
 }
