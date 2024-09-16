@@ -35,30 +35,32 @@ public class SwingTheSword : Skill
                 trueAttackDamage = 0;
 
             // reduce champion shield before health
-            if (enemyTargets[0].CurrentShield > 0)
+            if (enemyTargets[0].CurrentShield > 0) // champ have shield
             {
-                float damageAfterShield = character.CurrentShield - trueAttackDamage;
+                float damageAfterShield = trueAttackDamage - enemyTargets[0].CurrentShield;
                 float shieldLost;
 
-                if (damageAfterShield >= 0) 
+                if (damageAfterShield <= 0) 
                 {
-                    character.CurrentShield -= trueAttackDamage;
+                    enemyTargets[0].CurrentShield -= trueAttackDamage;
                     shieldLost = trueAttackDamage;
                 }
                 else
                 {
-                    shieldLost = character.CurrentShield;
-                    character.CurrentShield = 0;
-                    character.CurrentHealth += damageAfterShield;
+                    shieldLost = enemyTargets[0].CurrentShield;
+                    enemyTargets[0].CurrentShield = 0;
+                    enemyTargets[0].CurrentHealth -= damageAfterShield;
                 }
 
-                TemporaryShield temporaryShield = character.GetComponent<TemporaryShield>();
+                TemporaryShield temporaryShield = enemyTargets[0].GetComponent<TemporaryShield>();
                 if (temporaryShield != null)
                     temporaryShield.RemainShield -= shieldLost; 
             }
-
-            enemyTargets[0].CurrentHealth -= trueAttackDamage;
-            
+            else // champ not have shield
+            {
+                enemyTargets[0].CurrentHealth -= trueAttackDamage;
+            }
+           
             damages.Add(trueAttackDamage);
 
             // send damage list to skill handler
