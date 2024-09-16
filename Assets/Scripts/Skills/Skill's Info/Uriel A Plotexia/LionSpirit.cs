@@ -12,8 +12,8 @@ public class LionSpirit : Skill
         burstCost = 0f;
         numberOfEnemyTargets = 0;
         numberOfAllyTargets = 0;
-        numberOfSelfTarget = 1;
-        numberOfSelfOrAllyTarget = 0;
+        isGroupEnemy = false;
+        isGroupAlly = false;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Shield };
         activateTypes = new ActivateType[] { ActivateType.Active };

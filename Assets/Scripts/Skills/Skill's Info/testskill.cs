@@ -12,8 +12,6 @@ public class testskill : Skill
         burstCost = 0f;
         numberOfEnemyTargets = 3;
         numberOfAllyTargets = 3;
-        numberOfSelfTarget = 0;
-        numberOfSelfOrAllyTarget = 0;
         isGroupEnemy = false;
         isGroupAlly = true;
         priorityStat = StatType.CurrentHealth;

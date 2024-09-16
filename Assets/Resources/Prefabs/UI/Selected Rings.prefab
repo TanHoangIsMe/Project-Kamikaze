@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 4019181897115020933}
   - component: {fileID: 4520704602313922322}
   m_Layer: 0
-  m_Name: 'Self Selected Ring '
+  m_Name: Self Selected Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3887550973932095703
 Transform:
   m_ObjectHideFlags: 0
@@ -4847,7 +4847,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5190454044961401349
 Transform:
   m_ObjectHideFlags: 0
@@ -9677,7 +9677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3976264411470666539
 Transform:
   m_ObjectHideFlags: 0

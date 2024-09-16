@@ -20,7 +20,7 @@ public class EnemyAI : MonoBehaviour
             skillHandler.Champion = champion;
             skillHandler.IsCombatSkillMenu = false;
 
-            SwapChampionsLayer();
+            skillHandler.SwapChampionsLayer();
 
             if (skillHandler.UsingSkillBurst())
             {
@@ -38,21 +38,6 @@ public class EnemyAI : MonoBehaviour
                     skillHandler.AttackConfirm();
                 }
             }
-
-            SwapChampionsLayer();
-        }
-    }
-
-    // swap champion layer (enemy -> ally) (ally -> enemy)
-    // for enemy use auto find targets function
-    private void SwapChampionsLayer()
-    {
-        foreach(var character in FindObjectsOfType<OnFieldCharacter>())
-        {
-            if(character != null && character.gameObject.layer == 6)
-                character.gameObject.layer = 7;
-            else
-                character.gameObject.layer = 6;
         }
     }
 }

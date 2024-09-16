@@ -28,9 +28,9 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
-        { 0 ,"Maria" },
-        { 1 ,"Maria" },
-        { 2 ,"Maria" },
+        //{ 0 ,"Maria" },
+        //{ 1 ,"Maria" },
+        //{ 2 ,"Maria" },
         { 3 ,"Maria" },
         { 4 ,"Maria" },
     };

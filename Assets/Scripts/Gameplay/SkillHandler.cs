@@ -33,9 +33,28 @@ public class SkillHandler : MonoBehaviour
     private void ChangeLayerToSelf()
     {
         if (champion != null)
+        {
             champion.gameObject.layer = 8;
+        }
         else
             Debug.Log("Something wrong in change layer to self");
+    }
+
+    // swap champion layer (enemy -> ally) (ally -> enemy)
+    // for enemy use auto find targets function
+    public void SwapChampionsLayer()
+    {
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (character != null && character.gameObject.layer == 6)
+            {
+                character.gameObject.layer = 7;
+            }
+            else
+            {
+                character.gameObject.layer = 6;
+            }
+        }
     }
 
     private void SetUpToAutoFindTargets(int whichSkill)
@@ -47,9 +66,9 @@ public class SkillHandler : MonoBehaviour
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isCombatSkillMenu);
-        
+
         // if player champion using skill show UI
-        if (isCombatSkillMenu) 
+        if (isCombatSkillMenu)
         {
             // clear all selected ring and turn on based on targets
             autoFindTargets.TurnOffShowTargets();
@@ -77,7 +96,9 @@ public class SkillHandler : MonoBehaviour
         else
         {
             // set champion layer back
+            SwapChampionsLayer();
             champion.gameObject.layer = 7;
+
             champion.gameObject.transform.eulerAngles = 
                 new Vector3(
                     transform.eulerAngles.x,

@@ -11,8 +11,6 @@ public class SkyfallSlash: Skill
         manaCost = 50f;
         numberOfEnemyTargets = 3;
         numberOfAllyTargets = 0;
-        numberOfSelfTarget = 0;
-        numberOfSelfOrAllyTarget = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack };
         activateTypes = new ActivateType[] { ActivateType.Active };

@@ -11,8 +11,6 @@ public abstract class Skill : MonoBehaviour
     protected float burstCost;
     protected int numberOfEnemyTargets;
     protected int numberOfAllyTargets;
-    protected int numberOfSelfTarget;
-    protected int numberOfSelfOrAllyTarget;
     protected bool isGroupEnemy;
     protected bool isGroupAlly;
 
@@ -31,8 +29,6 @@ public abstract class Skill : MonoBehaviour
     public float BurstCost { get { return burstCost; } }
     public int NumberOfEnemyTargets { get { return numberOfEnemyTargets; } }
     public int NumberOfAllyTargets { get { return numberOfAllyTargets; } }
-    public int NumberOfSelfTarget { get { return numberOfSelfTarget; } }
-    public int NumberOfSelfOrAllyTarget { get { return numberOfSelfOrAllyTarget; } }
     public bool IsGroupEnemy { get { return isGroupEnemy; } }
     public bool IsGroupAlly { get { return isGroupAlly; } }
     public StatType PriorityStat { get { return priorityStat; } }

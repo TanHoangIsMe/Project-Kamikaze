@@ -11,8 +11,6 @@ public class AllEyesOnMe : Skill
         burstCost = 100f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
-        numberOfSelfTarget = 1;
-        numberOfSelfOrAllyTarget = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack, SkillType.Heal };
         activateTypes = new ActivateType[] { ActivateType.Active };

@@ -461,7 +461,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         else
             autoFindTargets.AutoFindTargetsBasedOnPriority(1, layer, priorityStat, true);
 
-        // check if targets next to each orther
+        // check if targets next to each other
         if (isGroup)
             if(layer == 7)
                 autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfEnemyTargets, 7, priorityStat);
