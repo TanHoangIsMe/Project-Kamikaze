@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SwingTheSword : Skill
 {
@@ -50,9 +51,25 @@ public class SwingTheSword : Skill
                     enemyTargets[0].CurrentHealth -= damageAfterShield;
                 }
 
-                TemporaryShield temporaryShield = enemyTargets[0].GetComponent<TemporaryShield>();
-                if (temporaryShield != null)
-                    temporaryShield.RemainShield -= shieldLost; 
+                // check if champion have temporary shield effect 
+                // then update shield value remain
+                for (int i = 0; i < enemyTargets[0].effects.Count; i++)
+                    if (enemyTargets[0].effects[i] is TemporaryShield)
+                    {
+                        TemporaryShield temporaryShield = enemyTargets[0].effects[i] as TemporaryShield;
+                        temporaryShield.RemainShield -= shieldLost;
+
+                        // if shield is break then remove shield effect from champion
+                        if (temporaryShield.RemainShield <= 0)
+                            temporaryShield.RemoveEffect();
+
+                        break;
+                    }
+
+                //if (temporaryShield != null)
+                //{
+                //    temporaryShield.RemainShield -= shieldLost;;
+                //}
             }
             else // champ not have shield
             {

@@ -9,7 +9,7 @@ public class UrielAPlotexia : Character
         elementTypes = new ElementType[] { ElementType.Light };
         attack = 200f;
         armor = 1000f;
-        speed = 20f;
+        speed = 200f;
         health = 1000f;
         maxMana = 80f;
         maxBurst = 100f;

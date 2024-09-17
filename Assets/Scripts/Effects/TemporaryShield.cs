@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TemporaryShield : Effect
@@ -16,30 +17,30 @@ public class TemporaryShield : Effect
 
     public override void EffectFunction()
     {
-        OnFieldCharacter champion = gameObject.GetComponent<OnFieldCharacter>();
-        champion.CurrentShield += effectValue;
-        remainShield = 200f;
-    }
-
-    private void Update()
-    {
-        if (remainShield <= 0)
+        if (champion != null)
         {
-            OnFieldCharacter champion = gameObject.GetComponent<OnFieldCharacter>();
-            if (champion != null)
-                champion.Effects.Remove("Temporary Shield");
-            Destroy(this);
+            champion.CurrentShield += effectValue;
+            remainShield = 200f;
         }
     }
 
     public override void RemoveEffect()
     {
-        OnFieldCharacter champion = gameObject.GetComponent<OnFieldCharacter>();
         if (champion != null)
         {
-            champion.Effects.Remove("Temporary Shield");
-            champion.CurrentShield -= remainShield;
+            if (remainShield > 0) 
+            {
+                // if shield is still on champion then remove it 
+                champion.CurrentShield -= remainShield;
+
+                // play champion health bars animation
+                SkillHandler skillHandler = FindObjectOfType<SkillHandler>();
+                if (skillHandler != null)
+                    skillHandler.PlayHealthBarEffect(null, null, champion);
+            }
+
+            // remove effect out of champion effect list
+            champion.Effects.Remove(this); 
         }
-        Destroy(this);
     }
 }

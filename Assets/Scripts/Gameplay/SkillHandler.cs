@@ -293,21 +293,25 @@ public class SkillHandler : MonoBehaviour
     #endregion
 
     #region OverHead Champion UI
-    private void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
+    public void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
     {
         // play health bar fill animation on enemies
-        int totalEnemies = enemies.Count();
-        for (int i = 0; i < totalEnemies; i++)
+        if (enemies != null)
         {
-            PlayPopUpDamageText(enemies, i);
+            int totalEnemies = enemies.Count();
+            for (int i = 0; i < totalEnemies; i++)
+            {
+                PlayPopUpDamageText(enemies, i);
 
-            // Play Update Health Bar Animation
-            enemies[i].gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+                // Play Update Health Bar Animation
+                enemies[i].gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+            }
         }
 
         // play health bar fill animation on allies
-        foreach (var ally in allies)
-            ally.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
+        if (allies != null)
+            foreach (var ally in allies)
+                ally.gameObject.GetComponent<OverHealthBar>().UpdateHealthFill();
 
         // play health bar fill animation on self
         if (self != null)

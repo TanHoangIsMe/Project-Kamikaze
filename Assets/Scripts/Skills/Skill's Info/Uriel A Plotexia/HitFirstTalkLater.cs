@@ -53,6 +53,6 @@ public class HitFirstTalkLater : Skill
                 character.CurrentHealth += loseHealth;
                 character.CurrentShield += needHealAmount;
             }
-        }   
+        }
     }
 }

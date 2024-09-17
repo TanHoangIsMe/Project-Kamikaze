@@ -93,13 +93,8 @@ public class GameplayController : MonoBehaviour
         foreach(var character in FindObjectsOfType<OnFieldCharacter>())
         {
             if (character.Effects.Count > 0)
-            {
-                var effectKeys = character.Effects.Keys;
-                List<string> effectNames = new List<string>(effectKeys);
-
-                for (int i = 0; i < effectNames.Count; i++)
-                    UpdateEffectRemainTurn(effectNames[i], character);
-            }
+                for (int i = 0; i < character.Effects.Count; i++)
+                    character.Effects[i].UpdateEffect();
         }
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
@@ -210,18 +205,4 @@ public class GameplayController : MonoBehaviour
         turnList.Reverse();
     }
     #endregion
-
-    #region Update Effect Remain Turn
-    private void UpdateEffectRemainTurn(string effectName, OnFieldCharacter character)
-    {
-        switch (effectName)
-        {
-            case "Temporary Shield":
-                character.gameObject.GetComponent<TemporaryShield>().UpdateEffect();
-                break;
-            default:
-                break;
-        }
-    }
-    #endregion  
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class LionSpirit : Skill
 {
@@ -32,21 +31,19 @@ public class LionSpirit : Skill
         //    character.CurrentMana = 0;
         //}
 
-        character.AddComponent<TemporaryShield>();
-        TemporaryShield temporaryShield = character.GetComponent<TemporaryShield>();
-        if (temporaryShield != null)
+        // set up temporary shield effect and add to champion effect list
+        Effect temporaryShield = new TemporaryShield();
+        temporaryShield.Champion = character;
+        temporaryShield.EffectValue = 200f;
+        temporaryShield.EffectFunction();
+
+        GameplayController gameplayController = FindAnyObjectByType<GameplayController>();
+        if (gameplayController != null)
         {
-            temporaryShield.EffectValue = 200f;
-            temporaryShield.EffectFunction();
-
-            GameplayController gameplayController = FindAnyObjectByType<GameplayController>();
-            if (gameplayController != null)
-            {
-                temporaryShield.StartTurn = gameplayController.Phase;
-                temporaryShield.EndTurn = temporaryShield.StartTurn + 1;
-            }
-
-            character.Effects.Add("Temporary Shield",temporaryShield.EffectAvatar);
+            temporaryShield.StartTurn = gameplayController.Phase;
+            temporaryShield.EndTurn = temporaryShield.StartTurn + 1;
         }
+
+        character.effects.Add(temporaryShield);
     }
 }
