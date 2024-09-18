@@ -35,7 +35,7 @@ public class MariaSkillController : MonoBehaviour
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
-            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position,
+            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
                 enemyTargets[0].gameObject.transform.position, 5f, "Using First Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
@@ -50,7 +50,7 @@ public class MariaSkillController : MonoBehaviour
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
-            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position, 
+            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack( 
                 enemyTargets[0].gameObject.transform.position,3.5f,"Using Second Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;

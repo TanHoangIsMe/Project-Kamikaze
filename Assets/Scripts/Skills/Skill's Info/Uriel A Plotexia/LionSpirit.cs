@@ -41,9 +41,10 @@ public class LionSpirit : Skill
         if (gameplayController != null)
         {
             temporaryShield.StartTurn = gameplayController.Phase;
-            temporaryShield.EndTurn = temporaryShield.StartTurn + 1;
+            temporaryShield.EndTurn = temporaryShield.StartTurn + 100;
         }
 
         character.effects.Add(temporaryShield);
+        character.UpdateEffectIcon();
     }
 }

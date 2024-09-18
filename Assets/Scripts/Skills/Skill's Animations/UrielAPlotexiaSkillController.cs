@@ -36,7 +36,7 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
-            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(gameObject.transform.position,
+            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
                 enemyTargets[0].gameObject.transform.position, 3f, "Using First Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;

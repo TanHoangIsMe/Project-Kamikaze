@@ -8,7 +8,8 @@ public class TemporaryShield : Effect
 
     public TemporaryShield()
     {
-        effectAvatar = "";
+        effectName = "Temporary Shield";
+        effectAvatar = "Art/UI/Effect Avatars/Temporary Shield";
         effectValue = 0;
         startTurn = 0;
         endTurn = 0;

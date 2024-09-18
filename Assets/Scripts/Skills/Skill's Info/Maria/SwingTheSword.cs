@@ -61,7 +61,10 @@ public class SwingTheSword : Skill
 
                         // if shield is break then remove shield effect from champion
                         if (temporaryShield.RemainShield <= 0)
+                        {
                             temporaryShield.RemoveEffect();
+                            enemyTargets[0].UpdateEffectIcon();
+                        }
 
                         break;
                     }

@@ -8,6 +8,8 @@ public class CalculateToPlayAnimation : MonoBehaviour
     private CheckSkillAnimationController checkSkillAnimationController;
     private List<OnFieldCharacter> targets;
     private List<Animator> animators;
+    private Vector3 characterOriginalPosition;
+    private Vector3 characterOriginalRotation;
 
     private void Awake()
     {
@@ -24,35 +26,32 @@ public class CalculateToPlayAnimation : MonoBehaviour
     private void Start()
     {
         checkSkillAnimationController = FindObjectOfType<CheckSkillAnimationController>();
+
+        // value to store character position
+        characterOriginalPosition = gameObject.transform.position;
+
+        // value to store character rotation
+        characterOriginalRotation = gameObject.transform.eulerAngles;
     }
 
     //character move to target for attack and back to original position
-    public IEnumerator MoveToPointAndBack(Vector3 startPosition, Vector3 endPosition,
+    public IEnumerator MoveToPointAndBack(Vector3 endPosition,
         float distanceFromEnd, string triggerName, Animator animator)
     {
-        // store champion start position
-        Vector3 originalPosition = startPosition;
-
         // calculate the position in front of target position
-        Vector3 directionToEnd = (endPosition - startPosition).normalized;
+        Vector3 directionToEnd = (endPosition - characterOriginalPosition).normalized;
         Vector3 targetPosition = endPosition - directionToEnd * distanceFromEnd;
 
         // Run to end point
-        yield return StartCoroutine(MoveToPoint(originalPosition, targetPosition,animator));
+        yield return StartCoroutine(MoveToPoint(characterOriginalPosition, targetPosition,animator));
 
         animator.SetTrigger(triggerName);
         yield return new WaitForSeconds(2f);
 
         // Back to start point
-        yield return StartCoroutine(MoveToPoint(targetPosition, originalPosition, animator));
+        yield return StartCoroutine(MoveToPoint(targetPosition, characterOriginalPosition, animator));
 
-        // reset transform
-        gameObject.transform.position = originalPosition;
-        if (gameObject.layer == 7)
-            gameObject.transform.eulerAngles =
-                new Vector3(0, 180f, 0);
-        else
-            gameObject.transform.eulerAngles = Vector3.zero;
+        ResetChampionTransform();
 
         // start new turn
         gameplayController.StartTurn();
@@ -105,6 +104,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
         animator.SetBool(parameterName, false); // play idle animation
         yield return new WaitForSeconds(0.5f);
 
+        // reset champion transform
+        ResetChampionTransform();
+
         // start new turn
         gameplayController.StartTurn();
     }
@@ -142,16 +144,12 @@ public class CalculateToPlayAnimation : MonoBehaviour
             foreach (var animator in animators)
             {
                 animator.SetBool("Being Attacked", false); // Play idle animation
-            }   
-            
-            // reset enemies position.y
+            }
+
+            // reset enemies position.y and y rotation
             foreach (var target in targets)
             {
-                target.gameObject.transform.position =
-                    new Vector3(
-                        target.gameObject.transform.position.x,
-                        0,
-                        target.gameObject.transform.position.z);
+                ResetEnemiesYValue(target.gameObject);
             }
         }
     }
@@ -163,5 +161,31 @@ public class CalculateToPlayAnimation : MonoBehaviour
             if (target.CurrentHealth <= 0)
                 foreach (var animator in animators)
                     animator.SetTrigger("Death");
+    }
+
+    private void ResetChampionTransform()
+    {
+        // reset champion position
+        gameObject.transform.position = characterOriginalPosition;
+
+        // reset champion y rotation
+        gameObject.transform.eulerAngles = characterOriginalRotation;
+    }
+
+    private void ResetEnemiesYValue(GameObject target)
+    {
+        // reset y position
+        target.transform.position =
+            new Vector3(
+                target.transform.position.x,
+                0,
+                target.transform.position.z);
+
+        // reset y rotation
+        if (target.layer == 7)
+            target.transform.eulerAngles =
+                new Vector3(0, 180f, 0);
+        else
+            target.transform.eulerAngles = Vector3.zero;
     }
 }

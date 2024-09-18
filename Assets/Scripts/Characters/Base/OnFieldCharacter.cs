@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OnFieldCharacter : MonoBehaviour 
 {
@@ -102,4 +104,47 @@ public class OnFieldCharacter : MonoBehaviour
         skills = currentCharacter.Skills;
         effects = new List<Effect>();
     }
+
+    #region Process Effect Icon
+    public void UpdateEffectIcon()
+    {
+        Transform overheadBars = gameObject.transform.Find("Health Bar Canvas");
+        if (overheadBars != null)
+        {
+            Transform effectIcons = overheadBars.gameObject.transform.Find("Effect Icons");
+            if (effectIcons != null)
+            {
+                // clear previous effect icons
+                foreach (Transform icon in effectIcons)
+                    Destroy(icon.gameObject);
+
+                for (int i = 0; i < MakeUniqueIconList(effects).Count; i++)
+                {
+                    // add effect image to overhead bars child object
+                    GameObject effectIcon = new GameObject();
+                    effectIcon.name = effects[i].EffectName;
+                    effectIcon.transform.SetParent(effectIcons);
+
+                    Image effectIconImage = effectIcon.AddComponent<Image>();
+                    effectIconImage.sprite = Resources.Load<Sprite>(effects[i].EffectAvatar);
+
+                    // set it transform
+                    RectTransform effectIconTransform = effectIcon.GetComponent<RectTransform>();
+                    effectIconTransform.sizeDelta = new Vector2(0.2f, 0.2f);
+                    effectIconTransform.localPosition = new Vector2(-0.33f + 0.22f * (i % 4), 0.18f + 0.22f * (i / 4));
+                    effectIconTransform.localRotation = Quaternion.identity;
+                    effectIconTransform.localScale = new Vector2(1.0f, 1.0f);
+                }
+            }
+        }        
+    }
+
+    // make a unique effect icon list to show on UI
+    private List<Effect> MakeUniqueIconList(List<Effect> originalList)
+    {
+        // Using HashSet to remove same effect
+        HashSet<Effect> uniqueList = new HashSet<Effect>(originalList);
+        return new List<Effect>(uniqueList); // Return new list
+    }
+    #endregion
 }
