@@ -94,7 +94,10 @@ public class GameplayController : MonoBehaviour
         {
             if (character.Effects.Count > 0)
                 for (int i = 0; i < character.Effects.Count; i++)
+                {
                     character.Effects[i].UpdateEffect();
+                    character.UpdateEffectIcon();
+                }
         }
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first

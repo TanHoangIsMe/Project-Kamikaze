@@ -53,26 +53,7 @@ public class SwingTheSword : Skill
 
                 // check if champion have temporary shield effect 
                 // then update shield value remain
-                for (int i = 0; i < enemyTargets[0].effects.Count; i++)
-                    if (enemyTargets[0].effects[i] is TemporaryShield)
-                    {
-                        TemporaryShield temporaryShield = enemyTargets[0].effects[i] as TemporaryShield;
-                        temporaryShield.RemainShield -= shieldLost;
-
-                        // if shield is break then remove shield effect from champion
-                        if (temporaryShield.RemainShield <= 0)
-                        {
-                            temporaryShield.RemoveEffect();
-                            enemyTargets[0].UpdateEffectIcon();
-                        }
-
-                        break;
-                    }
-
-                //if (temporaryShield != null)
-                //{
-                //    temporaryShield.RemainShield -= shieldLost;;
-                //}
+                UpdateRemainShield(enemyTargets[0], shieldLost);
             }
             else // champ not have shield
             {
@@ -85,5 +66,29 @@ public class SwingTheSword : Skill
             // for make pop up damage text 
             skillHandler.SkillValues = damages;
         }
+    }
+
+    private void UpdateRemainShield(OnFieldCharacter enemy, float shieldLost)
+    {
+        for (int i = 0; i < enemy.effects.Count; i++)
+            if (enemy.effects[i] is TemporaryShield)
+            {
+                TemporaryShield temporaryShield = enemy.effects[i] as TemporaryShield;
+
+                temporaryShield.RemainShield -= shieldLost;
+
+                // if shield is break then remove shield effect from champion
+                if (temporaryShield.RemainShield <= 0)
+                {
+                    // update shield lost
+                    shieldLost = -temporaryShield.RemainShield;
+
+                    temporaryShield.RemoveEffect();
+                    enemy.UpdateEffectIcon();
+
+                    // run this method again to find next shield
+                    UpdateRemainShield(enemy, shieldLost);
+                }
+            }
     }
 }

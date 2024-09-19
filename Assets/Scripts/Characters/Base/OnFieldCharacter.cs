@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -118,33 +118,45 @@ public class OnFieldCharacter : MonoBehaviour
                 foreach (Transform icon in effectIcons)
                     Destroy(icon.gameObject);
 
-                for (int i = 0; i < MakeUniqueIconList(effects).Count; i++)
+                for (int i = 0; i < effects.Count; i++)
                 {
-                    // add effect image to overhead bars child object
+                    // add effect game object
                     GameObject effectIcon = new GameObject();
                     effectIcon.name = effects[i].EffectName;
                     effectIcon.transform.SetParent(effectIcons);
 
-                    Image effectIconImage = effectIcon.AddComponent<Image>();
-                    effectIconImage.sprite = Resources.Load<Sprite>(effects[i].EffectAvatar);
+                    // add effect image game object
+                    GameObject effectImage= new GameObject();
+                    effectImage.transform.SetParent(effectIcon.transform);
+                    Image effectAvatar = effectImage.AddComponent<Image>();
+                    effectAvatar.sprite = Resources.Load<Sprite>(effects[i].EffectAvatar);
 
-                    // set it transform
-                    RectTransform effectIconTransform = effectIcon.GetComponent<RectTransform>();
-                    effectIconTransform.sizeDelta = new Vector2(0.2f, 0.2f);
-                    effectIconTransform.localPosition = new Vector2(-0.33f + 0.22f * (i % 4), 0.18f + 0.22f * (i / 4));
+                    // add effect remain turn text game object
+                    GameObject effectText = new GameObject();
+                    effectText.transform.SetParent(effectIcon.transform);
+                    TextMeshProUGUI effectRemainTurn = effectText.AddComponent<TextMeshProUGUI>();
+                    effectRemainTurn.text = (effects[i].EndTurn - effects[i].StartTurn).ToString();
+                    effectRemainTurn.fontSize = 0.12f;
+                    effectRemainTurn.alignment = TextAlignmentOptions.BottomRight;
+
+                    // set effect icon transform
+                    Transform effectIconTransform = effectIcon.GetComponent<Transform>();
+                    effectIconTransform.localPosition = 
+                        new Vector3(-0.33f + 0.22f * (i % 4), 0.18f + 0.22f * (i / 4), 0);
                     effectIconTransform.localRotation = Quaternion.identity;
-                    effectIconTransform.localScale = new Vector2(1.0f, 1.0f);
+                    effectIconTransform.localScale = Vector3.one;
+
+                   
+                    // set effect image transform
+                    RectTransform effectImageTransform = effectImage.GetComponent<RectTransform>();
+                    effectImageTransform.sizeDelta = new Vector2(0.2f, 0.2f);
+
+                    // set effect remain turn text transform
+                    RectTransform effectTextTransform = effectText.GetComponent<RectTransform>();
+                    effectTextTransform.sizeDelta = new Vector2(0.2f, 0.2f);
                 }
             }
         }        
-    }
-
-    // make a unique effect icon list to show on UI
-    private List<Effect> MakeUniqueIconList(List<Effect> originalList)
-    {
-        // Using HashSet to remove same effect
-        HashSet<Effect> uniqueList = new HashSet<Effect>(originalList);
-        return new List<Effect>(uniqueList); // Return new list
     }
     #endregion
 }
