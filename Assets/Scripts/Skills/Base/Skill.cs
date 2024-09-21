@@ -19,6 +19,8 @@ public abstract class Skill : MonoBehaviour
     protected SkillType[] skillTypes;
     protected ActivateType[] activateTypes;
     protected TargetType[] targetTypes;
+
+    protected CalculateSkillEnergy calculateSkillEnergy;
     #endregion
 
     #region Properties
@@ -35,10 +37,14 @@ public abstract class Skill : MonoBehaviour
     public SkillType[] SkillTypes { get { return skillTypes; } }
     public ActivateType[] ActivateTypes { get { return activateTypes; } }
     public TargetType[] TargetTypes { get { return targetTypes; } }
+
+    protected Skill()
+    {
+        calculateSkillEnergy = new CalculateSkillEnergy();
+    }
     #endregion
 
     #region Methods
-
     public abstract void SkillFunction(OnFieldCharacter character,
         SkillHandler skillHandler,
         List<OnFieldCharacter> enemyTargets = null, 

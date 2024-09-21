@@ -7,7 +7,7 @@ public class HitFirstTalkLater : Skill
         skillName = "Hit First, Talk Later";
         avatar = "Art/UI/Skill Avatars/Uriel A Plotexia/Hit First, Talk Later Avatar";
         description = "Not yet";
-        manaCost = 50f;
+        manaCost = 10f;
         burstCost = 0f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;

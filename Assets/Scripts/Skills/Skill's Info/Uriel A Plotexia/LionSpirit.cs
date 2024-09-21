@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class LionSpirit : Skill
 {
@@ -25,11 +26,7 @@ public class LionSpirit : Skill
         List<OnFieldCharacter> allyTargets = null)
     {
         // decrease champion mana
-        //character.CurrentMana -= manaCost;
-        //if (character.CurrentMana < 0)
-        //{ 
-        //    character.CurrentMana = 0;
-        //}
+        calculateSkillEnergy.ReduceCharacterMana(character, manaCost);
 
         // set up temporary shield effect and add to champion effect list
         Effect temporaryShield = new TemporaryShield();

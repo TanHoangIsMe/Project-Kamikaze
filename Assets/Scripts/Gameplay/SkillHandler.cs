@@ -187,7 +187,7 @@ public class SkillHandler : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Not enough burst to use skill");
+            Debug.Log("Not enough burst to use skill");
             return false;
         }
     }

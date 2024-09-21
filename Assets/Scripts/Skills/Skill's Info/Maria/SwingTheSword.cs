@@ -8,7 +8,7 @@ public class SwingTheSword : Skill
         skillName = "Swing The Sword";
         avatar = "Art/UI/Skill Avatars/Maria/Swing The Sword Avatar";
         description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
-        manaCost = 50f;
+        manaCost = 10f;
         burstCost = 0f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
@@ -23,8 +23,12 @@ public class SwingTheSword : Skill
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
+        if (enemyTargets == null) Debug.Log("Something's wrong");
+
         if (enemyTargets != null)
         {
+            calculateSkillEnergy.ReduceCharacterMana(character, manaCost);
+
             List<float> damages = new List<float>();
 
             // calculate the real damage deal to enemy 
@@ -65,6 +69,8 @@ public class SwingTheSword : Skill
             // send damage list to skill handler
             // for make pop up damage text 
             skillHandler.SkillValues = damages;
+
+            calculateSkillEnergy.IncreaseBurstBaseOnDamage(character, enemyTargets, trueAttackDamage);
         }
     }
 
