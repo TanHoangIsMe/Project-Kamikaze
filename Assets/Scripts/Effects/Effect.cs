@@ -30,5 +30,9 @@ public abstract class Effect : MonoBehaviour
         }
     }
 
-    public abstract void RemoveEffect();
+    public virtual void RemoveEffect()
+    {
+        // remove effect out of champion effect list
+        champion.Effects.Remove(this);
+    }
 }
