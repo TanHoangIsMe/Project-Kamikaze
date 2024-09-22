@@ -22,7 +22,7 @@ public class GameplayController : MonoBehaviour
         //{ 6 ,"Maria" },
         //{ 7 ,"Maria" },
         { 8 ,"UrielAPlotexia" },//UrielAPlotexia
-        //{ 9 ,"Maria" },
+        { 9 ,"Maria" },
         //{ 10 ,"Maria" },
     };
 

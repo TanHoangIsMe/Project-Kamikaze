@@ -22,16 +22,22 @@ public class CalculateSkillEnergy
 
     // increase character burst when deal or receive damage
     public void IncreaseBurstBaseOnDamage(OnFieldCharacter character, 
-        List<OnFieldCharacter> enemies, float damage)
+        List<OnFieldCharacter> enemies, List<float> damages)
     {
-        // for every 10 damage receive 1 burst pont
-        float restoreBurst = damage / 10f;
+        // calculate total damage that character deal to enemies
+        float totalDamage = 0;
+        foreach(var damage in damages)
+            totalDamage += damage;
+            
+        // for every 10 damage receive 1 burst point
 
         // restore character that deal damage
-        character.CurrentBurst += restoreBurst;
+        character.CurrentBurst += totalDamage / 10f;
 
         // restore character that receive damage
-        foreach (var enemy in enemies) 
-            enemy.CurrentBurst += restoreBurst;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].CurrentBurst += damages[i] / 10f;
+        }          
     }
 }

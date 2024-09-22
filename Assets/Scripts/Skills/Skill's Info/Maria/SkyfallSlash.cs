@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using UnityEngine;
 
 public class SkyfallSlash: Skill
 {
@@ -22,26 +22,18 @@ public class SkyfallSlash: Skill
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
+        if (enemyTargets == null) Debug.Log("Something's wrong");
+
         if (enemyTargets != null)
         {
-            List<float> damages = new List<float>();
+            calculateSkillEnergy.ReduceCharacterMana(character, manaCost);
 
-            foreach (var target in enemyTargets)
-            {
-                // calculate the real damage deal to enemy 
-                float trueAttackDamage = character.CurrentAttack
-                - target.CurrentArmor;
-                if (trueAttackDamage < 0) // make sure damage deal not negative
-                    trueAttackDamage = 0;
+            List<float> trueAttackDamages =
+                calculateSkillDamage.CalculateOutputDamage
+                (character, enemyTargets, skillHandler);
 
-                target.CurrentHealth -= trueAttackDamage;
-
-                damages.Add(trueAttackDamage);               
-            }
-
-            // send damage list to skill handler
-            // for make pop up damage text 
-            skillHandler.SkillValues = damages;
+            calculateSkillEnergy.IncreaseBurstBaseOnDamage(character,
+                enemyTargets, trueAttackDamages);
         }
     }
 }

@@ -21,6 +21,7 @@ public abstract class Skill : MonoBehaviour
     protected TargetType[] targetTypes;
 
     protected CalculateSkillEnergy calculateSkillEnergy;
+    protected CalculateSkillDamage calculateSkillDamage;
     #endregion
 
     #region Properties
@@ -41,6 +42,7 @@ public abstract class Skill : MonoBehaviour
     protected Skill()
     {
         calculateSkillEnergy = new CalculateSkillEnergy();
+        calculateSkillDamage = new CalculateSkillDamage();
     }
     #endregion
 
