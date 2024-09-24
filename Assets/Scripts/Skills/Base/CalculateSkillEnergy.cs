@@ -11,7 +11,7 @@ public class CalculateSkillEnergy
     // decrease champion burst
     public void ReduceCharacterBurst(OnFieldCharacter character)
     {
-        character.CurrentBurst = 0;
+        character.CurrentBurst = 0f;
     }
 
     // restore champion mana after using first
@@ -36,8 +36,6 @@ public class CalculateSkillEnergy
 
         // restore character that receive damage
         for (int i = 0; i < enemies.Count; i++)
-        {
             enemies[i].CurrentBurst += damages[i] / 10f;
-        }          
     }
 }

@@ -95,6 +95,9 @@ public class SkillHandler : MonoBehaviour
         // reset target lists
         ClearTargetsList();
 
+        // reset skill value list
+        skillValues.Clear();
+
         // turn off show targets
         autoFindTargets.TurnOffShowTargets();
 
