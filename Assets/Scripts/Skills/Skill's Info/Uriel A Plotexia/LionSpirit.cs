@@ -34,7 +34,6 @@ public class LionSpirit : Skill
         temporaryShield.EffectValue = 200f;
         temporaryShield.EffectFunction();
 
-        GameplayController gameplayController = FindAnyObjectByType<GameplayController>();
         if (gameplayController != null)
         {
             temporaryShield.StartTurn = gameplayController.Phase;

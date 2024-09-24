@@ -161,10 +161,10 @@ public class CalculateSkillDamage
 
     private void UpdateRemainShield(OnFieldCharacter enemy, float shieldLost)
     {
-        for (int i = 0; i < enemy.effects.Count; i++)
-            if (enemy.effects[i] is TemporaryShield)
+        foreach(var effect in enemy.effects)
+            if (effect is TemporaryShield)
             {
-                TemporaryShield temporaryShield = enemy.effects[i] as TemporaryShield;
+                TemporaryShield temporaryShield = effect as TemporaryShield;
 
                 temporaryShield.RemainShield -= shieldLost;
 

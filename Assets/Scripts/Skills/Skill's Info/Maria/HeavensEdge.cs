@@ -23,7 +23,7 @@ public class HeavensEdge: Skill
         List<OnFieldCharacter> allyTargets = null)
     {
         // decrease champion burst
-        calculateSkillEnergy.ReduceCharacterBurst(character, manaCost);
+        calculateSkillEnergy.ReduceCharacterBurst(character);
 
         if (enemyTargets != null)
         {

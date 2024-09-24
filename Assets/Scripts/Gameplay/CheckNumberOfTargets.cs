@@ -225,7 +225,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         targetType = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
     }
 
-    public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu)
+    public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu, bool isTaunted, OnFieldCharacter taunter)
     {
         GetSkillInfo();
         
@@ -237,20 +237,17 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.TurnOnShowTargets();
             }
             else if (targetType[0] == TargetType.SelfOrAlly) // skill affected self or ally
-            {
                 // auto find 1 enemy but can select self
                 // layer should be 6 or 7
                 // but i set 0 cause self don't need layer
                 AutoFind1EnemyOrAllyOrGroup(true, 0, 4, true, false);
-            }
+
             else if (targetType[0] == TargetType.Enemy)
             {
                 if (numberOfEnemyTargets == 1)
-                {
                     // auto find 1 target which low priority
                     // 1 target - enemy layer - priority stat - lowest stat
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, false);
-                }
                 else
                 {
                     if(!isGroupEnemy) // enemies not next to others
@@ -259,14 +256,15 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false,7,1,true, true);
                 }
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, false, 0);
             }
             else // target type = ally
             {
                 if (numberOfAllyTargets == 1)
-                {
                     // auto find 1 target which low priority
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, false);
-                }
                 else
                 {
                     if(!isGroupAlly)
@@ -286,8 +284,11 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (numberOfAllyTargets == numberOfEnemyTargets && numberOfAllyTargets == 1)
                 {
                     // auto find 1 enemy 1 ally which low priority
-                    autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
+                    AutoFind1EnemyOrAllyOrGroup(false, 6, 3, false, false);
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
+
+                    // replace target list with taunter (cannot select enemy)
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
                 }
                 else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
                 {
@@ -298,8 +299,11 @@ public class CheckNumberOfTargets : MonoBehaviour
                         // auto find allies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
                     else
-                        // auto find 1 enemy
-                        AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
+                        // auto find group allies
+                        AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
+
+                    // replace target list with taunter (cannot select enemy)
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
                 }
                 else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
                 {
@@ -310,27 +314,44 @@ public class CheckNumberOfTargets : MonoBehaviour
                         // auto find enemies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
                     else
-                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, true);
+
+                    // replace target list with taunter (cannot select enemy)
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
                 }
                 else // number of enemy > 1 and number of ally > 1
                 {
                     if (!isGroupEnemy && !isGroupAlly)
+                    {
                         // auto find targets (allies and enemies)
                         AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+
+                        // replace target list with taunter (cannot select enemy)
+                        AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                    }
                     else if (!isGroupEnemy && isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+
+                        // replace target list with taunter (cannot select enemy)
+                        AutoFindTauntTargets(isTaunted, taunter, true, 2);
                     }
-                    else if(isGroupEnemy && !isGroupAlly)
+                    else if (isGroupEnemy && !isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+
+                        // replace target list with taunter (cannot select enemy)
+                        AutoFindTauntTargets(isTaunted, taunter, false, 0);
                     }
                     else // group enemies and allies
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 3, false, true);
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
+
+                        // replace target list with taunter (cannot select enemy)
+                        AutoFindTauntTargets(isTaunted, taunter, true, 2);
                     }
                 }
             }
@@ -340,10 +361,8 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 if (numberOfEnemyTargets == 1) // skill affected self and 1 enemy
-                {
                     // auto find 1 enemy
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, false);
-                }
                 else // skill affected self and >1 enemy
                 {
                     if (!isGroupEnemy) // enemies not next to others
@@ -352,6 +371,9 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, false, 0);
             }
             // skill affected self and ally
             else if (targetType.Contains(TargetType.Enemy) && targetType.Contains(TargetType.Self)) 
@@ -359,10 +381,8 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 if (numberOfAllyTargets == 1)
-                {
                     // auto find 1 target which low priority
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, false);
-                }
                 else
                 {
                     if (!isGroupAlly)
@@ -377,18 +397,19 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 if (numberOfEnemyTargets == 1) // skill affected self and 1 enemy
-                {
                     // auto find 1 enemy
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 5, true, false);
-                }
                 else // skill affected self and >1 enemy
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
                     else // enemies next to others
-                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 5, true, true);
                 }
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, true, 4);
             }
         }
         else // number of target = 3
@@ -399,8 +420,11 @@ public class CheckNumberOfTargets : MonoBehaviour
                 autoFindTargets.SelfTarget = champion;
 
                 // auto find 1 enemy 1 ally which low priority
-                autoFindTargets.AutoFindTargetsBasedOnPriority(1, 6, priorityStat, true);
+                AutoFind1EnemyOrAllyOrGroup(false, 6, 3, false, false);
                 AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, true, 2);
             }
             // skill affected self, > 1 ally, 1 enemy
             else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
@@ -412,6 +436,9 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                 // auto find allies
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, false, 0);
             }
             // skill affected self, 1 ally, > 1 enemy
             else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
@@ -423,28 +450,45 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                 // auto find enemies
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+
+                // replace target list with taunter
+                AutoFindTauntTargets(isTaunted, taunter, true, 2);
             }
             else // number of enemy > 1 and number of ally > 1 and self
             {
                 autoFindTargets.SelfTarget = champion;
 
                 if (!isGroupEnemy && !isGroupAlly)
+                {
                     // auto find targets (allies and enemies)
                     AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+
+                    // replace target list with taunter
+                    AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                }
                 else if (!isGroupEnemy && isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
                     AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+
+                    // replace target list with taunter
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
                 }
                 else if (isGroupEnemy && !isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
                     AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+
+                    // replace target list with taunter
+                    AutoFindTauntTargets(isTaunted, taunter, false, 0);
                 }
                 else // group enemies and allies
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 3, false, true);
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
+
+                    // replace target list with taunter
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
                 }
             }
         }
@@ -501,6 +545,26 @@ public class CheckNumberOfTargets : MonoBehaviour
             ChoosingLowestPriority();
             layer = 6;
             ChoosingLowestPriority();
+        }
+    }
+
+    private void AutoFindTauntTargets(bool isTaunted, OnFieldCharacter taunter, bool canSelect, int selectType)
+    {
+        if (isTaunted)
+        {
+            // replace enemy target list with taunter
+            for (int i = 0; i < numberOfEnemyTargets; i++)
+                autoFindTargets.EnemyTargets[i] = taunter;
+
+            // update select type
+            if (!canSelect)
+                canSelectTarget = false;
+            else
+                this.selectType = selectType;
+
+            // reset show targets UI
+            autoFindTargets.TurnOffShowTargets();
+            autoFindTargets.TurnOnShowTargets();
         }
     }
     #endregion

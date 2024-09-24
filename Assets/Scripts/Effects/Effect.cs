@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Effect : MonoBehaviour
+public class Effect : MonoBehaviour
 {
     protected string effectName;
     protected string effectAvatar;
@@ -16,14 +16,15 @@ public abstract class Effect : MonoBehaviour
     public int EndTurn { get { return endTurn; } set { endTurn = value; } }
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
-    public abstract void EffectFunction();
+    public virtual void EffectFunction() { }
 
+    // update effect turn remain
     public void UpdateEffect()
     {
-        if (endTurn > 0)
+        if (endTurn - startTurn > 0)
         {
             endTurn--;
-            if (endTurn == 0)
+            if (endTurn - startTurn == 0)
             {
                 RemoveEffect();
             }

@@ -22,6 +22,7 @@ public abstract class Skill : MonoBehaviour
 
     protected CalculateSkillEnergy calculateSkillEnergy;
     protected CalculateSkillDamage calculateSkillDamage;
+    protected GameplayController gameplayController;
     #endregion
 
     #region Properties
@@ -43,6 +44,7 @@ public abstract class Skill : MonoBehaviour
     {
         calculateSkillEnergy = new CalculateSkillEnergy();
         calculateSkillDamage = new CalculateSkillDamage();
+        gameplayController = FindObjectOfType<GameplayController>();
     }
     #endregion
 

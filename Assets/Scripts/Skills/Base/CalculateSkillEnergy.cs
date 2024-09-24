@@ -9,7 +9,7 @@ public class CalculateSkillEnergy
     }
 
     // decrease champion burst
-    public void ReduceCharacterBurst(OnFieldCharacter character, float burstCost)
+    public void ReduceCharacterBurst(OnFieldCharacter character)
     {
         character.CurrentBurst = 0;
     }

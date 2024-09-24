@@ -10,10 +10,6 @@ public class TemporaryShield : Effect
     {
         effectName = "Temporary Shield";
         effectAvatar = "Art/UI/Effect Avatars/Temporary Shield";
-        effectValue = 0;
-        startTurn = 0;
-        endTurn = 0;
-        remainShield = 1;
     }
 
     public override void EffectFunction()

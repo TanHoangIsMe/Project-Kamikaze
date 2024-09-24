@@ -62,10 +62,20 @@ public class SkillHandler : MonoBehaviour
         // change champion layer = 8 - self
         ChangeLayerToSelf();
 
+        // check if champion is taunted
+        bool isTaunted = false;
+        OnFieldCharacter taunter = null;
+        foreach (var effect in champion.effects)
+            if (effect is Taunted taunted)
+            { 
+                isTaunted = true;
+                taunter = taunted.TauntedBy;
+            }
+
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
-        checkNumberOfTargets.CheckInfoToAutoFindTargets(isCombatSkillMenu);
+        checkNumberOfTargets.CheckInfoToAutoFindTargets(isCombatSkillMenu, isTaunted, taunter);
 
         // if player champion using skill show UI
         if (isCombatSkillMenu)
@@ -296,7 +306,7 @@ public class SkillHandler : MonoBehaviour
     public void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
     {
         // play health bar fill animation on enemies
-        if (enemies != null)
+        if (enemies != null && skillValues.Count > 0)
         {
             int totalEnemies = enemies.Count();
             for (int i = 0; i < totalEnemies; i++)
