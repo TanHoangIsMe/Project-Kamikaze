@@ -23,10 +23,10 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0.3
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 0cd0203ab60f88f4db947a87b4f57cbd, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -271,7 +271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &10881086
 Transform:
   m_ObjectHideFlags: 0
@@ -925,6 +925,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 133423450}
   m_CullTransparentMesh: 1
+--- !u!1001 &136313833
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &152598904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,6 +1127,67 @@ RectTransform:
   m_AnchoredPosition: {x: -900, y: 500}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &335541403
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &335558935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1536,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417396938}
   m_CullTransparentMesh: 1
+--- !u!1001 &427266442
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &472649785
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,6 +2391,67 @@ RectTransform:
   m_AnchoredPosition: {x: 120, y: 100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &617313319
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &636227415
 GameObject:
   m_ObjectHideFlags: 0
@@ -2475,6 +2719,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647855773}
   m_CullTransparentMesh: 1
+--- !u!1001 &674920825
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2581,7 +2886,7 @@ GameObject:
   - component: {fileID: 722331047}
   - component: {fileID: 722331046}
   m_Layer: 0
-  m_Name: Terrain
+  m_Name: Battle Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2655,7 +2960,7 @@ Transform:
   m_GameObject: {fileID: 722331045}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 0, z: -5}
+  m_LocalPosition: {x: -15, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3210,6 +3515,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   descriptionPanel: {fileID: 1638215932}
+--- !u!1001 &916576260
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3269,7 +3635,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -3295,13 +3661,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24192187, y: 0, z: 0, w: 0.9702957}
-  m_LocalPosition: {x: 25, y: 9, z: -7}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 25, y: 9, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 28, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!1 &1030827878
 GameObject:
   m_ObjectHideFlags: 0
@@ -3436,6 +3802,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030827878}
   m_CullTransparentMesh: 1
+--- !u!1001 &1170962907
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &1249188739
 GameObject:
   m_ObjectHideFlags: 0
@@ -4442,6 +4869,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1470775895}
   m_CullTransparentMesh: 1
+--- !u!1001 &1594692034
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 21.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &1599270017
 GameObject:
   m_ObjectHideFlags: 0
@@ -4517,6 +5005,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599270017}
   m_CullTransparentMesh: 1
+--- !u!1001 &1606492278
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 21.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &1638215932
 GameObject:
   m_ObjectHideFlags: 0
@@ -4750,6 +5299,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699481563}
   m_CullTransparentMesh: 1
+--- !u!1001 &1729671794
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328666592244123028, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_Name
+      value: UrielAPlotexia
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106011776487497518, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fd13475c195c8040b7c509a8a41bb06, type: 3}
 --- !u!1 &1758775135
 GameObject:
   m_ObjectHideFlags: 0
@@ -5659,3 +6269,13 @@ SceneRoots:
   - {fileID: 2132432324}
   - {fileID: 10881086}
   - {fileID: 722331048}
+  - {fileID: 1729671794}
+  - {fileID: 1606492278}
+  - {fileID: 617313319}
+  - {fileID: 335541403}
+  - {fileID: 916576260}
+  - {fileID: 674920825}
+  - {fileID: 1594692034}
+  - {fileID: 427266442}
+  - {fileID: 1170962907}
+  - {fileID: 136313833}
