@@ -19,19 +19,19 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
-        //{ 6 ,"Maria" },
-        //{ 7 ,"Maria" },
+        { 6 ,"Maria" },
+        { 7 ,"Maria" },
         { 8 ,"UrielAPlotexia" },//UrielAPlotexia
-        { 9 ,"Maria" },
-        //{ 10 ,"Maria" },
+        { 9 ,"UrielAPlotexia" },
+        { 10 ,"Maria" },
     };
 
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
-        //{ 0 ,"Maria" },
-        //{ 1 ,"Maria" },
-        //{ 2 ,"Maria" },
-        { 3 ,"Maria" },
+        { 0 ,"Maria" },
+        { 1 ,"UrielAPlotexia" },
+        { 2 ,"Maria" },
+        { 3 ,"UrielAPlotexia" },
         { 4 ,"Maria" },
     };
 
@@ -117,16 +117,16 @@ public class GameplayController : MonoBehaviour
     #region SpawnChampions
     private void SpawnEnemiesAndHeroes()
     { 
-        // spawn enemies
-        foreach (KeyValuePair<int, string> enemyChampion in enemyChampions)
-        {
-             CreateCharacter(enemyChampion.Key, enemyChampion.Value, 7);
-        }
-
         // spawn player's champions
         foreach (KeyValuePair<int, string> playerChampion in playerChampions)
         {
             CreateCharacter(playerChampion.Key, playerChampion.Value, 6);
+        }
+
+        // spawn enemies
+        foreach (KeyValuePair<int, string> enemyChampion in enemyChampions)
+        {
+            CreateCharacter(enemyChampion.Key, enemyChampion.Value, 7);
         }
     }
 
@@ -178,18 +178,18 @@ public class GameplayController : MonoBehaviour
         switch (position)
         {
             // enemy positions
-            case 0: return new Vector3(-7f, 0f, 10f);
-            case 1: return new Vector3(-4f, 0f, 13f);
-            case 2: return new Vector3(0f, 0f, 10f);
-            case 3: return new Vector3(4f, 0f, 13f);
-            case 4: return new Vector3(7f, 0f, 10f);
+            case 0: return new Vector3(18f, 0f, 16f);
+            case 1: return new Vector3(21.5f, 0f, 18f);
+            case 2: return new Vector3(25f, 0f, 16f);
+            case 3: return new Vector3(28.5f, 0f, 18f);
+            case 4: return new Vector3(32f, 0f, 16f);
 
             // ally positions
-            case 6: return new Vector3(-7f, 0f, -2f);
-            case 7: return new Vector3(-4f, 0f, -5f);
-            case 8: return new Vector3(0f, 0f, -2f);
-            case 9: return new Vector3(4f, 0f, -5f);
-            case 10: return new Vector3(7f, 0f, -2f);
+            case 6: return new Vector3(18f, 0f, 4f);
+            case 7: return new Vector3(21.5f, 0f, 2f);
+            case 8: return new Vector3(25f, 0f, 4f);
+            case 9: return new Vector3(28.5f, 0f, 2f);
+            case 10: return new Vector3(32f, 0f, 4f);
 
             default: return Vector3.zero;
         }
