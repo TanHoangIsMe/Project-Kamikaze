@@ -14,7 +14,7 @@ public class AllEyesOnMe : Skill
         priorityStat = StatType.CurrentAttack;
         skillTypes = new SkillType[] { SkillType.Crowd_Control };
         activateTypes = new ActivateType[] { ActivateType.Active };
-        targetTypes = new TargetType[] { TargetType.Enemy };
+        targetTypes = new TargetType[] { TargetType.Enemy, TargetType.Self };
     }
 
     public override void SkillFunction(OnFieldCharacter character,

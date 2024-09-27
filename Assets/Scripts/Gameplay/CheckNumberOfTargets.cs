@@ -22,9 +22,10 @@ public class CheckNumberOfTargets : MonoBehaviour
     public bool IsChoosePriorityOpen { get { return isChoosePriorityOpen; } set { isChoosePriorityOpen = value; } }
 
     // skill info
-    private TargetType[] targetType;
+    private SkillType[] skillTypes;
+    private TargetType[] targetTypes;
     private StatType priorityStat;
-    private int numberOfTargetType;
+    private int numberOfTargetTypes;
     private int numberOfAllyTargets;
     private int numberOfEnemyTargets;
     private bool isGroupEnemy;
@@ -204,7 +205,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     private void GetSkillInfo()
     {
         // count how many type of target that skill can affect to
-        numberOfTargetType = champion.Skills[whichSkill].TargetTypes.Count();
+        numberOfTargetTypes = champion.Skills[whichSkill].TargetTypes.Count();
 
         // priority stat for auto find
         priorityStat = champion.Skills[whichSkill].PriorityStat;
@@ -222,27 +223,30 @@ public class CheckNumberOfTargets : MonoBehaviour
         isGroupAlly = champion.Skills[whichSkill].IsGroupAlly;
 
         // which type of target skill affected to
-        targetType = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
+        targetTypes = champion.CurrentCharacter.Skills[whichSkill].TargetTypes;
+
+        // check which type of skill
+        skillTypes = champion.CurrentCharacter.Skills[whichSkill].SkillTypes;
     }
 
     public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu, bool isTaunted, OnFieldCharacter taunter)
     {
         GetSkillInfo();
         
-        if (numberOfTargetType == 1)
+        if (numberOfTargetTypes == 1)
         {
-            if (targetType[0] == TargetType.Self) // skill just affected self
+            if (targetTypes[0] == TargetType.Self) // skill just affected self
             {
                 autoFindTargets.SelfTarget = champion;
                 autoFindTargets.TurnOnShowTargets();
             }
-            else if (targetType[0] == TargetType.SelfOrAlly) // skill affected self or ally
+            else if (targetTypes[0] == TargetType.SelfOrAlly) // skill affected self or ally
                 // auto find 1 enemy but can select self
                 // layer should be 6 or 7
                 // but i set 0 cause self don't need layer
                 AutoFind1EnemyOrAllyOrGroup(true, 0, 4, true, false);
 
-            else if (targetType[0] == TargetType.Enemy)
+            else if (targetTypes[0] == TargetType.Enemy)
             {
                 if (numberOfEnemyTargets == 1)
                     // auto find 1 target which low priority
@@ -258,7 +262,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 }
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
             }
             else // target type = ally
             {
@@ -275,10 +279,10 @@ public class CheckNumberOfTargets : MonoBehaviour
                 }
             }
         }
-        else if (numberOfTargetType == 2) // number of target type = 2
+        else if (numberOfTargetTypes == 2) // number of target type = 2
         {
             // skill just affected ally and enemy not self
-            if (targetType.Contains(TargetType.Ally) && targetType.Contains(TargetType.Enemy))
+            if (targetTypes.Contains(TargetType.Ally) && targetTypes.Contains(TargetType.Enemy))
             {
                 // skill affect 1 ally and 1 enemy
                 if (numberOfAllyTargets == numberOfEnemyTargets && numberOfAllyTargets == 1)
@@ -288,7 +292,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
 
                     // replace target list with taunter (cannot select enemy)
-                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                 }
                 else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
                 {
@@ -303,7 +307,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
 
                     // replace target list with taunter (cannot select enemy)
-                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                 }
                 else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
                 {
@@ -317,7 +321,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, true);
 
                     // replace target list with taunter (cannot select enemy)
-                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                 }
                 else // number of enemy > 1 and number of ally > 1
                 {
@@ -327,7 +331,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
 
                         // replace target list with taunter (cannot select enemy)
-                        AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                        AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
                     }
                     else if (!isGroupEnemy && isGroupAlly)
                     {
@@ -335,7 +339,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
 
                         // replace target list with taunter (cannot select enemy)
-                        AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                        AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                     }
                     else if (isGroupEnemy && !isGroupAlly)
                     {
@@ -343,7 +347,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
 
                         // replace target list with taunter (cannot select enemy)
-                        AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                        AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
                     }
                     else // group enemies and allies
                     {
@@ -351,12 +355,12 @@ public class CheckNumberOfTargets : MonoBehaviour
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
 
                         // replace target list with taunter (cannot select enemy)
-                        AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                        AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                     }
                 }
             }
             //skill affected self and enemy
-            else if (targetType.Contains(TargetType.Enemy) && targetType.Contains(TargetType.Self))
+            else if (targetTypes.Contains(TargetType.Enemy) && targetTypes.Contains(TargetType.Self))
             {
                 autoFindTargets.SelfTarget = champion;
 
@@ -373,10 +377,10 @@ public class CheckNumberOfTargets : MonoBehaviour
                 }
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
             }
             // skill affected self and ally
-            else if (targetType.Contains(TargetType.Enemy) && targetType.Contains(TargetType.Self)) 
+            else if (targetTypes.Contains(TargetType.Enemy) && targetTypes.Contains(TargetType.Self)) 
             {
                 autoFindTargets.SelfTarget = champion;
 
@@ -409,7 +413,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 }
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, true, 4);
+                AutoFindTauntTargets(isTaunted, taunter, true, 4, skillTypes);
             }
         }
         else // number of target = 3
@@ -424,7 +428,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, false);
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
             }
             // skill affected self, > 1 ally, 1 enemy
             else if (numberOfEnemyTargets == 1 && numberOfAllyTargets > 1)
@@ -438,7 +442,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
             }
             // skill affected self, 1 ally, > 1 enemy
             else if (numberOfAllyTargets == 1 && numberOfEnemyTargets > 1)
@@ -452,7 +456,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
 
                 // replace target list with taunter
-                AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
             }
             else // number of enemy > 1 and number of ally > 1 and self
             {
@@ -464,7 +468,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
 
                     // replace target list with taunter
-                    AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                    AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
                 }
                 else if (!isGroupEnemy && isGroupAlly)
                 {
@@ -472,7 +476,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
 
                     // replace target list with taunter
-                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                 }
                 else if (isGroupEnemy && !isGroupAlly)
                 {
@@ -480,7 +484,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
 
                     // replace target list with taunter
-                    AutoFindTauntTargets(isTaunted, taunter, false, 0);
+                    AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
                 }
                 else // group enemies and allies
                 {
@@ -488,7 +492,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
 
                     // replace target list with taunter
-                    AutoFindTauntTargets(isTaunted, taunter, true, 2);
+                    AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
                 }
             }
         }
@@ -548,9 +552,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         }
     }
 
-    private void AutoFindTauntTargets(bool isTaunted, OnFieldCharacter taunter, bool canSelect, int selectType)
+    private void AutoFindTauntTargets(bool isTaunted, OnFieldCharacter taunter, bool canSelect, int selectType, SkillType[] skillTypes)
     {
-        if (isTaunted)
+        if (isTaunted && skillTypes.Contains(SkillType.Attack))
         {
             // replace enemy target list with taunter
             for (int i = 0; i < numberOfEnemyTargets; i++)
@@ -575,7 +579,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         isChoosePriorityOpen = true;
         this.layer = layer;
 
-        string targets = "";
+        string targets;
         if (layer == 6) targets = "allies";
         else targets = "enemies";
 
