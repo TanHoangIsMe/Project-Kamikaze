@@ -89,8 +89,9 @@ public class SkillHandler : MonoBehaviour
     private void ResetThings()
     {
         // turn off can select target
-        checkNumberOfTargets.IsFinish = false;
+        checkNumberOfTargets.IsFinishChoosing = false;
         checkNumberOfTargets.CanSelectTarget = false;
+        checkNumberOfTargets.IsFinishFinding = false;
 
         // reset target lists
         ClearTargetsList();
@@ -130,7 +131,7 @@ public class SkillHandler : MonoBehaviour
     private void ResetCheckNumberOfTargetsFlags()
     {
         checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
-        checkNumberOfTargets.IsFinish = false;
+        checkNumberOfTargets.IsFinishChoosing = false;
         checkNumberOfTargets.IsChoosePriorityOpen = false;
         checkNumberOfTargets.CanSelectTarget = false;
     }
@@ -207,9 +208,7 @@ public class SkillHandler : MonoBehaviour
 
     public void AttackConfirm()
     {
-        if (autoFindTargets.EnemyTargets.Count() > 0 ||
-            autoFindTargets.AllyTargets.Count() > 0 ||
-            autoFindTargets.SelfTarget != null)
+        if (checkNumberOfTargets.IsFinishFinding)
         {
             if(isCombatSkillMenu)
                 // turn off skill menu

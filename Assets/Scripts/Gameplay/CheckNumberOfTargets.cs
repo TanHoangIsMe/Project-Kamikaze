@@ -37,12 +37,15 @@ public class CheckNumberOfTargets : MonoBehaviour
     private int selectType;
 
     // value to control when to open choose dialog when need to open dialog 2 times
-    private bool isFinish;
-    public bool IsFinish { set { isFinish = value; } }
+    private bool isFinishChoosing;
+    public bool IsFinishChoosing { set { isFinishChoosing = value; } }
 
     // value to know when player can select target
     private bool canSelectTarget;
     public bool CanSelectTarget { set { canSelectTarget = value; } }
+
+    private bool isFinishFinding;
+    public bool IsFinishFinding { get { return isFinishFinding; } set { isFinishFinding = value; } }
 
     private void Awake()
     {
@@ -53,9 +56,10 @@ public class CheckNumberOfTargets : MonoBehaviour
         choosePriorityText = choosePriorityPanel.GetChild(0)
             .gameObject.GetComponent<TextMeshProUGUI>();
 
-        isFinish = false;
+        isFinishChoosing = false;
         canSelectTarget = false;
         isChoosePriorityOpen = false;
+        isFinishFinding = false;
     }
 
     private void Update()
@@ -106,9 +110,10 @@ public class CheckNumberOfTargets : MonoBehaviour
                 (numberOfEnemyTargets, 7, priorityStat, isLow);
 
         choosePriorityPanel.gameObject.SetActive(false);
-        isFinish = true;
+        isFinishChoosing = true;
         autoFindTargets.TurnOnShowTargets();
         isChoosePriorityOpen = false;
+        isFinishFinding = true;
     }
 
     private void UpdateTargetListBasedOnSelect(GameObject clickedObject)
@@ -239,6 +244,7 @@ public class CheckNumberOfTargets : MonoBehaviour
             {
                 autoFindTargets.SelfTarget = champion;
                 autoFindTargets.TurnOnShowTargets();
+                isFinishFinding = true;
             }
             else if (targetTypes[0] == TargetType.SelfOrAlly) // skill affected self or ally
                 // auto find 1 enemy but can select self
@@ -254,11 +260,11 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, false);
                 else
                 {
-                    if(!isGroupEnemy) // enemies not next to others
+                    if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
                     else // enemies next to others
-                        AutoFind1EnemyOrAllyOrGroup(false,7,1,true, true);
+                        AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
 
                 // replace target list with taunter
@@ -271,7 +277,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, false);
                 else
                 {
-                    if(!isGroupAlly)
+                    if (!isGroupAlly)
                         // auto find allies
                         AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
                     else
@@ -523,8 +529,10 @@ public class CheckNumberOfTargets : MonoBehaviour
         // check if need to show targets found UI 
         if (canTurnOnShowTargets)
             autoFindTargets.TurnOnShowTargets();
-    }
 
+        // finish find targets can confirm attack
+        isFinishFinding = true;
+    }
 
     private void AutoFindOver1EnemyOrAlly(bool isCombatSkillMenu, int layer)
     {
@@ -591,12 +599,13 @@ public class CheckNumberOfTargets : MonoBehaviour
     {
         OpenChoosePriorityDialog(7);
         yield return StartCoroutine(AwaitFinishChoosing());
+        isFinishFinding = false; // reset can confirm attack to false 
         OpenChoosePriorityDialog(6);
     }
 
     private IEnumerator AwaitFinishChoosing()
     {
-        while (!isFinish)
+        while (!isFinishChoosing)
         {
             yield return null;
         }
