@@ -7,10 +7,10 @@ public class UrielAPlotexia : Character
         roleTypes = new RoleType[] { RoleType.Tanker };
         classTypes = new ClassType[] { ClassType.Defender };
         elementTypes = new ElementType[] { ElementType.Light };
-        attack = 200f;
+        attack = 1000f;
         armor = 100f;
-        speed = 200f;
-        health = 1000f;
+        speed = 1000f;
+        health = 5000f;
         maxMana = 80f;
         maxBurst = 100f;
         skills = new Skill[] {

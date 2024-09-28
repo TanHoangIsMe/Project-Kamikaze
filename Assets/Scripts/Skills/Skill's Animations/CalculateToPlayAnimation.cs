@@ -156,11 +156,40 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     public void PlayDeathAnimation()
     {
+        StartCoroutine(WaitForDeathAnimation());
+    }
+
+    private IEnumerator WaitForDeathAnimation()
+    {
+        List<float> animationLengths = new List<float>();
+
         // check enemy death to play death animation
         foreach (var target in targets)
             if (target.CurrentHealth <= 0)
                 foreach (var animator in animators)
+                {
                     animator.SetTrigger("Death");
+                    animationLengths.Add(animator.GetCurrentAnimatorStateInfo(0).length);
+                }
+        
+        if (animationLengths.Count > 0)
+        {
+            // find longest death animation 
+            float maxAnimationLength = 0f;
+            foreach (var length in animationLengths)
+                if (length > maxAnimationLength)
+                    maxAnimationLength = length;
+
+            yield return new WaitForSeconds(maxAnimationLength + 2f);
+        }
+
+        // reset isAnimating flag
+        OnFieldCharacter character = GetComponent<OnFieldCharacter>();  
+        Component characterSkillController = checkSkillAnimationController.GetCharacterSkillController(character);
+        checkSkillAnimationController.CheckWhoseAnimationControllerToResetIsAnimating(characterSkillController);
+
+        // check end game condition
+        gameplayController.CheckGameOver();
     }
 
     private void ResetChampionTransform()

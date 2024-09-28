@@ -74,4 +74,15 @@ public class CheckSkillAnimationController : MonoBehaviour
         
         return null;
     }
+
+    public void CheckWhoseAnimationControllerToResetIsAnimating(Component skillAnimationController)
+    {
+        // Maria
+        if(skillAnimationController is MariaSkillController mariaSkillAnimationController)
+            mariaSkillAnimationController.IsAnimating = false;
+
+        // Uriel A Plotexia
+        if (skillAnimationController is UrielAPlotexiaSkillController urielAPlotexiaSkillController)
+            urielAPlotexiaSkillController.IsAnimating = false;
+    }
 }

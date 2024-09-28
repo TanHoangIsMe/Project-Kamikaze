@@ -1,11 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameplayController : MonoBehaviour
 {
     [SerializeField] GameObject skillMenuCanvas;
+    [SerializeField] GameObject phaseCanvas;
+    [SerializeField] GameObject gameOverCanvas;
     [SerializeField] TextMeshProUGUI phaseText;
+    [SerializeField] GameObject resultIcon;
 
     private string prefabPath; // path to character in Prefabs folder
     private int phase; // combat turn
@@ -19,19 +25,19 @@ public class GameplayController : MonoBehaviour
 
     private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
-        { 6 ,"Maria" },
-        { 7 ,"Maria" },
+        //{ 6 ,"Maria" },
+        //{ 7 ,"Maria" },
         { 8 ,"UrielAPlotexia" },//UrielAPlotexia
         { 9 ,"UrielAPlotexia" },
-        { 10 ,"Maria" },
+        //{ 10 ,"Maria" },
     };
 
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
         { 0 ,"Maria" },
-        { 1 ,"UrielAPlotexia" },
-        { 2 ,"Maria" },
-        { 3 ,"UrielAPlotexia" },
+        //{ 1 ,"UrielAPlotexia" },
+        //{ 2 ,"Maria" },
+        //{ 3 ,"UrielAPlotexia" },
         { 4 ,"Maria" },
     };
 
@@ -49,11 +55,21 @@ public class GameplayController : MonoBehaviour
     private void Start()
     {
         SpawnEnemiesAndHeroes();
-        StartNewPhase();
+        // await a little bit to start combat 
+        Invoke("StartNewPhase", 2f); 
     }
 
     public void StartTurn()
     {
+        // check if game over
+        Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
+        if (enemyAllDead || allyAllDead)
+        {
+            skillMenuCanvas.SetActive(false);
+            phaseCanvas.SetActive(false);
+            return;
+        }
+            
         // remove turn list of dead champion       
         for(int i = 0; i < turnList.Count; i++)
             if (turnList[i].CurrentHealth < 0)
@@ -206,6 +222,43 @@ public class GameplayController : MonoBehaviour
 
         // Reverse the list
         turnList.Reverse();
+    }
+    #endregion
+
+    #region GameOver
+    public void CheckGameOver()
+    {
+        Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
+
+        if (allyAllDead || enemyAllDead)
+        {
+            Time.timeScale = 0;
+            gameOverCanvas.SetActive(true);
+        }
+
+        Image resultIconImage = resultIcon.GetComponent<Image>();
+
+        if (enemyAllDead && resultIconImage != null)
+            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/GameOver/Victory Icon");
+        else
+        {
+            resultIconImage.rectTransform.sizeDelta = new Vector2(500f, 450f);
+            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/GameOver/Defeat Icon");
+        }
+    }
+
+    private void Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead)
+    {
+        enemyAllDead = true;
+        allyAllDead = true;
+
+        foreach (var champ in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (new[] { 6, 7, 8, 9, 10 }.Contains(champ.Position) && champ.CurrentHealth > 0)
+                allyAllDead = false;
+            else if (new[] { 0, 1, 2, 3, 4 }.Contains(champ.Position) && champ.CurrentHealth > 0)
+                enemyAllDead = false;
+        }           
     }
     #endregion
 }

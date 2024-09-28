@@ -8,7 +8,7 @@ public class AllEyesOnMe : Skill
         avatar = "Art/UI/Skill Avatars/Uriel A Plotexia/All Eyes On Me Avatar";
         description = "Not yet";
         manaCost = 0f;
-        burstCost = 0f;
+        burstCost = 100f;
         numberOfEnemyTargets = 3;
         numberOfAllyTargets = 0;
         priorityStat = StatType.CurrentAttack;

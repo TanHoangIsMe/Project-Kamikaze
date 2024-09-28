@@ -14,6 +14,9 @@ public class MariaSkillController : MonoBehaviour
     private List<OnFieldCharacter> enemyTargets;
     public List<OnFieldCharacter> EnemyTargets { set { enemyTargets = value; } }
 
+    private bool isAnimating = false;
+    public bool IsAnimating { set { isAnimating = value; } }
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -29,12 +32,13 @@ public class MariaSkillController : MonoBehaviour
 
     public void PlayFirstSkillAnimation()
     {
-        if (enemyTargets != null)
+        if (enemyTargets != null && !isAnimating)
         {
             if(combatSkillMenu != null)
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
+            isAnimating = true;
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
                 enemyTargets[0].gameObject.transform.position, 5f, "Using First Skill", animator));
 
@@ -44,14 +48,15 @@ public class MariaSkillController : MonoBehaviour
 
     public void PlaySecondSkillAnimation()
     {   
-        if (enemyTargets != null)
+        if (enemyTargets != null && !isAnimating)
         {
             if (combatSkillMenu != null)
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
-            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack( 
-                enemyTargets[0].gameObject.transform.position,3.5f,"Using Second Skill", animator));
+            isAnimating = true;
+            StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
+                enemyTargets[0].gameObject.transform.position, 3.5f,"Using Second Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
@@ -59,12 +64,13 @@ public class MariaSkillController : MonoBehaviour
 
     public void PlayBurstSkillAnimation()
     {
-        if (enemyTargets != null)
+        if (enemyTargets != null && !isAnimating)
         {
             if (combatSkillMenu != null)
                 // turn off combat skill menu canvas
                 combatSkillMenu.gameObject.SetActive(false);
 
+            isAnimating = true;
             StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle("Using Burst Skill", 4.30f,animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
