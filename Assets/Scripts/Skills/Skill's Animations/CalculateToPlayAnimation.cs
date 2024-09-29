@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Animations;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
     private List<Animator> animators;
     private Vector3 characterOriginalPosition;
     private Vector3 characterOriginalRotation;
+    List<float> animationLengths;
 
     private void Awake()
     {
@@ -35,9 +37,11 @@ public class CalculateToPlayAnimation : MonoBehaviour
     }
 
     //character move to target for attack and back to original position
-    public IEnumerator MoveToPointAndBack(Vector3 endPosition,
+    public IEnumerator MoveToPointAndBack(OnFieldCharacter target,
         float distanceFromEnd, string triggerName, Animator animator)
     {
+        Vector3 endPosition = target.gameObject.transform.position;
+
         // calculate the position in front of target position
         Vector3 directionToEnd = (endPosition - characterOriginalPosition).normalized;
         Vector3 targetPosition = endPosition - directionToEnd * distanceFromEnd;
@@ -53,8 +57,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         ResetChampionTransform();
 
-        // start new turn
-        gameplayController.StartTurn();
+        if(target.CurrentHealth > 0)
+            // start new turn
+            gameplayController.StartTurn();
     }
 
     // character move to target for attack
@@ -96,7 +101,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         }
     }
 
-    public IEnumerator UsingSkillAndBackToIdle(string parameterName, float animationDuration, Animator animator)
+    public IEnumerator UsingSkillAndBackToIdle(OnFieldCharacter target, string parameterName, float animationDuration, Animator animator)
     {
         animator.SetBool(parameterName, true); // play skill animation
         yield return new WaitForSeconds(animationDuration);
@@ -107,8 +112,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
         // reset champion transform
         ResetChampionTransform();
 
-        // start new turn
-        gameplayController.StartTurn();
+        if (target.CurrentHealth > 0)
+            // start new turn
+            gameplayController.StartTurn();
     }
 
     public IEnumerator BeingAttackedAndBackToIdle(float animationDuration, List<OnFieldCharacter> enemyTargets)
@@ -161,7 +167,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     private IEnumerator WaitForDeathAnimation()
     {
-        List<float> animationLengths = new List<float>();
+        animationLengths = new List<float>();
 
         // check enemy death to play death animation
         foreach (var target in targets)
@@ -169,7 +175,10 @@ public class CalculateToPlayAnimation : MonoBehaviour
                 foreach (var animator in animators)
                 {
                     animator.SetTrigger("Death");
-                    animationLengths.Add(animator.GetCurrentAnimatorStateInfo(0).length);
+
+                    // find animation with its name
+                    string deathAnimationName = target.name.Replace("(Clone)", "") + " Death";
+                    GetAnimationByTag(animator, deathAnimationName, animationLengths);
                 }
         
         if (animationLengths.Count > 0)
@@ -181,6 +190,13 @@ public class CalculateToPlayAnimation : MonoBehaviour
                     maxAnimationLength = length;
 
             yield return new WaitForSeconds(maxAnimationLength + 2f);
+
+            foreach (var target in targets)
+                if (target.CurrentHealth <= 0)
+                    Destroy(target.gameObject);
+            
+            // start new turn
+            gameplayController.StartTurn();
         }
 
         // reset isAnimating flag
@@ -190,6 +206,22 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // check end game condition
         gameplayController.CheckGameOver();
+    }
+
+    private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)
+    {
+        AnimatorController animatorController = animator.runtimeAnimatorController as AnimatorController;
+
+        if (animatorController != null)
+            foreach (var layer in animatorController.layers)
+                foreach (var state in layer.stateMachine.states)
+                    // check is state of motion is AnimationClip
+                    if (state.state.motion is AnimationClip clip)
+                        if (clip.name == animationName) // compare animation name
+                        {
+                            animationLengths.Add(clip.length);
+                            return;
+                        }
     }
 
     private void ResetChampionTransform()

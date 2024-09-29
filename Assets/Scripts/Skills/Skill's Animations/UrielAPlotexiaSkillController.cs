@@ -41,7 +41,7 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
 
             isAnimating = true;
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
-                enemyTargets[0].gameObject.transform.position, 3f, "Using First Skill", animator));
+                enemyTargets[0], 3f, "Using First Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
@@ -56,7 +56,7 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
                 combatSkillMenu.gameObject.SetActive(false);
 
             isAnimating = true;
-            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle("Using Second Skill", 2.03f, animator));
+            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle(enemyTargets[0], "Using Second Skill", 2.03f, animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
@@ -71,7 +71,7 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
                 combatSkillMenu.gameObject.SetActive(false);
 
             isAnimating = true;
-            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle("Using Burst Skill", 2.26f, animator));
+            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle(enemyTargets[0], "Using Burst Skill", 2.26f, animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
