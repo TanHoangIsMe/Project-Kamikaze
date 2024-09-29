@@ -35,10 +35,10 @@ public class GameplayController : MonoBehaviour
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
         { 0 ,"Maria" },
-        //{ 1 ,"UrielAPlotexia" },
-        //{ 2 ,"Maria" },
-        //{ 3 ,"UrielAPlotexia" },
-        { 4 ,"Maria" },
+        { 1 ,"UrielAPlotexia" },
+        { 2 ,"Maria" },
+        { 3 ,"UrielAPlotexia" },
+        //{ 4 ,"Maria" },
     };
 
     private void Awake()
@@ -95,9 +95,9 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            enemyAI.Champion = whoTurn;
-            enemyAI.StartEnemyTurn();
-            //StartTurn(); // for debug
+            //enemyAI.Champion = whoTurn;
+            //enemyAI.StartEnemyTurn();
+            StartTurn(); // for debug
         }
     }
 

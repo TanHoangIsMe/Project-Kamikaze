@@ -40,7 +40,7 @@ public class MariaSkillController : MonoBehaviour
 
             isAnimating = true;
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
-                enemyTargets[0], 5f, "Using First Skill", animator));
+                enemyTargets, 5f, "Using First Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
@@ -56,7 +56,7 @@ public class MariaSkillController : MonoBehaviour
 
             isAnimating = true;
             StartCoroutine(calculateToPlayAnimation.MoveToPointAndBack(
-                enemyTargets[0], 3.5f,"Using Second Skill", animator));
+                enemyTargets, 3.5f,"Using Second Skill", animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }
@@ -71,7 +71,7 @@ public class MariaSkillController : MonoBehaviour
                 combatSkillMenu.gameObject.SetActive(false);
 
             isAnimating = true;
-            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle(enemyTargets[0], "Using Burst Skill", 4.30f,animator));
+            StartCoroutine(calculateToPlayAnimation.UsingSkillAndBackToIdle(enemyTargets, "Using Burst Skill", 4.30f,animator));
 
             playLastAnimation.EnemyTargets = enemyTargets;
         }

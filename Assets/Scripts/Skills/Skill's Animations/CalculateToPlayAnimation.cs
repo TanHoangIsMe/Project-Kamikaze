@@ -37,10 +37,14 @@ public class CalculateToPlayAnimation : MonoBehaviour
     }
 
     //character move to target for attack and back to original position
-    public IEnumerator MoveToPointAndBack(OnFieldCharacter target,
+    public IEnumerator MoveToPointAndBack(List<OnFieldCharacter> targets,
         float distanceFromEnd, string triggerName, Animator animator)
     {
-        Vector3 endPosition = target.gameObject.transform.position;
+        // calculate destination
+        Vector3 endPosition = Vector3.zero;
+        foreach (var target in targets)
+            endPosition += target.gameObject.transform.position;
+        endPosition /= targets.Count;
 
         // calculate the position in front of target position
         Vector3 directionToEnd = (endPosition - characterOriginalPosition).normalized;
@@ -57,9 +61,8 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         ResetChampionTransform();
 
-        if(target.CurrentHealth > 0)
-            // start new turn
-            gameplayController.StartTurn();
+        // check is any target dead
+        CheckTargetsDead();
     }
 
     // character move to target for attack
@@ -101,7 +104,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         }
     }
 
-    public IEnumerator UsingSkillAndBackToIdle(OnFieldCharacter target, string parameterName, float animationDuration, Animator animator)
+    public IEnumerator UsingSkillAndBackToIdle(List<OnFieldCharacter> targets, string parameterName, float animationDuration, Animator animator)
     {
         animator.SetBool(parameterName, true); // play skill animation
         yield return new WaitForSeconds(animationDuration);
@@ -112,9 +115,14 @@ public class CalculateToPlayAnimation : MonoBehaviour
         // reset champion transform
         ResetChampionTransform();
 
-        if (target.CurrentHealth > 0)
+        if ( targets.Count == 0)
             // start new turn
             gameplayController.StartTurn();
+        else
+        {
+            // check is any target dead
+            CheckTargetsDead();
+        }
     }
 
     public IEnumerator BeingAttackedAndBackToIdle(float animationDuration, List<OnFieldCharacter> enemyTargets)
@@ -160,6 +168,20 @@ public class CalculateToPlayAnimation : MonoBehaviour
         }
     }
 
+    private void CheckTargetsDead()
+    {
+        // check is any target dead
+        bool isSomeoneDead = false;
+
+        foreach (var target in targets)
+            if (target.CurrentHealth < 0)
+                isSomeoneDead = true;
+
+        if (!isSomeoneDead)
+            // start new turn
+            gameplayController.StartTurn();
+    }
+
     public void PlayDeathAnimation()
     {
         StartCoroutine(WaitForDeathAnimation());
@@ -189,7 +211,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
                 if (length > maxAnimationLength)
                     maxAnimationLength = length;
 
-            yield return new WaitForSeconds(maxAnimationLength + 2f);
+            yield return new WaitForSeconds(maxAnimationLength + 1f);
 
             foreach (var target in targets)
                 if (target.CurrentHealth <= 0)
