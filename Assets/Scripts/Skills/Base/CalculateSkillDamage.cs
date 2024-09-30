@@ -6,7 +6,7 @@ public class CalculateSkillDamage
     // calculate the real damage after being effected by armor,
     // element advantage,class advantage.
     public List<float> CalculateOutputDamage(OnFieldCharacter character,
-        List<OnFieldCharacter> enemies, SkillHandler skillHandler)
+        List<OnFieldCharacter> enemies, SkillHandler skillHandler, float damagePercent)
     {
         // list to store damages value to show damage deal popup text
         List<float> damages = new List<float>();
@@ -161,10 +161,10 @@ public class CalculateSkillDamage
 
     private void UpdateRemainShield(OnFieldCharacter enemy, float shieldLost)
     {
-        foreach(var effect in enemy.effects)
-            if (effect is TemporaryShield)
+        for(int i = 0; i < enemy.Effects.Count; i++) 
+            if (enemy.Effects[i] is TemporaryShield)
             {
-                TemporaryShield temporaryShield = effect as TemporaryShield;
+                TemporaryShield temporaryShield = enemy.Effects[i] as TemporaryShield;
 
                 temporaryShield.RemainShield -= shieldLost;
 

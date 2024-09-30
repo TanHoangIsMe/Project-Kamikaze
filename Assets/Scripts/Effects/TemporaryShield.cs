@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TemporaryShield : Effect
 {
     private float remainShield;
@@ -36,8 +33,13 @@ public class TemporaryShield : Effect
                     skillHandler.PlayHealthBarEffect(null, null, champion);
             }
 
-            // remove effect out of champion effect list
-            champion.Effects.Remove(this); 
+            //for (int i = 0; i < champion.Effects.Count; i++)
+            //    if (champion.Effects[i] is TemporaryShield)
+            //    {
+            //        // remove effect out of champion effect list
+            //        champion.Effects.RemoveAt(i);
+            //        break;
+            //    }
         }
     }
 }

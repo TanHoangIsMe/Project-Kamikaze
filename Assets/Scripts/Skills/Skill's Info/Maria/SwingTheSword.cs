@@ -7,7 +7,7 @@ public class SwingTheSword : Skill
     {
         skillName = "Swing The Sword";
         avatar = "Art/UI/Skill Avatars/Maria/Swing The Sword Avatar";
-        description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat.";
+        description = "Maria spins around and swings her great sword at the enemy, dealing damage equal to 130% of her attack stat and reduce enemy armor by 20%";
         manaCost = 10f;
         burstCost = 0f;
         numberOfEnemyTargets = 1;
@@ -31,10 +31,24 @@ public class SwingTheSword : Skill
 
             List<float> trueAttackDamages = 
                 calculateSkillDamage.CalculateOutputDamage
-                (character, enemyTargets, skillHandler);
+                (character, enemyTargets, skillHandler, 1.3f);
 
             calculateSkillEnergy.IncreaseBurstBaseOnDamage(character, 
                 enemyTargets, trueAttackDamages);
+
+            ArmorBreak armorBreak = new ArmorBreak();
+            armorBreak.Champion = enemyTargets[0];
+            armorBreak.EffectValue = enemyTargets[0].CurrentArmor * 0.2f;
+            armorBreak.EffectFunction();
+
+            if (gameplayController != null)
+            {
+                armorBreak.StartTurn = gameplayController.Phase;
+                armorBreak.EndTurn = gameplayController.Phase + 2;
+            }
+
+            enemyTargets[0].Effects.Add(armorBreak);
+            enemyTargets[0].UpdateEffectIcon();
         }
     }
 }

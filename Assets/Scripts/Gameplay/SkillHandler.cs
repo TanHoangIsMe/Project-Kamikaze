@@ -65,7 +65,7 @@ public class SkillHandler : MonoBehaviour
         // check if champion is taunted
         bool isTaunted = false;
         OnFieldCharacter taunter = null;
-        foreach (var effect in champion.effects)
+        foreach (var effect in champion.Effects)
             if (effect is Taunted taunted)
             { 
                 isTaunted = true;

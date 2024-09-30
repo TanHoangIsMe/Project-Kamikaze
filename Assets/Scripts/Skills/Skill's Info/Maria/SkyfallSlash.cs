@@ -7,9 +7,10 @@ public class SkyfallSlash: Skill
     {
         skillName = "Skyfall Slash";
         avatar = "Art/UI/Skill Avatars/Maria/Skyfall Slash Avatar";
-        description = "Uriel A Plotexia increase his or an ally's armor by 30";
-        manaCost = 50f;
-        numberOfEnemyTargets = 3;
+        description = "Not yet";
+        manaCost = 0f;
+        burstCost = 0f;
+        numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack };
@@ -30,7 +31,7 @@ public class SkyfallSlash: Skill
 
             List<float> trueAttackDamages =
                 calculateSkillDamage.CalculateOutputDamage
-                (character, enemyTargets, skillHandler);
+                (character, enemyTargets, skillHandler, 1f);
 
             calculateSkillEnergy.IncreaseBurstBaseOnDamage(character,
                 enemyTargets, trueAttackDamages);

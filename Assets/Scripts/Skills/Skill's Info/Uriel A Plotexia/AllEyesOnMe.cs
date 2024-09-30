@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class AllEyesOnMe : Skill
 {
@@ -42,7 +43,7 @@ public class AllEyesOnMe : Skill
             if (effect is Taunt previousTaunt && gameplayController != null)
             {
                 previousTaunt.StartTurn = gameplayController.Phase;
-                previousTaunt.EndTurn = previousTaunt.StartTurn + 1;
+                previousTaunt.EndTurn = gameplayController.Phase + 1;
                 isTaunt = true;
                 character.UpdateEffectIcon();
                 break;
@@ -51,16 +52,16 @@ public class AllEyesOnMe : Skill
         if (isTaunt) return;
 
         // add taunt effect to champion effect list
-        Effect taunt = new Taunt();
+        Taunt taunt = new Taunt();
         taunt.Champion = character;
 
         if (gameplayController != null)
         {
             taunt.StartTurn = gameplayController.Phase;
-            taunt.EndTurn = taunt.StartTurn + 1;
+            taunt.EndTurn = gameplayController.Phase + 1;
         }
 
-        character.effects.Add(taunt);
+        character.Effects.Add(taunt);
         character.UpdateEffectIcon();
     }
 
@@ -78,13 +79,13 @@ public class AllEyesOnMe : Skill
                 {
                     previousTaunted.TauntedBy = character;
                     previousTaunted.StartTurn = gameplayController.Phase;
-                    previousTaunted.EndTurn = previousTaunted.StartTurn + 1;
+                    previousTaunted.EndTurn = gameplayController.Phase + 1;
                     isTaunted = true;
                     target.UpdateEffectIcon();
                     break;
                 }
 
-            if (isTaunted) continue;
+            if (isTaunted) return;
 
             // if target not being taunt
             Taunted taunted = new Taunted();
@@ -94,10 +95,10 @@ public class AllEyesOnMe : Skill
             if (gameplayController != null)
             {
                 taunted.StartTurn = gameplayController.Phase;
-                taunted.EndTurn = taunted.StartTurn + 1;
+                taunted.EndTurn = gameplayController.Phase + 1;
             }
 
-            target.effects.Add(taunted);
+            target.Effects.Add(taunted);
             target.UpdateEffectIcon();
         }
     }

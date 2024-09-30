@@ -27,7 +27,7 @@ public class GameplayController : MonoBehaviour
     {
         //{ 6 ,"Maria" },
         //{ 7 ,"Maria" },
-        { 8 ,"UrielAPlotexia" },//UrielAPlotexia
+        //{ 8 ,"UrielAPlotexia" },//UrielAPlotexia
         { 9 ,"UrielAPlotexia" },
         //{ 10 ,"Maria" },
     };
@@ -35,10 +35,10 @@ public class GameplayController : MonoBehaviour
     private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
     {
         { 0 ,"Maria" },
-        { 1 ,"UrielAPlotexia" },
+        //{ 1 ,"UrielAPlotexia" },
         { 2 ,"Maria" },
-        { 3 ,"UrielAPlotexia" },
-        //{ 4 ,"Maria" },
+        //{ 3 ,"UrielAPlotexia" },
+        { 4 ,"Maria" },
     };
 
     private void Awake()
@@ -95,9 +95,9 @@ public class GameplayController : MonoBehaviour
         }
         else // enemy turn
         {
-            //enemyAI.Champion = whoTurn;
-            //enemyAI.StartEnemyTurn();
-            StartTurn(); // for debug
+            enemyAI.Champion = whoTurn;
+            enemyAI.StartEnemyTurn();
+            //StartTurn(); // for debug
         }
     }
 
@@ -109,11 +109,11 @@ public class GameplayController : MonoBehaviour
         foreach(var character in FindObjectsOfType<OnFieldCharacter>())
         {
             if (character.Effects.Count > 0)
-                for (int i = 0; i < character.Effects.Count; i++)
+                for (int i = character.Effects.Count - 1; i >= 0; i--)
                 {
                     character.Effects[i].UpdateEffect();
-                    character.UpdateEffectIcon();
                 }
+            character.UpdateEffectIcon();
         }
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
@@ -169,6 +169,14 @@ public class GameplayController : MonoBehaviour
                     transform.eulerAngles.x, 
                     180f, 
                     transform.eulerAngles.z);
+
+                GameObject overheadBars = champion.transform.Find("Health Bar Canvas").gameObject;
+                if (overheadBars != null)
+                {
+                    RectTransform overheadBarsTransform = overheadBars.GetComponent<RectTransform>();
+                    if (overheadBarsTransform != null)
+                        overheadBarsTransform.localScale *= 1.5f;                  
+                }
             }
 
             // disable selected ring
@@ -194,11 +202,11 @@ public class GameplayController : MonoBehaviour
         switch (position)
         {
             // enemy positions
-            case 0: return new Vector3(18f, 0f, 16f);
-            case 1: return new Vector3(21.5f, 0f, 18f);
-            case 2: return new Vector3(25f, 0f, 16f);
-            case 3: return new Vector3(28.5f, 0f, 18f);
-            case 4: return new Vector3(32f, 0f, 16f);
+            case 0: return new Vector3(18f, 0f, 14f);
+            case 1: return new Vector3(21.5f, 0f, 16f);
+            case 2: return new Vector3(25f, 0f, 14f);
+            case 3: return new Vector3(28.5f, 0f, 16f);
+            case 4: return new Vector3(32f, 0f, 14f);
 
             // ally positions
             case 6: return new Vector3(18f, 0f, 4f);

@@ -16,7 +16,7 @@ public class OnFieldCharacter : MonoBehaviour
     private float currentBurst;
     private float currentShield;
     private Skill[] skills;
-    public List<Effect> effects;
+    private List<Effect> effects;
 
     public Character CurrentCharacter { get { return currentCharacter; } set { currentCharacter = value; } }
     public int Position { get { return position; } set { position = value; } }
@@ -136,27 +136,28 @@ public class OnFieldCharacter : MonoBehaviour
                     effectText.transform.SetParent(effectIcon.transform);
                     TextMeshProUGUI effectRemainTurn = effectText.AddComponent<TextMeshProUGUI>();
                     effectRemainTurn.text = (effects[i].EndTurn - effects[i].StartTurn).ToString();
-                    effectRemainTurn.fontSize = 0.12f;
+                    effectRemainTurn.fontSize = 0.18f;
                     effectRemainTurn.alignment = TextAlignmentOptions.BottomRight;
+                    effectRemainTurn.fontStyle = FontStyles.Bold;
 
                     // set effect icon transform
                     Transform effectIconTransform = effectIcon.GetComponent<Transform>();
                     effectIconTransform.localPosition = 
-                        new Vector3(-0.33f + 0.22f * (i % 4), 0.18f + 0.22f * (i / 4), 0);
+                        new Vector3(-0.32f + 0.32f * (i % 3), 0.2f + 0.28f * (i / 3), 0);
                     effectIconTransform.localRotation = Quaternion.identity;
                     effectIconTransform.localScale = Vector3.one;
 
                    
                     // set effect image transform
                     RectTransform effectImageTransform = effectImage.GetComponent<RectTransform>();
-                    effectImageTransform.sizeDelta = new Vector2(0.2f, 0.2f);
+                    effectImageTransform.sizeDelta = new Vector2(0.25f, 0.25f);
 
                     // set effect remain turn text transform
                     RectTransform effectTextTransform = effectText.GetComponent<RectTransform>();
-                    effectTextTransform.sizeDelta = new Vector2(0.2f, 0.2f);
+                    effectTextTransform.sizeDelta = new Vector2(0.25f, 0.25f);
                 }
             }
-        }        
+        }
     }
     #endregion
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class LionSpirit : Skill
 {
@@ -29,7 +28,7 @@ public class LionSpirit : Skill
         calculateSkillEnergy.ReduceCharacterMana(character, manaCost);
 
         // set up temporary shield effect and add to champion effect list
-        Effect temporaryShield = new TemporaryShield();
+        TemporaryShield temporaryShield = new TemporaryShield();
         temporaryShield.Champion = character;
         temporaryShield.EffectValue = 200f;
         temporaryShield.EffectFunction();
@@ -37,10 +36,10 @@ public class LionSpirit : Skill
         if (gameplayController != null)
         {
             temporaryShield.StartTurn = gameplayController.Phase;
-            temporaryShield.EndTurn = temporaryShield.StartTurn + 2;
+            temporaryShield.EndTurn = gameplayController.Phase + 2;
         }
 
-        character.effects.Add(temporaryShield);
+        character.Effects.Add(temporaryShield);
         character.UpdateEffectIcon();
     }
 }

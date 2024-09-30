@@ -30,14 +30,6 @@ public class OverHealthBar : MonoBehaviour
         overHeadBars.transform.rotation = cam.transform.rotation;
     }
 
-    private void TurnOffOverHeadBar()
-    {           
-        healthBackground.gameObject.SetActive(false);
-        healthFill.gameObject.SetActive(false);
-        healthLoseFill.gameObject.SetActive(false);
-        shieldFill.gameObject.SetActive(false);
-    }
-
     public void UpdateHealthFill()
     {
         if (champion != null)
@@ -83,7 +75,7 @@ public class OverHealthBar : MonoBehaviour
 
         // turn off health bar if character dead
         if (champion.CurrentHealth <= 0)
-            TurnOffOverHeadBar();
+            overHeadBars.SetActive(false);
     }
 
     // Using coroutine to reduce lose health fill slowly 

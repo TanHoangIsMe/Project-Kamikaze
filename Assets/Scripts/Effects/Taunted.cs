@@ -8,4 +8,14 @@ public class Taunted : Effect
         effectName = "Taunted";
         effectAvatar = "Art/UI/Effect Avatars/Taunted";
     }
+
+    public override void EffectFunction() { }
+
+    public override void RemoveEffect()
+    {
+        for (int i = 0; i < champion.Effects.Count; i++)
+            if (champion.Effects[i] is Taunted)             
+                // remove effect out of champion effect list
+                champion.Effects.RemoveAt(i);
+    }
 }
