@@ -38,7 +38,7 @@ public class PlayLastAnimation : MonoBehaviour
         {
             // play target being attacked animation
             StartCoroutine(calculateToPlayAnimation.BeingAttackedAndBackToIdle(1f, enemyTargets));
-
+            
             skillHandler.SendInfoToUsingSecondSkill();
 
             calculateToPlayAnimation.PlayDeathAnimation();

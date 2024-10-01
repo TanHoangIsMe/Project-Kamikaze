@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.Animations;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
@@ -202,7 +201,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
                     string deathAnimationName = target.name.Replace("(Clone)", "") + " Death";
                     GetAnimationByTag(animator, deathAnimationName, animationLengths);
                 }
-        
+
         if (animationLengths.Count > 0)
         {
             // find longest death animation 
@@ -216,7 +215,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
             foreach (var target in targets)
                 if (target.CurrentHealth <= 0)
                     Destroy(target.gameObject);
-            
+
             // start new turn
             gameplayController.StartTurn();
         }
@@ -232,18 +231,17 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)
     {
-        AnimatorController animatorController = animator.runtimeAnimatorController as AnimatorController;
+        // get all Animation Clips from Animator
+        var animationClips = animator.runtimeAnimatorController.animationClips;
 
-        if (animatorController != null)
-            foreach (var layer in animatorController.layers)
-                foreach (var state in layer.stateMachine.states)
-                    // check is state of motion is AnimationClip
-                    if (state.state.motion is AnimationClip clip)
-                        if (clip.name == animationName) // compare animation name
-                        {
-                            animationLengths.Add(clip.length);
-                            return;
-                        }
+        foreach (var clip in animationClips)
+        {
+            if (clip.name == animationName) // compare animation clip
+            {
+                animationLengths.Add(clip.length);
+                return;
+            }
+        }
     }
 
     private void ResetChampionTransform()

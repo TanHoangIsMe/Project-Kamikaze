@@ -24,7 +24,7 @@ public abstract class Effect : MonoBehaviour
     public void UpdateEffect()
     {
         endTurn--;
-        if (endTurn == startTurn )
+        if (endTurn <= startTurn )
         {
             RemoveEffect();
         }

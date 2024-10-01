@@ -7,7 +7,7 @@ public class LionSpirit : Skill
         skillName = "Lion's Spirit";
         avatar = "Art/UI/Skill Avatars/Uriel A Plotexia/Lion's Spirit Avatar";
         description = "Uriel A Plotexia gain a shield for himself equal to 30% of his lost health.";
-        manaCost = 50f;
+        manaCost = 10f;
         burstCost = 0f;
         numberOfEnemyTargets = 0;
         numberOfAllyTargets = 0;

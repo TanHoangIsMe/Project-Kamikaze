@@ -113,6 +113,7 @@ public class GameplayController : MonoBehaviour
                 {
                     character.Effects[i].UpdateEffect();
                 }
+
             character.UpdateEffectIcon();
         }
         CreateTurnList(); // Create new turn list 

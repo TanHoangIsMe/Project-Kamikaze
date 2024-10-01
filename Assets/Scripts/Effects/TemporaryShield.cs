@@ -33,13 +33,15 @@ public class TemporaryShield : Effect
                     skillHandler.PlayHealthBarEffect(null, null, champion);
             }
 
-            //for (int i = 0; i < champion.Effects.Count; i++)
-            //    if (champion.Effects[i] is TemporaryShield)
-            //    {
-            //        // remove effect out of champion effect list
-            //        champion.Effects.RemoveAt(i);
-            //        break;
-            //    }
+            int removeIndex = 0;
+            for (int i = champion.Effects.Count - 1; i >= 0; i--)
+                if (champion.Effects[i] is TemporaryShield)
+                {
+                    removeIndex = i;
+                }
+
+            // remove effect out of champion effect list
+            champion.Effects.RemoveAt(removeIndex);
         }
     }
 }

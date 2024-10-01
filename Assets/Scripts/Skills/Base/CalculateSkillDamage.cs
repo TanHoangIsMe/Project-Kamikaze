@@ -19,13 +19,11 @@ public class CalculateSkillDamage
             trueAttackDamage = CalculateDamageAfterElement(character, enemy, trueAttackDamage);
             trueAttackDamage = CalculateDamageAfterClass(character, enemy, trueAttackDamage);
 
-            // round damage
-            trueAttackDamage = (float)Mathf.Round(trueAttackDamage);
-
             // make sure damage deal not negative
             if (trueAttackDamage < 0) trueAttackDamage = 0;
 
-            damages.Add(trueAttackDamage);
+            // display round damage
+            damages.Add((float)Mathf.Round(trueAttackDamage));
 
             CalculateDamageDeal(enemy, trueAttackDamage);
         }

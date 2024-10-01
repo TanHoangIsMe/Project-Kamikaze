@@ -18,15 +18,18 @@ public class ArmorBreak : Effect
     {
         if (champion != null)
         {
-            champion.CurrentArmor += effectValue;
+            int removeIndex = 0;
+            for (int i = champion.Effects.Count - 1; i >= 0; i--)
+                if (champion.Effects[i] is ArmorBreak)
+                {
+                    removeIndex = i;
+                }
 
-            //for (int i = 0; i < champion.Effects.Count; i++)
-            //    if (champion.Effects[i] is ArmorBreak)
-            //    {
-            //        // remove effect out of champion effect list
-            //        champion.Effects.RemoveAt(i);
-            //        break;
-            //    }
+            // restore armor value
+            champion.CurrentArmor += champion.Effects[removeIndex].EffectValue;
+
+            // remove effect out of champion effect list
+            champion.Effects.RemoveAt(removeIndex);
         }
     }
 }

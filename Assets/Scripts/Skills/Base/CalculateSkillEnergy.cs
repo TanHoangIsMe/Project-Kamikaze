@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class CalculateSkillEnergy
@@ -32,14 +33,14 @@ public class CalculateSkillEnergy
         // for every 10 damage receive 1 burst point
 
         // restore character that deal damage
-        character.CurrentBurst += totalDamage / 10f;
+        character.CurrentBurst += (float)MathF.Round(totalDamage / 10f);
         if (character.CurrentBurst > character.CurrentCharacter.MaxBurst)
             character.CurrentBurst = character.CurrentCharacter.MaxBurst;
 
         // restore character that receive damage
         for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].CurrentBurst += damages[i] / 10f;
+            enemies[i].CurrentBurst += (float)MathF.Round(damages[i] / 10f);
             if (enemies[i].CurrentBurst > enemies[i].CurrentCharacter.MaxBurst)
                 enemies[i].CurrentBurst = enemies[i].CurrentCharacter.MaxBurst;
         }
