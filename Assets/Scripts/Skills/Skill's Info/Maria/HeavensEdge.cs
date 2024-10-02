@@ -9,7 +9,7 @@ public class HeavensEdge: Skill
         avatar = "Art/UI/Skill Avatars/Maria/Heaven's Edge Avatar";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 0f;
-        burstCost = 0f;
+        burstCost = 80f;
         numberOfEnemyTargets = 1;
         numberOfAllyTargets = 0;
         priorityStat = StatType.CurrentHealth;

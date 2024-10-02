@@ -16,7 +16,6 @@ public class SkillHandler : MonoBehaviour
 
     private CheckNumberOfTargets checkNumberOfTargets;
     private AutoFindTargets autoFindTargets;
-    private CheckSkillAnimationController checkSkillAnimationController;
 
     private List<float> skillValues;
     public List<float> SkillValues { set { skillValues = value; } }
@@ -28,8 +27,6 @@ public class SkillHandler : MonoBehaviour
     {
         checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
         autoFindTargets = GetComponent<AutoFindTargets>();
-        checkSkillAnimationController = GetComponent<CheckSkillAnimationController>();
-
         skillValues = new List<float>();
         canReuse = false;
     }
@@ -218,33 +215,24 @@ public class SkillHandler : MonoBehaviour
                 // turn off skill menu
                 skillMenu.SetActive(false);
 
+            // find champion animation controller script
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
+            IAnimationPlayable animationController = champion.GetComponent<IAnimationPlayable>();
+            animationController.SetEnemyTargets(enemies);
 
             if (checkNumberOfTargets.WhichSkill == 0) // using skill 1
-            {
                 // play animation
-                checkSkillAnimationController.
-                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 0);
-
-            }
+                animationController.PlayFirstSkillAnimation();
             else if (checkNumberOfTargets.WhichSkill == 1) // using skill 2
-            {
                 // play animation
-                checkSkillAnimationController.
-                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 1);
-            }
+                animationController.PlaySecondSkillAnimation();
             else // using burst
-            {
                 // play animation
-                checkSkillAnimationController.
-                    GetSkillAnimationControllerForPlayAnimation(champion, enemies, 2);
+                animationController.PlayBurstSkillAnimation();
 
-            }
         }
         else
-        {
-            Debug.Log("Please choose a skill");
-        }       
+            Debug.Log("Please choose a skill");   
     }
 
     public void SendInfoToUsingFirstSkill()
@@ -263,8 +251,6 @@ public class SkillHandler : MonoBehaviour
         // play health bar reduce or increase animation
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
-
-        //ResetThings();
     }
 
     public void SendInfoToUsingSecondSkill()
@@ -283,8 +269,6 @@ public class SkillHandler : MonoBehaviour
         // play health bar reduce or increase animation
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
-
-        //ResetThings();
     }
 
     public void SendInfoToUsingBurstSkill()
@@ -303,8 +287,6 @@ public class SkillHandler : MonoBehaviour
         // play health bar reduce or increase animation
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
-
-        //ResetThings();
     }
     #endregion
 

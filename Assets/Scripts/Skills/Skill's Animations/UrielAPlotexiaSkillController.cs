@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UrielAPlotexiaSkillController : MonoBehaviour
+public class UrielAPlotexiaSkillController : MonoBehaviour, IAnimationPlayable
 {
     private CombatSkillMenu combatSkillMenu;
     private SkillHandler skillHandler;
@@ -10,13 +10,10 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
     private PlayLastAnimation playLastAnimation;
 
     private Animator animator;
-    public Animator Animator { get { return animator; } }
 
     private List<OnFieldCharacter> enemyTargets;
-    public List<OnFieldCharacter> EnemyTargets { set { enemyTargets = value; } }
 
     private bool isAnimating = false;
-    public bool IsAnimating { set { isAnimating = value; } }
 
     private void Awake()
     {
@@ -29,6 +26,21 @@ public class UrielAPlotexiaSkillController : MonoBehaviour
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>();
+    }
+
+    public void SetEnemyTargets(List<OnFieldCharacter> targets)
+    {
+        enemyTargets = targets;
+    }
+
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
+
+    public void SetIsAnimating(bool isAnimating)
+    {
+        this.isAnimating = isAnimating;
     }
 
     public void PlayFirstSkillAnimation()

@@ -6,7 +6,6 @@ using UnityEngine;
 public class CalculateToPlayAnimation : MonoBehaviour
 {
     private GameplayController gameplayController;
-    private CheckSkillAnimationController checkSkillAnimationController;
     private List<OnFieldCharacter> targets;
     private List<Animator> animators;
     private Vector3 characterOriginalPosition;
@@ -27,8 +26,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     private void Start()
     {
-        checkSkillAnimationController = FindObjectOfType<CheckSkillAnimationController>();
-
         // value to store character position
         characterOriginalPosition = gameObject.transform.position;
 
@@ -116,44 +113,33 @@ public class CalculateToPlayAnimation : MonoBehaviour
     public IEnumerator BeingAttackedAndBackToIdle(float animationDuration, List<OnFieldCharacter> enemyTargets)
     {
         targets = new List<OnFieldCharacter>(enemyTargets);
+        animators = new List<Animator>();
 
-        if (checkSkillAnimationController != null)
+        foreach (var target in targets)
         {
-            animators = new List<Animator>();
-
-            foreach (var target in targets)
-            {
-                // get target skill controller script and animator controller
-                Component targetSkillController = checkSkillAnimationController.GetCharacterSkillController(target);
-                Animator targetAnimator = checkSkillAnimationController.CheckWhoseAnimationControllerToGetAnimator(targetSkillController);
-
-                if (targetSkillController != null && targetAnimator != null)
-                {
+            // get target animator controller
+            IAnimationPlayable animationController = target.GetComponent<IAnimationPlayable>();
+            Animator targetAnimator = animationController.GetAnimator();
+               
+            if (targetAnimator != null)
                     animators.Add(targetAnimator);
-                }
-            }
-
-            // Start animations on all animators
-            foreach (var animator in animators)
-            {
-                animator.SetBool("Being Attacked", true); // Play being attacked animation
-            }
-
-            // Wait for the duration of the animation
-            yield return new WaitForSeconds(animationDuration);
-
-            // Stop animations on all animators
-            foreach (var animator in animators)
-            {
-                animator.SetBool("Being Attacked", false); // Play idle animation
-            }
-
-            // reset enemies position.y and y rotation
-            foreach (var target in targets)
-            {
-                ResetEnemiesYValue(target);
-            }
         }
+
+        // Start animations on all animators
+        foreach (var animator in animators)
+            animator.SetBool("Being Attacked", true); // Play being attacked animation
+
+        // Wait for the duration of the animation
+        yield return new WaitForSeconds(animationDuration);
+
+        // Stop animations on all animators
+        foreach (var animator in animators)
+            animator.SetBool("Being Attacked", false); // Play idle animation
+
+        // reset enemies position.y and y rotation
+        foreach (var target in targets)
+            ResetEnemiesYValue(target);
+
     }
 
     public void PlayDeathAnimation(int whichSkill, SkillHandler skillHandler)
@@ -193,9 +179,9 @@ public class CalculateToPlayAnimation : MonoBehaviour
         }
 
         // reset isAnimating flag
-        OnFieldCharacter character = GetComponent<OnFieldCharacter>();  
-        Component characterSkillController = checkSkillAnimationController.GetCharacterSkillController(character);
-        checkSkillAnimationController.CheckWhoseAnimationControllerToResetIsAnimating(characterSkillController);
+        IAnimationPlayable animationController = 
+            gameObject.GetComponent<IAnimationPlayable>();
+        animationController.SetIsAnimating(false);
 
         // check end game condition
         gameplayController.CheckGameOver();
