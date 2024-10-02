@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class HeavensEdge: Skill
 {
@@ -8,13 +9,13 @@ public class HeavensEdge: Skill
         avatar = "Art/UI/Skill Avatars/Maria/Heaven's Edge Avatar";
         description = "Uriel A Plotexia increase his or an ally's armor by 30";
         manaCost = 0f;
-        burstCost = 80f;
-        numberOfEnemyTargets = 3;
-        numberOfAllyTargets = 3;
+        burstCost = 0f;
+        numberOfEnemyTargets = 1;
+        numberOfAllyTargets = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack};
         activateTypes = new ActivateType[] { ActivateType.Active };
-        targetTypes = new TargetType[] { TargetType.Ally, TargetType.Enemy };
+        targetTypes = new TargetType[] { TargetType.Enemy };
     }
 
     public override void SkillFunction(OnFieldCharacter character,
@@ -22,22 +23,25 @@ public class HeavensEdge: Skill
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
-        // decrease champion burst
-        calculateSkillEnergy.ReduceCharacterBurst(character);
+        if (enemyTargets == null) Debug.Log("Something's wrong");
 
         if (enemyTargets != null)
         {
-            foreach (var target in enemyTargets)
+            // decrease champion burst
+            calculateSkillEnergy.ReduceCharacterBurst(character);
+
+            List<float> trueAttackDamages =
+                calculateSkillDamage.CalculateOutputDamage
+                (character, enemyTargets, skillHandler, 2f);
+
+            if (enemyTargets[0].CurrentHealth <= 0) // reset skill if enemy die
             {
-                target.CurrentHealth -= 10f;
+                character.CurrentBurst = burstCost;
+                skillHandler.CanReuse = true;
             }
-        }
-        if (allyTargets != null)
-        {
-            foreach (var target in allyTargets)
-            {
-                target.CurrentHealth += 10f;
-            }
+            else
+                calculateSkillEnergy.IncreaseBurstBaseOnDamage(character,
+                    enemyTargets, trueAttackDamages);
         }
     }
 }

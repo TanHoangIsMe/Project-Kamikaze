@@ -19,6 +19,8 @@ public class GameplayController : MonoBehaviour
 
     // place to hold all champion that exist on battle field
     private List<OnFieldCharacter> turnList;
+    public List<OnFieldCharacter> TurnList { get { return turnList; } set { turnList = value; } }
+
     private OnFieldCharacter whoTurn; // variable to know whose turn
     private CombatSkillMenu combatSkillMenu;
     private EnemyAI enemyAI;
@@ -26,9 +28,9 @@ public class GameplayController : MonoBehaviour
     private Dictionary<int, string> playerChampions = new Dictionary<int, string>
     {
         //{ 6 ,"Maria" },
-        //{ 7 ,"Maria" },
+        { 7 ,"Maria" },
         //{ 8 ,"UrielAPlotexia" },//UrielAPlotexia
-        { 9 ,"UrielAPlotexia" },
+        //{ 9 ,"UrielAPlotexia" },
         //{ 10 ,"Maria" },
     };
 

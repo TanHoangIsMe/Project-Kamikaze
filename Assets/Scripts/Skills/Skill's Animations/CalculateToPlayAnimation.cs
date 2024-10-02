@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CalculateToPlayAnimation : MonoBehaviour
@@ -59,9 +60,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
         yield return StartCoroutine(MoveToPoint(targetPosition, characterOriginalPosition, animator));
 
         ResetChampionTransform();
-
-        // check is any target dead
-        CheckTargetsDead();
     }
 
     // character move to target for attack
@@ -113,15 +111,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // reset champion transform
         ResetChampionTransform();
-
-        if ( targets.Count == 0)
-            // start new turn
-            gameplayController.StartTurn();
-        else
-        {
-            // check is any target dead
-            CheckTargetsDead();
-        }
     }
 
     public IEnumerator BeingAttackedAndBackToIdle(float animationDuration, List<OnFieldCharacter> enemyTargets)
@@ -162,31 +151,17 @@ public class CalculateToPlayAnimation : MonoBehaviour
             // reset enemies position.y and y rotation
             foreach (var target in targets)
             {
-                ResetEnemiesYValue(target.gameObject);
+                ResetEnemiesYValue(target);
             }
         }
     }
 
-    private void CheckTargetsDead()
+    public void PlayDeathAnimation(int whichSkill, SkillHandler skillHandler)
     {
-        // check is any target dead
-        bool isSomeoneDead = false;
-
-        foreach (var target in targets)
-            if (target.CurrentHealth < 0)
-                isSomeoneDead = true;
-
-        if (!isSomeoneDead)
-            // start new turn
-            gameplayController.StartTurn();
+        StartCoroutine(WaitForDeathAnimation(whichSkill, skillHandler));
     }
 
-    public void PlayDeathAnimation()
-    {
-        StartCoroutine(WaitForDeathAnimation());
-    }
-
-    private IEnumerator WaitForDeathAnimation()
+    private IEnumerator WaitForDeathAnimation(int whichSkill, SkillHandler skillHandler)
     {
         animationLengths = new List<float>();
 
@@ -215,9 +190,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
             foreach (var target in targets)
                 if (target.CurrentHealth <= 0)
                     Destroy(target.gameObject);
-
-            // start new turn
-            gameplayController.StartTurn();
         }
 
         // reset isAnimating flag
@@ -227,6 +199,25 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // check end game condition
         gameplayController.CheckGameOver();
+
+        // reset values for next auto find targets
+        skillHandler.ResetThings();
+
+        if (skillHandler.CanReuse)
+        {
+            if (whichSkill == 0)
+                skillHandler.UsingSkill1();
+            else if (whichSkill == 1)
+                skillHandler.UsingSkill2();
+            else
+                skillHandler.UsingSkillBurst();
+
+            skillHandler.AttackConfirm();
+            skillHandler.CanReuse = false; // reset flag
+        }
+        else
+            // start new turn
+            gameplayController.Invoke("StartTurn", 3f);
     }
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)
@@ -253,17 +244,17 @@ public class CalculateToPlayAnimation : MonoBehaviour
         gameObject.transform.eulerAngles = characterOriginalRotation;
     }
 
-    private void ResetEnemiesYValue(GameObject target)
+    private void ResetEnemiesYValue(OnFieldCharacter target)
     {
         // reset y position
-        target.transform.position =
+        target.gameObject.transform.position =
             new Vector3(
                 target.transform.position.x,
                 0,
                 target.transform.position.z);
 
         // reset y rotation
-        if (target.layer == 7)
+        if (new[] { 0, 1, 2, 3, 4 }.Contains(target.Position))
             target.transform.eulerAngles =
                 new Vector3(0, 180f, 0);
         else

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using UnityEngine;
 
 public class AllEyesOnMe : Skill
 {
@@ -23,11 +23,13 @@ public class AllEyesOnMe : Skill
         List<OnFieldCharacter> enemyTargets = null,
         List<OnFieldCharacter> allyTargets = null)
     {
-        // decrease champion burst
-        calculateSkillEnergy.ReduceCharacterBurst(character);
+        if (enemyTargets == null) Debug.Log("Something's wrong");
 
         if (enemyTargets != null)
         {
+            // decrease champion burst
+            calculateSkillEnergy.ReduceCharacterBurst(character);
+
             SetTauntEffect(character);
             SetTauntedEffect(enemyTargets, character);
         }

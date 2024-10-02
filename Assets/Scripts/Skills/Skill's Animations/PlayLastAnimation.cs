@@ -28,7 +28,7 @@ public class PlayLastAnimation : MonoBehaviour
 
             skillHandler.SendInfoToUsingFirstSkill();
 
-            calculateToPlayAnimation.PlayDeathAnimation();
+            calculateToPlayAnimation.PlayDeathAnimation(0, skillHandler);
         }
     }
 
@@ -41,7 +41,7 @@ public class PlayLastAnimation : MonoBehaviour
             
             skillHandler.SendInfoToUsingSecondSkill();
 
-            calculateToPlayAnimation.PlayDeathAnimation();
+            calculateToPlayAnimation.PlayDeathAnimation(1, skillHandler);
         }
     }
 
@@ -54,7 +54,7 @@ public class PlayLastAnimation : MonoBehaviour
 
             skillHandler.SendInfoToUsingBurstSkill();
 
-            calculateToPlayAnimation.PlayDeathAnimation();
+            calculateToPlayAnimation.PlayDeathAnimation(2, skillHandler);
         }
     }
 }

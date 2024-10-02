@@ -21,6 +21,9 @@ public class SkillHandler : MonoBehaviour
     private List<float> skillValues;
     public List<float> SkillValues { set { skillValues = value; } }
 
+    private bool canReuse; // flat to know is skill can use instance after cast
+    public bool CanReuse { get { return canReuse; } set { canReuse = value; } }
+
     private void Awake()
     {
         checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
@@ -28,6 +31,7 @@ public class SkillHandler : MonoBehaviour
         checkSkillAnimationController = GetComponent<CheckSkillAnimationController>();
 
         skillValues = new List<float>();
+        canReuse = false;
     }
 
     private void ChangeLayerToSelf()
@@ -86,7 +90,7 @@ public class SkillHandler : MonoBehaviour
         }
     }
 
-    private void ResetThings()
+    public void ResetThings()
     {
         // turn off can select target
         checkNumberOfTargets.IsFinishChoosing = false;
@@ -260,7 +264,7 @@ public class SkillHandler : MonoBehaviour
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
 
-        ResetThings();
+        //ResetThings();
     }
 
     public void SendInfoToUsingSecondSkill()
@@ -280,7 +284,7 @@ public class SkillHandler : MonoBehaviour
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
 
-        ResetThings();
+        //ResetThings();
     }
 
     public void SendInfoToUsingBurstSkill()
@@ -300,7 +304,7 @@ public class SkillHandler : MonoBehaviour
         // when champion current health change
         PlayHealthBarEffect(enemies, allies, self);
 
-        ResetThings();
+        //ResetThings();
     }
     #endregion
 
