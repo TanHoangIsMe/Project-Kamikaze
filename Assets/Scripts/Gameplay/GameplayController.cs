@@ -25,23 +25,7 @@ public class GameplayController : MonoBehaviour
     private CombatSkillMenu combatSkillMenu;
     private EnemyAI enemyAI;
 
-    private Dictionary<int, string> playerChampions = new Dictionary<int, string>
-    {
-        //{ 6 ,"Maria" },
-        { 7 ,"Maria" },
-        //{ 8 ,"UrielAPlotexia" },//UrielAPlotexia
-        //{ 9 ,"UrielAPlotexia" },
-        //{ 10 ,"Maria" },
-    };
-
-    private Dictionary<int, string> enemyChampions = new Dictionary<int, string>
-    {
-        { 0 ,"Maria" },
-        //{ 1 ,"UrielAPlotexia" },
-        { 2 ,"Maria" },
-        //{ 3 ,"UrielAPlotexia" },
-        { 4 ,"Maria" },
-    };
+    private Dictionary<int, string> championList;
 
     private void Awake()
     {
@@ -56,6 +40,8 @@ public class GameplayController : MonoBehaviour
     #region Turn
     private void Start()
     {
+        championList = DataManager.Instance.championList;
+
         SpawnEnemiesAndHeroes();
         // await a little bit to start combat 
         Invoke("StartNewPhase", 2f); 
@@ -136,37 +122,33 @@ public class GameplayController : MonoBehaviour
     #region SpawnChampions
     private void SpawnEnemiesAndHeroes()
     { 
-        // spawn player's champions
-        foreach (KeyValuePair<int, string> playerChampion in playerChampions)
-        {
-            CreateCharacter(playerChampion.Key, playerChampion.Value, 6);
-        }
-
-        // spawn enemies
-        foreach (KeyValuePair<int, string> enemyChampion in enemyChampions)
-        {
-            CreateCharacter(enemyChampion.Key, enemyChampion.Value, 7);
-        }
+        // spawn champions
+        if(championList.Count > 0)    
+            foreach (KeyValuePair<int, string> champ in championList)
+                CreateCharacter(champ);
     }
 
-    private void CreateCharacter(int position, string characterName, int layer)
+    private void CreateCharacter(KeyValuePair<int, string> champ)
     {
-        prefabPath = $"Prefabs/Characters/{characterName}";
+        prefabPath = $"Prefabs/Characters/{champ.Value}";
 
         GameObject prefab = Resources.Load<GameObject>(prefabPath);
 
         if (prefab != null)
         {
             // create champion
-            GameObject champion = Instantiate(prefab, GetPosition(position), Quaternion.identity);
+            GameObject champion = Instantiate(prefab, GetPosition(champ.Key), Quaternion.identity);
 
             // set up champion layer
-            champion.layer = layer;
+            if (new[] { 0, 1, 2, 3, 4 }.Contains(champ.Key))
+                champion.layer = 7;
+            else
+                champion.layer = 6;
 
             // set on field character position
-            champion.GetComponent<OnFieldCharacter>().Position = position;
+            champion.GetComponent<OnFieldCharacter>().Position = champ.Key;
 
-            if(layer == 7)
+            if(champion.layer == 7)
             {
                 champion.transform.eulerAngles = new Vector3(
                     transform.eulerAngles.x, 
