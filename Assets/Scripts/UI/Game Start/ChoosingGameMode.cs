@@ -9,6 +9,11 @@ public class ChoosingGameMode : MonoBehaviour
 
     public void MoveToMainMenu()
     {
+        // reset select champ scene
+        ChampSelectPvE champSelectScene = FindObjectOfType<ChampSelectPvE>();
+        if (champSelectScene != null )
+            champSelectScene.ResetScene();
+
         champSelectPvE.SetActive(false);
         mainMenu.SetActive(true);
 

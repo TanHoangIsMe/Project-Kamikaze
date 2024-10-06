@@ -19,16 +19,41 @@ public class ChampSelectPvE : MonoBehaviour
 
     private Dictionary<int, string> championList;
 
-    private void Awake()
-    {
-        championList = new Dictionary<int, string>();
-    }
-
     private void Start()
     {
-        AddOnClickListener(playerSlotButtons, playerTeam, true);
-        AddOnClickListener(enemySlotButtons, enemyTeam, true);
-        AddOnClickListener(champSelectButtons, selectChampionList, false);
+        championList = new Dictionary<int, string>();
+
+        AddOnClickListener(champSelectButtons, selectChampionList, 1);
+        AddOnClickListener(playerSlotButtons, playerTeam, 2);
+        AddOnClickListener(enemySlotButtons, enemyTeam, 3);
+    }
+
+    public void ResetScene()
+    {
+        selectedChamp = null; // reset select champ flag 
+
+        // reset player squad
+        foreach (Button button in playerSlotButtons)
+        {
+            Image image = button.gameObject.GetComponent<Image>();
+            if (image != null)
+                image.sprite = Resources.Load<Sprite>("Art/UI/GameStart/Add Champion Image");
+        }
+
+        // reset enemy squad
+        foreach (Button button in enemySlotButtons)
+        {
+            Image image = button.gameObject.GetComponent<Image>();
+            if (image != null)
+                image.sprite = Resources.Load<Sprite>("Art/UI/GameStart/Add Champion Image");
+        }
+
+        // turn off all select champ border
+        foreach (Button button in champSelectButtons)
+            SelectBorderHandler(false, button);
+
+        // reset champion list
+        championList.Clear();
     }
 
     public void SendChampionListToPvEMode()
@@ -47,8 +72,11 @@ public class ChampSelectPvE : MonoBehaviour
             // send champion list to pve mode
             if ( isEnemyTeamNumberGreaterThan0 && isPlayerTeamNumberGreaterThan0)
             {
-                DataManager.Instance.championList = championList;
-                SceneManager.LoadSceneAsync(1);
+                // clone champion for send data cause champ list data will be reset
+                Dictionary<int,string> cloneChampList = new Dictionary<int,string>(championList);
+                ResetScene(); // reset this values
+                DataManager.Instance.championList = cloneChampList; 
+                SceneManager.LoadSceneAsync(1);           
             }
         }
     }
@@ -107,18 +135,26 @@ public class ChampSelectPvE : MonoBehaviour
     }
 
     // add listener to button
-    private void AddOnClickListener(Button[] buttons, GameObject gameObject, bool isSlot)
+    // whichButtons = 1 -> champSelectButtons
+    // whichButtons = 2 -> playerSlotButtons
+    // whichButtons = 3 -> enemySelectButtons
+    private void AddOnClickListener(Button[] buttons, GameObject gameObject, int whichButtons)
     {
         buttons = gameObject.GetComponentsInChildren<Button>();
 
-        if (!isSlot)
+        if (whichButtons == 1)
             champSelectButtons = buttons;
+        else if (whichButtons == 2)
+            playerSlotButtons = buttons;
+        else
+            enemySlotButtons = buttons;
 
+        // add listener
         foreach (Button button in buttons)
-            if(isSlot)
-                button.onClick.AddListener(() => SelectSlotButtonClicked(button));
-            else
+            if(whichButtons == 1)
                 button.onClick.AddListener(() => SelectChampButtonClicked(button));
+            else
+                button.onClick.AddListener(() => SelectSlotButtonClicked(button));
     }
 
     // turn on-off select border 
