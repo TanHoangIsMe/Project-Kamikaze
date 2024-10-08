@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChampSelectPvE : MonoBehaviour
 {
+    [SerializeField] GameObject loadingCanvas;
     [SerializeField] GameObject selectChampionList;
     [SerializeField] GameObject playerTeam;
     [SerializeField] GameObject enemyTeam;
@@ -75,8 +75,17 @@ public class ChampSelectPvE : MonoBehaviour
                 // clone champion for send data cause champ list data will be reset
                 Dictionary<int,string> cloneChampList = new Dictionary<int,string>(championList);
                 ResetScene(); // reset this values
-                DataManager.Instance.championList = cloneChampList; 
-                SceneManager.LoadSceneAsync(1);           
+                DataManager.Instance.championList = cloneChampList;
+
+                // open loading scene
+                LoadingScene loadingScene = loadingCanvas.GetComponent<LoadingScene>();
+
+                if (loadingScene != null)
+                {
+                    loadingCanvas.SetActive(true);
+                    loadingScene.LoadScene(1);
+                    gameObject.SetActive(false);
+                }
             }
         }
     }

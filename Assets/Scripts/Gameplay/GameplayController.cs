@@ -40,6 +40,7 @@ public class GameplayController : MonoBehaviour
     #region Turn
     private void Start()
     {
+        // get champion list data
         championList = DataManager.Instance.championList;
 
         SpawnEnemiesAndHeroes();
@@ -93,6 +94,7 @@ public class GameplayController : MonoBehaviour
     {
         phase++; // Next phase
         phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
+        phaseCanvas.SetActive(true);
         turnList.Clear();
         foreach(var character in FindObjectsOfType<OnFieldCharacter>())
         {
@@ -232,11 +234,14 @@ public class GameplayController : MonoBehaviour
         Image resultIconImage = resultIcon.GetComponent<Image>();
 
         if (enemyAllDead && resultIconImage != null)
-            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/GameOver/Victory Icon");
+        {
+            resultIconImage.rectTransform.sizeDelta = new Vector2(1000f, 800f);
+            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
+        }
         else
         {
-            resultIconImage.rectTransform.sizeDelta = new Vector2(500f, 450f);
-            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/GameOver/Defeat Icon");
+            resultIconImage.rectTransform.sizeDelta = new Vector2(800f, 800f);
+            resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
         }
     }
 
