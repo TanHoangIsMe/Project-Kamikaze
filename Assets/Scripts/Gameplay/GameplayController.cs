@@ -9,6 +9,7 @@ public class GameplayController : MonoBehaviour
 {
     [SerializeField] GameObject skillMenuCanvas;
     [SerializeField] GameObject phaseCanvas;
+    [SerializeField] GameObject settingCanvas;
     [SerializeField] GameObject gameOverCanvas;
     [SerializeField] TextMeshProUGUI phaseText;
     [SerializeField] GameObject resultIcon;
@@ -228,6 +229,8 @@ public class GameplayController : MonoBehaviour
         if (allyAllDead || enemyAllDead)
         {
             Time.timeScale = 0;
+            phaseCanvas.SetActive(false);
+            settingCanvas.SetActive(false);
             gameOverCanvas.SetActive(true);
         }
 

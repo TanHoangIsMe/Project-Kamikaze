@@ -37,7 +37,7 @@ public class ChampSelectPvE : MonoBehaviour
         {
             Image image = button.gameObject.GetComponent<Image>();
             if (image != null)
-                image.sprite = Resources.Load<Sprite>("Art/UI/GameStart/Add Champion Image");
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Add Champion Image");
         }
 
         // reset enemy squad
@@ -45,7 +45,7 @@ public class ChampSelectPvE : MonoBehaviour
         {
             Image image = button.gameObject.GetComponent<Image>();
             if (image != null)
-                image.sprite = Resources.Load<Sprite>("Art/UI/GameStart/Add Champion Image");
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Add Champion Image");
         }
 
         // turn off all select champ border
@@ -103,7 +103,7 @@ public class ChampSelectPvE : MonoBehaviour
             // remove champion slot
             if (selectedChamp == "None")
             {
-                image.sprite = Resources.Load<Sprite>("Art/UI/GameStart/Add Champion Image");
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Add Champion Image");
 
                 foreach (KeyValuePair<int, string> champ in championList)
                     if (champ.Key == champPosition)
