@@ -5,6 +5,7 @@ public class ChoosingGameMode : MonoBehaviour
 {
     [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject champSelectPvE;
+    [SerializeField] GameObject lobbyPvP;
     [SerializeField] VideoPlayer videoPlayer;
 
     public void MoveToMainMenu()
@@ -31,5 +32,17 @@ public class ChoosingGameMode : MonoBehaviour
 
         mainMenu.SetActive(false);
         champSelectPvE.SetActive(true);
+    }
+
+    public void MoveToLobbyPvP()
+    {
+        if (videoPlayer.isPlaying)
+        {
+            videoPlayer.Stop();
+            videoPlayer.frame = 0; // reset video
+        }
+
+        mainMenu.SetActive(false);
+        lobbyPvP.SetActive(true);
     }
 }

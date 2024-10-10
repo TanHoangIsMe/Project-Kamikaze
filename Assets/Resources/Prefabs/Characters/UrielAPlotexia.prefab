@@ -108,6 +108,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8740524587830443731}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc843fa64a331ea43a3717067911427f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5930820388078151070}
   m_SourcePrefab: {fileID: 100100000, guid: bc843fa64a331ea43a3717067911427f, type: 3}
 --- !u!4 &2328666592244123028 stripped
 Transform:
@@ -152,7 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e1060560caa914ca274e7476e28394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effects: []
 --- !u!114 &2500947664119820010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +208,27 @@ MonoBehaviour:
   healthFill: {fileID: 6368275594565554369}
   healthLoseFill: {fileID: 6970720219672828216}
   shieldFill: {fileID: 1581665061677512849}
+--- !u!114 &5930820388078151070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3106011776487497518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &3465886500427908697
 PrefabInstance:
   m_ObjectHideFlags: 0
