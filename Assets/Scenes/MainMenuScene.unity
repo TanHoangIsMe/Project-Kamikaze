@@ -2664,7 +2664,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3943443dbe5d27c409de5af148ab5d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingCanvas: {fileID: 1229023063}
+  selectChampPvP: {fileID: 1855386554}
+  createRoomIF: {fileID: 2057276338}
+  joinRoomIF: {fileID: 909201149}
   createRoomBT: {fileID: 1019750153}
   joinRoomBT: {fileID: 962205726}
 --- !u!1 &490513820
@@ -7906,7 +7908,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1855386549}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ChampSelectPvE, Assembly-CSharp
         m_MethodName: SendChampionListToPvEMode
         m_Mode: 1
@@ -9696,7 +9698,7 @@ GameObject:
   - component: {fileID: 1855386552}
   - component: {fileID: 1855386551}
   - component: {fileID: 1855386550}
-  - component: {fileID: 1855386549}
+  - component: {fileID: 1855386554}
   m_Layer: 5
   m_Name: PvP Choosing Champ Canvas
   m_TagString: Untagged
@@ -9704,22 +9706,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1855386549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855386548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bc6f54421376ad4bb324bcfc234c8f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadingCanvas: {fileID: 1229023063}
-  selectChampionList: {fileID: 2016778191}
-  playerTeam: {fileID: 516665566}
-  enemyTeam: {fileID: 239791071}
 --- !u!114 &1855386550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9803,6 +9789,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1855386554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855386548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd75e91ca71482449380ebb07773c88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomIDText: {fileID: 1596117910}
 --- !u!1 &1870708769
 GameObject:
   m_ObjectHideFlags: 0
