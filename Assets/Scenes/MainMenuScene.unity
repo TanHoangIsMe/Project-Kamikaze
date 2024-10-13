@@ -2561,6 +2561,7 @@ GameObject:
   - component: {fileID: 460598993}
   - component: {fileID: 460598992}
   - component: {fileID: 460598991}
+  - component: {fileID: 460598996}
   - component: {fileID: 460598995}
   m_Layer: 5
   m_Name: Lobby Canvas
@@ -2669,6 +2670,27 @@ MonoBehaviour:
   joinRoomIF: {fileID: 909201149}
   createRoomBT: {fileID: 1019750153}
   joinRoomBT: {fileID: 962205726}
+--- !u!114 &460598996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460598990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1910910066
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &490513820
 GameObject:
   m_ObjectHideFlags: 0
@@ -10924,7 +10946,7 @@ VideoPlayer:
   - 0.6
   m_Url: 
   m_EnabledAudioTracks: 01
-  m_DirectAudioMutes: 00
+  m_DirectAudioMutes: 01
   m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1

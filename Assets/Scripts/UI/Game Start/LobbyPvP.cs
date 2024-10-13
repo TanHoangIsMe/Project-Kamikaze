@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +12,13 @@ public class LobbyPvP : NetworkBehaviour
     [SerializeField] private Button createRoomBT;
     [SerializeField] private Button joinRoomBT;
 
-    private NetworkVariable<string> roomID;
+    private static NetworkVariable<FixedString64Bytes> roomID =
+        new NetworkVariable<FixedString64Bytes>(default, 
+            NetworkVariableReadPermission.Everyone, 
+            NetworkVariableWritePermission.Server);
 
     private void Awake()
     {
-        roomID = new NetworkVariable<string>(string.Empty);
-
         // player create room as host 
         createRoomBT.onClick.AddListener(() => {
             CreateRoom();
@@ -38,39 +40,66 @@ public class LobbyPvP : NetworkBehaviour
             return;
         }
 
-        // start room as host
-        NetworkManager.Singleton.StartHost();
+        if (!string.IsNullOrEmpty(roomID.Value.ToString()))
+        {
+            Debug.Log("A room already exists. Please join the existing room.");
+            return;
+        }
 
-        roomID.Value = createRoomID;        
-        selectChampPvP.gameObject.SetActive(true);
-        selectChampPvP.RoomID = roomID.Value;
+        // Start room as host
+        NetworkManager.Singleton.StartHost();
     }
 
     public void JoinRoom()
     {
         string joinRoomID = joinRoomIF.text;
 
-        if (IsRoomAvailable(joinRoomID))
+        if (string.IsNullOrEmpty(joinRoomID))
         {
-            // join room
-            NetworkManager.Singleton.StartClient();
+            Debug.Log("Invalid Room ID");
+            return;
+        }
+
+        NetworkManager.Singleton.StartClient();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsHost)
+        {
+            roomID.Value = new FixedString64Bytes(createRoomIF.text);
+            selectChampPvP.RoomID = roomID.Value.ToString();
             selectChampPvP.gameObject.SetActive(true);
+        }
+        else if(IsClient)
+        {
+            CheckRoomStatusServerRpc(joinRoomIF.text);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckRoomStatusServerRpc(string joinRoomID)
+    {
+        if (roomID.Value.ToString() == joinRoomID && NetworkManager.Singleton.ConnectedClients.Count == 2)
+            NotifyClientJoinRoomClientRpc(true);
+
+        else
+            NotifyClientJoinRoomClientRpc(false);
+    }
+
+    [ClientRpc]
+    private void NotifyClientJoinRoomClientRpc(bool canJoin)
+    {
+        if (!canJoin)
+        {
+            Debug.Log("Room is full. Disconnecting...");
+            NetworkManager.Singleton.Shutdown();
         }
         else
         {
-            Debug.Log("Invalid");
+            Debug.Log("join sucess");
+            selectChampPvP.RoomID = roomID.Value.ToString();
+            selectChampPvP.gameObject.SetActive(true);
         }
-    }
-
-    // check join room condition
-    private bool IsRoomAvailable(string roomID)
-    {
-        return roomID == this.roomID.Value && IsRoomFull() == false;
-    }
-
-    private bool IsRoomFull()
-    {
-        // 2 player limit
-        return NetworkManager.Singleton.ConnectedClients.Count >= 2;
     }
 }
