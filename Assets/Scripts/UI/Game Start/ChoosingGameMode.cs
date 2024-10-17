@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -42,7 +43,7 @@ public class ChoosingGameMode : MonoBehaviour
             videoPlayer.frame = 0; // reset video
         }
 
-        mainMenu.SetActive(false);
         lobbyPvP.SetActive(true);
+        mainMenu.SetActive(false);
     }
 }

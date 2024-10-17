@@ -7,7 +7,7 @@ using System.Linq;
 
 public class LobbyPvP : NetworkBehaviour
 {
-    [SerializeField] private ChampSelectPvP selectChampPvP;
+    [SerializeField] private GameObject selectChampPvP;
     [SerializeField] private TMP_InputField createRoomIF;
     [SerializeField] private TMP_InputField joinRoomIF;
     [SerializeField] private Button createRoomBT;
@@ -76,7 +76,7 @@ public class LobbyPvP : NetworkBehaviour
             .ConnectionData.Port = ushort.Parse(joinRoomID);
 
             // join room as client
-            NetworkManager.Singleton.StartClient();
+            NetworkManager.Singleton.StartClient();           
         }
         else
         {
@@ -88,27 +88,37 @@ public class LobbyPvP : NetworkBehaviour
     {
         if (IsHost)
         {
-            //selectChampPvP.RoomID = roomID.Value.ToString();
-            selectChampPvP.gameObject.SetActive(true);
+            // move to select champ phase
+            SpawnSelectChampCanvas();
+            gameObject.SetActive(false);
         }
         else if(IsClient)
         {
-            CheckRoomStatusServerRpc(joinRoomIF.text);
+            CheckRoomStatusServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void CheckRoomStatusServerRpc(string joinRoomID)
+    private void SpawnSelectChampCanvas()
     {
-        if (NetworkManager.Singleton.ConnectedClients.Count == 2)
-            NotifyClientJoinRoomClientRpc(true);
-        else
-            NotifyClientJoinRoomClientRpc(false);
+        GameObject selectChampCanvas = Instantiate(selectChampPvP);
+        selectChampCanvas.GetComponent<NetworkObject>().Spawn();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckRoomStatusServerRpc(ulong clientId)
+    {
+        // check if room has 2 player
+       bool canJoin = NetworkManager.Singleton.ConnectedClients.Count == 2;
+        NotifyClientJoinRoomClientRpc(canJoin, clientId);
     }
 
     [ClientRpc]
-    private void NotifyClientJoinRoomClientRpc(bool canJoin)
+    private void NotifyClientJoinRoomClientRpc(bool canJoin, ulong clientId)
     {
+        // just send notify to local client
+        if (NetworkManager.Singleton.LocalClientId != clientId)
+            return;
+
         if (!canJoin)
         {
             Debug.Log("Room is full. Disconnecting...");
@@ -117,8 +127,9 @@ public class LobbyPvP : NetworkBehaviour
         else
         {
             Debug.Log("join success");
-            //selectChampPvP.RoomID = roomID.Value.ToString();
-            selectChampPvP.gameObject.SetActive(true);
+
+            // request server spawn shared object
+            SpawnSelectChampCanvas();
         }
     }
 
