@@ -100,8 +100,11 @@ public class LobbyPvP : NetworkBehaviour
 
     private void SpawnSelectChampCanvas()
     {
-        GameObject selectChampCanvas = Instantiate(selectChampPvP);
-        selectChampCanvas.GetComponent<NetworkObject>().Spawn();
+        if (GameObject.FindGameObjectWithTag("SelectChampPvP") == null)
+        {
+            GameObject selectChampCanvas = Instantiate(selectChampPvP);
+            selectChampCanvas.GetComponent<NetworkObject>().Spawn();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -109,7 +112,7 @@ public class LobbyPvP : NetworkBehaviour
     {
         // check if room has 2 player
        bool canJoin = NetworkManager.Singleton.ConnectedClients.Count == 2;
-        NotifyClientJoinRoomClientRpc(canJoin, clientId);
+       NotifyClientJoinRoomClientRpc(canJoin, clientId);
     }
 
     [ClientRpc]

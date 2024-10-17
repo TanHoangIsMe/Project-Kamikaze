@@ -3647,7 +3647,7 @@ GameObject:
   - component: {fileID: 6621575600349521245}
   m_Layer: 5
   m_Name: PvP Choosing Champ Canvas
-  m_TagString: Untagged
+  m_TagString: SelectChampPvP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3747,7 +3747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1713058520
+  GlobalObjectIdHash: 489379404
   InScenePlacedSourceGlobalObjectIdHash: 3825240222
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -3769,7 +3769,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomIDText: {fileID: 9119180509781535879}
-  clientText: {fileID: 6440272691429898191}
+  clientLabel: {fileID: 6440272691429898191}
+  startButton: {fileID: 2108927313842182328}
 --- !u!1 &8385761822263222499
 GameObject:
   m_ObjectHideFlags: 0
