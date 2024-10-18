@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ChampSelectPvP : NetworkBehaviour
 {
+    [SerializeField] private Transform selectChampBG;
     [SerializeField] private TextMeshProUGUI roomIDText;
     [SerializeField] private GameObject clientLabel;
     [SerializeField] private Button startButton;
@@ -93,7 +94,10 @@ public class ChampSelectPvP : NetworkBehaviour
     [ClientRpc]
     private void StartSelectChampClientRpc()
     {
-        Debug.Log("Can start?: " + isClientReady.Value);
+        // active all inactive object and vice versa
+        if (isClientReady.Value)
+            foreach (Transform child in selectChampBG)
+                child.gameObject.SetActive(!child.gameObject.activeSelf);
     }
     #endregion
 
