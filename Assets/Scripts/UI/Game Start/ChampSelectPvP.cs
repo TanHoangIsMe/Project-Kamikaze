@@ -10,6 +10,11 @@ public class ChampSelectPvP : NetworkBehaviour
     [SerializeField] private GameObject clientLabel;
     [SerializeField] private Button startButton;
 
+    private NetworkVariable<bool> isClientReady = 
+        new NetworkVariable<bool>(false, 
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
+
     private void Start()
     {
         // set room id
@@ -24,16 +29,17 @@ public class ChampSelectPvP : NetworkBehaviour
             SetUpClientUIServerRpc(NetworkManager.Singleton.LocalClientId);
             startButton.onClick.AddListener(() =>
             {
-
+                ClientReadyServerRpc(NetworkManager.Singleton.LocalClientId);
             });
         }
         else
             startButton.onClick.AddListener(() =>
             {
-
+                StartSelectChampClientRpc();
             });
     }
 
+    #region Rpc
     [ServerRpc (RequireOwnership = false)]
     public void SetUpClientUIServerRpc(ulong clientId)
     {
@@ -42,6 +48,15 @@ public class ChampSelectPvP : NetworkBehaviour
 
         // set client player start button to ready
         UpdateStartButtonTextClientRpc(clientId);
+    }
+
+    [ServerRpc (RequireOwnership = false)]
+    private void ClientReadyServerRpc(ulong clientId)
+    {
+        // update client state
+        isClientReady.Value = !isClientReady.Value;
+
+        ClientReadyClientRpc(clientId, isClientReady.Value);
     }
 
     [ClientRpc]
@@ -58,7 +73,56 @@ public class ChampSelectPvP : NetworkBehaviour
             return;
 
         // change start button text to ready
-        Transform child = startButton.gameObject.transform.GetChild(0);
-        TMP_Text childText = child.gameObject.GetComponent<TMP_Text>();
+        UpdateStartButtonText("Ready");
     }
+
+    [ClientRpc]
+    private void ClientReadyClientRpc(ulong clientId, bool isReady)
+    {
+        if (isReady)
+        {
+            // client player ready
+            UpdateClientState(clientId, true);
+        }
+        else
+        {
+            UpdateClientState(clientId, false);
+        }
+    }
+
+    [ClientRpc]
+    private void StartSelectChampClientRpc()
+    {
+        Debug.Log("Can start?: " + isClientReady.Value);
+    }
+    #endregion
+
+    #region Reuse Code
+    private void UpdateStartButtonText(string text)
+    {
+        Transform child = startButton.gameObject.transform.GetChild(0);
+        if (child != null)
+        {
+            TMP_Text childText = child.gameObject.GetComponent<TMP_Text>();
+            if (childText != null)
+                childText.text = text;
+        }
+    }
+
+    private void UpdateClientState(ulong clientId, bool isReady)
+    {
+        // active ready icon
+        clientLabel.transform.GetChild(0).gameObject.SetActive(isReady);
+
+        // just update if this client 
+        if (NetworkManager.Singleton.LocalClientId != clientId)
+            return;
+
+        // change start button text to ready
+        if (isReady)           
+            UpdateStartButtonText("Cancel");
+        else
+            UpdateStartButtonText("Ready");
+    }
+    #endregion
 }
