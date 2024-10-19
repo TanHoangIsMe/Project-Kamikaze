@@ -3772,6 +3772,9 @@ MonoBehaviour:
   roomIDText: {fileID: 9119180509781535879}
   clientLabel: {fileID: 6440272691429898191}
   startButton: {fileID: 2108927313842182328}
+  hostTeam: {fileID: 8947560491851678865}
+  clientTeam: {fileID: 9152885897713623344}
+  champList: {fileID: 8027847511391199108}
 --- !u!1 &8385761822263222499
 GameObject:
   m_ObjectHideFlags: 0

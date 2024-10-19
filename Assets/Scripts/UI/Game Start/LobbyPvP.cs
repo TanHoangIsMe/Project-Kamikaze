@@ -88,9 +88,7 @@ public class LobbyPvP : NetworkBehaviour
     {
         if (IsHost)
         {
-            // move to select champ phase
-            SpawnSelectChampCanvas();
-            gameObject.SetActive(false);
+            MoveToSelectChampPhase();
         }
         else if(IsClient)
         {
@@ -130,9 +128,7 @@ public class LobbyPvP : NetworkBehaviour
         else
         {
             Debug.Log("join success");
-
-            // request server spawn shared object
-            SpawnSelectChampCanvas();
+            MoveToSelectChampPhase();
         }
     }
 
@@ -154,5 +150,18 @@ public class LobbyPvP : NetworkBehaviour
             }
         }
         return true;
+    }
+
+    private void MoveToSelectChampPhase()
+    {
+        // spawn shared object to select champ
+        SpawnSelectChampCanvas();
+
+        // remove all listener of button
+        createRoomBT.onClick.RemoveAllListeners();
+        joinRoomBT.onClick.RemoveAllListeners();
+
+        // turn off join room UI
+        gameObject.SetActive(false);
     }
 }

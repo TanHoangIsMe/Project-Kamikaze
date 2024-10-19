@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ChampSelectPvP : NetworkBehaviour
 {
+    // Ready Phase
     [SerializeField] private Transform selectChampBG;
     [SerializeField] private TextMeshProUGUI roomIDText;
     [SerializeField] private GameObject clientLabel;
@@ -15,6 +16,11 @@ public class ChampSelectPvP : NetworkBehaviour
         new NetworkVariable<bool>(false, 
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
+
+    // Select Champ Phase
+    [SerializeField] private GameObject hostTeam;
+    [SerializeField] private GameObject clientTeam;
+    [SerializeField] private GameObject champList;
 
     private void Start()
     {
@@ -36,11 +42,13 @@ public class ChampSelectPvP : NetworkBehaviour
         else
             startButton.onClick.AddListener(() =>
             {
-                StartSelectChampClientRpc();
+                StartSelectChampClientRpc(); // start select champ phase
+                // set who can click which buttons
+                SetButtonOnClickPermissionClientRpc(NetworkManager.Singleton.LocalClientId);
             });
     }
 
-    #region Rpc
+    #region Server Rpc
     [ServerRpc (RequireOwnership = false)]
     public void SetUpClientUIServerRpc(ulong clientId)
     {
@@ -59,7 +67,9 @@ public class ChampSelectPvP : NetworkBehaviour
 
         ClientReadyClientRpc(clientId, isClientReady.Value);
     }
+    #endregion
 
+    #region Client Rpc
     [ClientRpc]
     private void SetUpClientUIClientRpc()
     {
@@ -96,8 +106,28 @@ public class ChampSelectPvP : NetworkBehaviour
     {
         // active all inactive object and vice versa
         if (isClientReady.Value)
+        {
+            startButton.onClick.RemoveAllListeners();
+
             foreach (Transform child in selectChampBG)
                 child.gameObject.SetActive(!child.gameObject.activeSelf);
+        }
+    }
+
+    [ClientRpc]
+    private void SetButtonOnClickPermissionClientRpc(ulong clientId)
+    {
+        // host
+        if(NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            AddListener(hostTeam, true, true);
+            AddListener(clientTeam, false, false);
+        }
+        else // client
+        {
+            AddListener(clientTeam, true, true);
+            AddListener(hostTeam, false, false);
+        }
     }
     #endregion
 
@@ -128,5 +158,36 @@ public class ChampSelectPvP : NetworkBehaviour
         else
             UpdateStartButtonText("Ready");
     }
+
+    private void AddListener(GameObject team, bool isHost, bool canClick)
+    {
+        // get all slot button to set if it interactable 
+        Button[] slotButtons = team.GetComponentsInChildren<Button>();
+        foreach (Button button in slotButtons)
+        {
+            if (canClick) // can click
+                if(isHost) // host
+                    button.onClick.AddListener(() =>
+                    {
+                        testServer();
+                    });
+                else // client
+                    button.onClick.AddListener(() =>
+                    {
+                       testClient();
+                    });
+            else // can not click
+                button.interactable = false;
+        }
+    }
     #endregion
+
+    private void testClient()
+    {
+
+    }
+    private void testServer()
+    {
+
+    }
 }
