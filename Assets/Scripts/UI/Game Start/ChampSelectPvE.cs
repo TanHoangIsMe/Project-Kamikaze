@@ -103,7 +103,7 @@ public class ChampSelectPvE : MonoBehaviour
             // remove champion slot
             if (selectedChamp == "None")
             {
-                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Add Champion Image");
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
 
                 foreach (KeyValuePair<int, string> champ in championList)
                     if (champ.Key == champPosition)

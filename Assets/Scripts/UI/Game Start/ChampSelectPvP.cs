@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -21,6 +23,14 @@ public class ChampSelectPvP : NetworkBehaviour
     [SerializeField] private GameObject hostTeam;
     [SerializeField] private GameObject clientTeam;
     [SerializeField] private GameObject champList;
+
+    private string selectedChamp;
+    private Button[] champListButtons;
+    private Button[] hostSlotButtons;
+    private Button[] clientSlotButtons;
+
+    private NetworkVariable<string> hostSelectedChamp = new NetworkVariable<string>(null);
+    private NetworkVariable<string> clientSelectedChamp = new NetworkVariable<string>(null);
 
     private void Start()
     {
@@ -120,13 +130,15 @@ public class ChampSelectPvP : NetworkBehaviour
         // host
         if(NetworkManager.Singleton.LocalClientId == clientId)
         {
-            AddListener(hostTeam, true, true);
-            AddListener(clientTeam, false, false);
+            AddListener(hostTeam, 1, true);
+            AddListener(clientTeam, 2, false);
+            AddListener(champList, 3, true);
         }
         else // client
         {
-            AddListener(clientTeam, true, true);
-            AddListener(hostTeam, false, false);
+            AddListener(clientTeam, 2, true);
+            AddListener(hostTeam, 1, false);
+            AddListener(champList, 3, true);
         }
     }
     #endregion
@@ -159,35 +171,105 @@ public class ChampSelectPvP : NetworkBehaviour
             UpdateStartButtonText("Ready");
     }
 
-    private void AddListener(GameObject team, bool isHost, bool canClick)
+    // which type = 1 -> host
+    // which type = 2 -> client
+    // which type = 3 -> select champ 
+    private void AddListener(GameObject team, int whichType, bool canClick)
     {
         // get all slot button to set if it interactable 
         Button[] slotButtons = team.GetComponentsInChildren<Button>();
-        foreach (Button button in slotButtons)
+
+        // store button list
+        if(whichType == 1) 
+            hostSlotButtons = slotButtons;
+        else if (whichType == 2)
+            clientSlotButtons = slotButtons;
+        else
+            champListButtons = slotButtons;
+        
+        for(int i = 0; i < slotButtons.Length; i++) 
         {
+            int index = i; // store index to prevent out of index bug
+
             if (canClick) // can click
-                if(isHost) // host
-                    button.onClick.AddListener(() =>
+            {
+                if (whichType == 1) // host button
+                    slotButtons[index].onClick.AddListener(() =>
                     {
-                        testServer();
+                        SetUpChampSelectServerRpc(index, true);
                     });
-                else // client
-                    button.onClick.AddListener(() =>
+                else if (whichType == 2) // client button
+                    slotButtons[index].onClick.AddListener(() =>
                     {
-                       testClient();
+                        SetUpChampSelectServerRpc(index, false);
                     });
+                else // champ list button
+                {
+                    slotButtons[index].onClick.AddListener(() =>
+                    {
+                        SelectChampButtonClicked(slotButtons[index]);
+                    });
+                }
+            }
             else // can not click
-                button.interactable = false;
+                slotButtons[i].interactable = false;
         }
     }
     #endregion
-
-    private void testClient()
+    private void SelectChampButtonClicked(Button clickedButton)
     {
+        foreach (Button button in champListButtons)
+            SelectBorderHandler(false, button);
 
+        selectedChamp = clickedButton.gameObject.name;
+        SelectBorderHandler(true, clickedButton);
     }
-    private void testServer()
-    {
 
+    // turn on-off select border 
+    private void SelectBorderHandler(bool isActive, Button button)
+    {
+        Transform selectBorder = button.gameObject.transform.GetChild(0);
+        if (selectBorder != null)
+            selectBorder.gameObject.SetActive(isActive);
+    }
+
+    [ServerRpc (RequireOwnership = false)]
+    private void SetUpChampSelectServerRpc(int buttonIndex, bool isHost)
+    {
+        SetUpChampSelectClientRpc(buttonIndex, isHost);
+    }
+
+    [ClientRpc]
+    private void SetUpChampSelectClientRpc(int buttonIndex, bool isHost)
+    {
+        if (selectedChamp != null)
+        {
+            Image image;
+            if (isHost) 
+                image = hostSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+            else
+                image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+
+            // set up champion value
+            //int champPosition = int.Parse(champListButtons[buttonIndex].gameObject.name);
+            //string champName = selectedChamp.Replace(" ", "");
+
+            // remove champion slot
+            if (selectedChamp == "None")
+            {
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+
+                //    //foreach (KeyValuePair<int, string> champ in championList)
+                //    //    if (champ.Key == champPosition)
+                //    //    {
+                //    //        championList.Remove(champ.Key);
+                //    //        break;
+                //    //    }
+            }
+            else // add champion to slot
+            {
+                image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectedChamp} Avatar");
+            }
+        }
     }
 }
