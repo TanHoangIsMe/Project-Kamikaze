@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -27,11 +26,8 @@ public class ChampSelectPvP : NetworkBehaviour
     private Button[] hostSlotButtons;
     private Button[] clientSlotButtons;
 
-    private NetworkVariable<FixedString64Bytes> hostSelectedChamp = 
-        new NetworkVariable<FixedString64Bytes>(default);
-
-    private NetworkVariable<FixedString64Bytes> clientSelectedChamp = 
-        new NetworkVariable<FixedString64Bytes>(default);
+    private string hostSelectedChamp;
+    private string clientSelectedChamp;
 
     private void Start()
     {
@@ -53,7 +49,9 @@ public class ChampSelectPvP : NetworkBehaviour
         else
             startButton.onClick.AddListener(() =>
             {
-                StartSelectChampClientRpc(); // start select champ phase
+                // start select champ phase
+                StartSelectChampClientRpc();
+                
                 // set who can click which buttons
                 SetButtonOnClickPermissionClientRpc(NetworkManager.Singleton.LocalClientId);
             });
@@ -77,6 +75,12 @@ public class ChampSelectPvP : NetworkBehaviour
         isClientReady.Value = !isClientReady.Value;
 
         ClientReadyClientRpc(clientId, isClientReady.Value);
+    }
+
+    [ServerRpc (RequireOwnership = false)]
+    private void UpdateClientSelectChampServerRpc(string champName)
+    {
+        UpdateClientSelectChampClientRpc(champName);
     }
     #endregion
 
@@ -123,6 +127,18 @@ public class ChampSelectPvP : NetworkBehaviour
             foreach (Transform child in selectChampBG)
                 child.gameObject.SetActive(!child.gameObject.activeSelf);
         }
+    }
+
+    [ClientRpc]
+    private void UpdateClientSelectChampClientRpc(string champName)
+    {
+        clientSelectedChamp = champName;
+    }
+
+    [ClientRpc]
+    private void UpdateHostSelectChampClientRpc(string champName)
+    {
+        hostSelectedChamp = champName;
     }
 
     [ClientRpc]
@@ -197,12 +213,12 @@ public class ChampSelectPvP : NetworkBehaviour
                 if (whichType == 1) // host button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        SetUpChampSelectServerRpc(index, true, hostSelectedChamp.Value.ToString());
+                        SetUpChampSelectServerRpc(index, true, hostSelectedChamp);
                     });
                 else if (whichType == 2) // client button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        //SetUpChampSelectServerRpc(index, false);
+                        SetUpChampSelectServerRpc(index, false, clientSelectedChamp);
                     });
                 else // champ list button
                 {
@@ -223,21 +239,16 @@ public class ChampSelectPvP : NetworkBehaviour
         foreach (Button button in champListButtons)
             SelectBorderHandler(false, button);
 
-        // convert string to fixed string
-        FixedString64Bytes fixedString = new FixedString64Bytes(clickedButton.gameObject.name);
-        Debug.Log("ishost: " + IsHost);
-        Debug.Log(hostSelectedChamp);
-        Debug.Log(hostSelectedChamp.Value);
-        Debug.Log(clickedButton.name);
-
         // store host or client select champ
-        //if (IsHost)
-        //    hostSelectedChamp.Value = fixedString;
-        //else
-        //    clientSelectedChamp.Value = fixedString;
+        if (IsHost)
+            //hostSelectedChamp.Value = new List<byte>(Encoding.UTF8.GetBytes(clickedButton.name));
+            UpdateHostSelectChampClientRpc(clickedButton.name);
+        else
+            // request server update client champ select
+            UpdateClientSelectChampServerRpc(clickedButton.name); 
 
-        //// turn on champ select border ui
-        //SelectBorderHandler(true, clickedButton);
+        // turn on champ select border ui
+        SelectBorderHandler(true, clickedButton);
     }
 
     // turn on-off select border 
@@ -258,7 +269,7 @@ public class ChampSelectPvP : NetworkBehaviour
     private void SetUpChampSelectClientRpc(int buttonIndex, bool isHost, string selectChamp)
     {
         Image image;
-
+        Debug.Log(selectChamp);
         if (isHost && selectChamp != "")
         {           
             image = hostSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
@@ -284,9 +295,9 @@ public class ChampSelectPvP : NetworkBehaviour
                 image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectChamp} Avatar");
             }
         }
-        else if (IsClient && clientSelectedChamp.Value != "")
-        {
-            image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
-        }
+        //else if (IsClient && clientSelectedChamp.Value != null)
+        //{
+        //    image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+        //}
     }
 }
