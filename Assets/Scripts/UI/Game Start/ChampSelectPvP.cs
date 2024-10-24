@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +12,10 @@ public class ChampSelectPvP : NetworkBehaviour
     [SerializeField] private Transform selectChampBG;
     [SerializeField] private TextMeshProUGUI roomIDText;
     [SerializeField] private GameObject clientLabel;
-    [SerializeField] private Button startButton;
+    [SerializeField] private Button startPickButton;
+    [SerializeField] private Button startMatchButton;
 
-    private NetworkVariable<bool> isClientReady = 
-        new NetworkVariable<bool>(false, 
-            NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server);
+    private bool isReadyPick = false;
 
     // Select Champ Phase
     [SerializeField] private GameObject hostTeam;
@@ -32,6 +31,8 @@ public class ChampSelectPvP : NetworkBehaviour
 
     private Dictionary<int, string> championList;
 
+    private bool isReadyMatch = false;
+
     private void Start()
     {
         // set room id
@@ -45,21 +46,23 @@ public class ChampSelectPvP : NetworkBehaviour
         // set up ui depend on server or client
         if (!IsServer)
         {
-            SetUpClientUIServerRpc(NetworkManager.Singleton.LocalClientId);
+            SetUpClientUIServerRpc();
 
-            startButton.onClick.AddListener(() =>
+            startPickButton.onClick.AddListener(() =>
             {
-                ClientReadyServerRpc(NetworkManager.Singleton.LocalClientId);
+                ReadyServerRpc(true);
             });
         }
         else
-            startButton.onClick.AddListener(() =>
+            startPickButton.interactable = false;
+
+            startPickButton.onClick.AddListener(() =>
             {
                 // start select champ phase
                 StartSelectChampClientRpc();
                 
                 // set who can click which buttons
-                SetButtonOnClickPermissionClientRpc(NetworkManager.Singleton.LocalClientId);
+                SetButtonOnClickPermissionClientRpc();
             });
     }
 
@@ -83,22 +86,19 @@ public class ChampSelectPvP : NetworkBehaviour
 
     #region Server Rpc
     [ServerRpc (RequireOwnership = false)]
-    public void SetUpClientUIServerRpc(ulong clientId)
+    public void SetUpClientUIServerRpc()
     {
         // active client player label when client join
         SetUpClientUIClientRpc(); 
 
         // set client player start button to ready
-        UpdateStartButtonTextClientRpc(clientId);
+        UpdateStartButtonTextClientRpc();
     }
 
     [ServerRpc (RequireOwnership = false)]
-    private void ClientReadyServerRpc(ulong clientId)
+    private void ReadyServerRpc(bool isPick)
     {
-        // update client state
-        isClientReady.Value = !isClientReady.Value;
-
-        ClientReadyClientRpc(clientId, isClientReady.Value);
+        ReadyClientRpc(isPick);
     }
 
     [ServerRpc (RequireOwnership = false)]
@@ -122,40 +122,43 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void UpdateStartButtonTextClientRpc(ulong clientId)
+    private void UpdateStartButtonTextClientRpc()
     {
-        // just update if this client 
-        if (NetworkManager.Singleton.LocalClientId != clientId)
-            return;
-
-        // change start button text to ready
-        UpdateStartButtonText("Ready");
+        if(!IsHost)
+            // change start button text to ready
+            UpdateStartButtonText("Ready", startPickButton);
     }
 
     [ClientRpc]
-    private void ClientReadyClientRpc(ulong clientId, bool isReady)
+    private void ReadyClientRpc(bool isPick)
     {
-        if (isReady)
-        {
-            // client player ready
-            UpdateClientState(clientId, true);
-        }
-        else
-        {
-            UpdateClientState(clientId, false);
-        }
+        UpdateReadyState(isPick);
     }
 
     [ClientRpc]
     private void StartSelectChampClientRpc()
     {
         // active all inactive object and vice versa
-        if (isClientReady.Value)
+        if (isReadyPick)
         {
-            startButton.onClick.RemoveAllListeners();
+            startPickButton.onClick.RemoveAllListeners();
 
             foreach (Transform child in selectChampBG)
-                child.gameObject.SetActive(!child.gameObject.activeSelf);
+            {
+                if (child.name != "VS")
+                    child.gameObject.SetActive(!child.gameObject.activeSelf);
+            }
+
+            if (!IsHost)
+            {
+                UpdateStartButtonText("Ready", startMatchButton);
+                startMatchButton.onClick.AddListener(() =>
+                {
+                    ReadyServerRpc(false);
+                });
+            }
+            else
+                startMatchButton.interactable = false;
         }
     }
 
@@ -172,10 +175,10 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void SetButtonOnClickPermissionClientRpc(ulong clientId)
+    private void SetButtonOnClickPermissionClientRpc()
     {
         // host
-        if(NetworkManager.Singleton.LocalClientId == clientId)
+        if(IsHost)
         {
             AddListener(hostTeam, 1, true);
             AddListener(clientTeam, 2, false);
@@ -283,9 +286,9 @@ public class ChampSelectPvP : NetworkBehaviour
     #endregion
 
     #region Reuse Code
-    private void UpdateStartButtonText(string text)
+    private void UpdateStartButtonText(string text, Button button)
     {
-        Transform child = startButton.gameObject.transform.GetChild(0);
+        Transform child = button.gameObject.transform.GetChild(0);
         if (child != null)
         {
             TMP_Text childText = child.gameObject.GetComponent<TMP_Text>();
@@ -294,20 +297,51 @@ public class ChampSelectPvP : NetworkBehaviour
         }
     }
 
-    private void UpdateClientState(ulong clientId, bool isReady)
+    // isPick = true -> ready to start pick state
+    // isPick = false -> ready to start match state
+    private void UpdateReadyState(bool isPick)
     {
-        // active ready icon
-        clientLabel.transform.GetChild(0).gameObject.SetActive(isReady);
+        if (isPick)
+        {
+            isReadyPick = !isReadyPick;
 
-        // just update if this client 
-        if (NetworkManager.Singleton.LocalClientId != clientId)
-            return;
+            // active ready icon
+            clientLabel.transform.GetChild(0).gameObject.SetActive(isReadyPick);
 
-        // change start button text to ready
-        if (isReady)           
-            UpdateStartButtonText("Cancel");
+            if (!IsHost)
+            {
+                // change start button text to ready
+                if (isReadyPick)
+                    UpdateStartButtonText("Cancel", startPickButton);
+                else
+                    UpdateStartButtonText("Ready", startPickButton);
+            }
+
+            if (IsHost) // active or inactive host start match button
+                if (isReadyPick)
+                    startPickButton.interactable = true;
+                else
+                    startPickButton.interactable = false;
+        }
         else
-            UpdateStartButtonText("Ready");
+        {
+            isReadyMatch = !isReadyMatch;
+
+            if (!IsHost)
+            {
+                // change start button text to ready
+                if (isReadyMatch)
+                    UpdateStartButtonText("Cancel", startMatchButton);
+                else
+                    UpdateStartButtonText("Ready", startMatchButton);
+            }
+            
+            if (IsHost) // active or inactive host start match button
+                if(isReadyMatch)
+                    startMatchButton.interactable = true;
+                else
+                    startMatchButton.interactable = false;
+        }
     }
 
     // which type = 1 -> host
