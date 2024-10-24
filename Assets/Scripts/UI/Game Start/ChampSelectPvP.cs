@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -29,6 +30,8 @@ public class ChampSelectPvP : NetworkBehaviour
     private string hostSelectedChamp;
     private string clientSelectedChamp;
 
+    private Dictionary<int, string> championList;
+
     private void Start()
     {
         // set room id
@@ -37,10 +40,13 @@ public class ChampSelectPvP : NetworkBehaviour
 
         roomIDText.text = $"Room ID: {roomID}";
 
+        championList = new Dictionary<int, string>();
+
         // set up ui depend on server or client
         if (!IsServer)
         {
             SetUpClientUIServerRpc(NetworkManager.Singleton.LocalClientId);
+
             startButton.onClick.AddListener(() =>
             {
                 ClientReadyServerRpc(NetworkManager.Singleton.LocalClientId);
@@ -55,6 +61,24 @@ public class ChampSelectPvP : NetworkBehaviour
                 // set who can click which buttons
                 SetButtonOnClickPermissionClientRpc(NetworkManager.Singleton.LocalClientId);
             });
+    }
+
+    private void SelectChampButtonClicked(Button clickedButton)
+    {
+        // turn off all select border ui
+        foreach (Button button in champListButtons)
+            SelectBorderHandler(false, button);
+
+        // store host or client select champ
+        if (IsHost)
+            //hostSelectedChamp.Value = new List<byte>(Encoding.UTF8.GetBytes(clickedButton.name));
+            UpdateHostSelectChampClientRpc(clickedButton.name);
+        else
+            // request server update client champ select
+            UpdateClientSelectChampServerRpc(clickedButton.name);
+
+        // turn on champ select border ui
+        SelectBorderHandler(true, clickedButton);
     }
 
     #region Server Rpc
@@ -81,6 +105,12 @@ public class ChampSelectPvP : NetworkBehaviour
     private void UpdateClientSelectChampServerRpc(string champName)
     {
         UpdateClientSelectChampClientRpc(champName);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetUpClientChampSelectServerRpc(int buttonIndex, string selectChamp)
+    {
+        SetUpClientChampSelectClientRpc(buttonIndex, selectChamp);
     }
     #endregion
 
@@ -158,6 +188,98 @@ public class ChampSelectPvP : NetworkBehaviour
             AddListener(champList, 3, true);
         }
     }
+
+    [ClientRpc]
+    private void SetUpHostChampSelectClientRpc(int buttonIndex, string selectChamp)
+    {
+        Image image;
+        
+        if (selectChamp != null)
+        {
+            image = hostSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+
+            // set up champion value
+            int champPosition = int.Parse(hostSlotButtons[buttonIndex].gameObject.name);
+            string champName = selectChamp.Replace(" ", "");
+
+            // remove champion slot
+            if (selectChamp == "None")
+            {
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+
+                foreach (KeyValuePair<int, string> champ in championList)
+                    if (champ.Key == champPosition)
+                    {
+                        championList.Remove(champ.Key);
+                        break;
+                    }
+            }
+            else // add champion to slot
+            {
+                image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectChamp} Avatar");
+
+                bool isExisted = false; // flag to know a slot already have champ
+
+                // if have just replace champ name
+                foreach (KeyValuePair<int, string> champ in championList)
+                    if (champ.Key == champPosition)
+                    {
+                        championList[champ.Key] = champName;
+                        isExisted = true;
+                        break;
+                    }
+
+                if (!isExisted) // else create new champ slot
+                    championList.Add(champPosition, champName);
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void SetUpClientChampSelectClientRpc(int buttonIndex, string selectChamp)
+    {
+        Image image;
+
+        if (selectChamp != null)
+        {
+            image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+
+            // set up champion value
+            int champPosition = int.Parse(clientSlotButtons[buttonIndex].gameObject.name);
+            string champName = selectChamp.Replace(" ", "");
+
+            // remove champion slot
+            if (selectChamp == "None")
+            {
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+
+                foreach (KeyValuePair<int, string> champ in championList)
+                    if (champ.Key == champPosition)
+                    {
+                        championList.Remove(champ.Key);
+                        break;
+                    }
+            }
+            else // add champion to slot
+            {
+                image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectChamp} Avatar");
+
+                bool isExisted = false; // flag to know a slot already have champ
+
+                // if have just replace champ name
+                foreach (KeyValuePair<int, string> champ in championList)
+                    if (champ.Key == champPosition)
+                    {
+                        championList[champ.Key] = champName;
+                        isExisted = true;
+                        break;
+                    }
+
+                if (!isExisted) // else create new champ slot
+                    championList.Add(champPosition, champName);
+            }
+        }
+    }
     #endregion
 
     #region Reuse Code
@@ -213,12 +335,12 @@ public class ChampSelectPvP : NetworkBehaviour
                 if (whichType == 1) // host button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        SetUpChampSelectServerRpc(index, true, hostSelectedChamp);
+                        SetUpHostChampSelectClientRpc(index, hostSelectedChamp);
                     });
                 else if (whichType == 2) // client button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        SetUpChampSelectServerRpc(index, false, clientSelectedChamp);
+                        SetUpClientChampSelectServerRpc(index, clientSelectedChamp);
                     });
                 else // champ list button
                 {
@@ -232,24 +354,6 @@ public class ChampSelectPvP : NetworkBehaviour
                 slotButtons[i].interactable = false;
         }
     }
-    #endregion
-    private void SelectChampButtonClicked(Button clickedButton)
-    {
-        // turn off all select border ui
-        foreach (Button button in champListButtons)
-            SelectBorderHandler(false, button);
-
-        // store host or client select champ
-        if (IsHost)
-            //hostSelectedChamp.Value = new List<byte>(Encoding.UTF8.GetBytes(clickedButton.name));
-            UpdateHostSelectChampClientRpc(clickedButton.name);
-        else
-            // request server update client champ select
-            UpdateClientSelectChampServerRpc(clickedButton.name); 
-
-        // turn on champ select border ui
-        SelectBorderHandler(true, clickedButton);
-    }
 
     // turn on-off select border 
     private void SelectBorderHandler(bool isActive, Button button)
@@ -258,46 +362,5 @@ public class ChampSelectPvP : NetworkBehaviour
         if (selectBorder != null)
             selectBorder.gameObject.SetActive(isActive);
     }
-
-    [ServerRpc (RequireOwnership = false)]
-    private void SetUpChampSelectServerRpc(int buttonIndex, bool isHost, string selectChamp)
-    {
-        SetUpChampSelectClientRpc(buttonIndex, isHost, selectChamp);
-    }
-
-    [ClientRpc]
-    private void SetUpChampSelectClientRpc(int buttonIndex, bool isHost, string selectChamp)
-    {
-        Image image;
-        Debug.Log(selectChamp);
-        if (isHost && selectChamp != "")
-        {           
-            image = hostSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
-
-            // set up champion value
-            //int champPosition = int.Parse(champListButtons[buttonIndex].gameObject.name);
-            //string champName = selectedChamp.Replace(" ", "");
-
-            // remove champion slot
-            if (selectChamp == "None")
-            {
-                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
-
-                //    //foreach (KeyValuePair<int, string> champ in championList)
-                //    //    if (champ.Key == champPosition)
-                //    //    {
-                //    //        championList.Remove(champ.Key);
-                //    //        break;
-                //    //    }
-            }
-            else // add champion to slot
-            {
-                image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectChamp} Avatar");
-            }
-        }
-        //else if (IsClient && clientSelectedChamp.Value != null)
-        //{
-        //    image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
-        //}
-    }
+    #endregion   
 }
