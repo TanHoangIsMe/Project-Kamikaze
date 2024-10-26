@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,10 +75,10 @@ public class ChampSelectPvP : NetworkBehaviour
         // store host or client select champ
         if (IsHost)
             //hostSelectedChamp.Value = new List<byte>(Encoding.UTF8.GetBytes(clickedButton.name));
-            UpdateHostSelectChampClientRpc(clickedButton.name);
+            UpdateSelectChampClientRpc(clickedButton.name);
         else
             // request server update client champ select
-            UpdateClientSelectChampServerRpc(clickedButton.name);
+            UpdateSelectChampServerRpc(clickedButton.name);
 
         // turn on champ select border ui
         SelectBorderHandler(true, clickedButton);
@@ -102,15 +102,15 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ServerRpc (RequireOwnership = false)]
-    private void UpdateClientSelectChampServerRpc(string champName)
+    private void UpdateSelectChampServerRpc(string champName)
     {
-        UpdateClientSelectChampClientRpc(champName);
+        UpdateSelectChampClientRpc(champName);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SetUpClientChampSelectServerRpc(int buttonIndex, string selectChamp)
+    private void SetUpChampSelectServerRpc(int buttonIndex, string selectChamp, bool isHost)
     {
-        SetUpClientChampSelectClientRpc(buttonIndex, selectChamp);
+        SetUpChampSelectClientRpc(buttonIndex, selectChamp, isHost);
     }
     #endregion
 
@@ -158,27 +158,28 @@ public class ChampSelectPvP : NetworkBehaviour
                 });
             }
             else
+            {
+                startMatchButton.onClick.AddListener(() => { 
+                    
+                });
                 startMatchButton.interactable = false;
+            }
         }
     }
 
     [ClientRpc]
-    private void UpdateClientSelectChampClientRpc(string champName)
+    private void UpdateSelectChampClientRpc(string champName)
     {
-        clientSelectedChamp = champName;
-    }
-
-    [ClientRpc]
-    private void UpdateHostSelectChampClientRpc(string champName)
-    {
-        hostSelectedChamp = champName;
+        if (IsHost)
+            hostSelectedChamp = champName;
+        else
+            clientSelectedChamp = champName;
     }
 
     [ClientRpc]
     private void SetButtonOnClickPermissionClientRpc()
-    {
-        // host
-        if(IsHost)
+    {      
+        if(IsHost) // host
         {
             AddListener(hostTeam, 1, true);
             AddListener(clientTeam, 2, false);
@@ -193,16 +194,22 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void SetUpHostChampSelectClientRpc(int buttonIndex, string selectChamp)
+    private void SetUpChampSelectClientRpc(int buttonIndex, string selectChamp, bool isHost)
     {
         Image image;
-        
+
+        Button[] slotButtons;
+        if (isHost)
+            slotButtons = hostSlotButtons;
+        else
+            slotButtons = clientSlotButtons;
+
         if (selectChamp != null)
         {
-            image = hostSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
+            image = slotButtons[buttonIndex].gameObject.GetComponent<Image>();
 
             // set up champion value
-            int champPosition = int.Parse(hostSlotButtons[buttonIndex].gameObject.name);
+            int champPosition = int.Parse(slotButtons[buttonIndex].gameObject.name);
             string champName = selectChamp.Replace(" ", "");
 
             // remove champion slot
@@ -214,52 +221,8 @@ public class ChampSelectPvP : NetworkBehaviour
                     if (champ.Key == champPosition)
                     {
                         championList.Remove(champ.Key);
-                        break;
-                    }
-            }
-            else // add champion to slot
-            {
-                image.sprite = Resources.Load<Sprite>($"Art/UI/Character Avatars/{selectChamp} Avatar");
-
-                bool isExisted = false; // flag to know a slot already have champ
-
-                // if have just replace champ name
-                foreach (KeyValuePair<int, string> champ in championList)
-                    if (champ.Key == champPosition)
-                    {
-                        championList[champ.Key] = champName;
-                        isExisted = true;
-                        break;
-                    }
-
-                if (!isExisted) // else create new champ slot
-                    championList.Add(champPosition, champName);
-            }
-        }
-    }
-
-    [ClientRpc]
-    private void SetUpClientChampSelectClientRpc(int buttonIndex, string selectChamp)
-    {
-        Image image;
-
-        if (selectChamp != null)
-        {
-            image = clientSlotButtons[buttonIndex].gameObject.GetComponent<Image>();
-
-            // set up champion value
-            int champPosition = int.Parse(clientSlotButtons[buttonIndex].gameObject.name);
-            string champName = selectChamp.Replace(" ", "");
-
-            // remove champion slot
-            if (selectChamp == "None")
-            {
-                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
-
-                foreach (KeyValuePair<int, string> champ in championList)
-                    if (champ.Key == champPosition)
-                    {
-                        championList.Remove(champ.Key);
+                        if (!isHost && !CheckChampList(false)) // client team is empty
+                            ReadyServerRpc(false); // update ready state        
                         break;
                     }
             }
@@ -325,8 +288,9 @@ public class ChampSelectPvP : NetworkBehaviour
         }
         else
         {
-            isReadyMatch = !isReadyMatch;
-
+            if (isReadyMatch || (!isReadyMatch && CheckChampList(false)))
+                isReadyMatch = !isReadyMatch;
+            
             if (!IsHost)
             {
                 // change start button text to ready
@@ -335,12 +299,14 @@ public class ChampSelectPvP : NetworkBehaviour
                 else
                     UpdateStartButtonText("Ready", startMatchButton);
             }
-            
+
             if (IsHost) // active or inactive host start match button
-                if(isReadyMatch)
+            {
+                if (isReadyMatch)
                     startMatchButton.interactable = true;
                 else
                     startMatchButton.interactable = false;
+            }
         }
     }
 
@@ -369,12 +335,12 @@ public class ChampSelectPvP : NetworkBehaviour
                 if (whichType == 1) // host button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        SetUpHostChampSelectClientRpc(index, hostSelectedChamp);
+                        SetUpChampSelectClientRpc(index, hostSelectedChamp, true);
                     });
                 else if (whichType == 2) // client button
                     slotButtons[index].onClick.AddListener(() =>
                     {
-                        SetUpClientChampSelectServerRpc(index, clientSelectedChamp);
+                        SetUpChampSelectServerRpc(index, clientSelectedChamp, false);
                     });
                 else // champ list button
                 {
@@ -395,6 +361,32 @@ public class ChampSelectPvP : NetworkBehaviour
         Transform selectBorder = button.gameObject.transform.GetChild(0);
         if (selectBorder != null)
             selectBorder.gameObject.SetActive(isActive);
+    }
+
+    private bool CheckChampList(bool isHost)
+    {
+        bool isNotEmpty = false;
+        
+        if (!isHost) // check client team
+        {
+            foreach (KeyValuePair<int, string> clientChamp in championList)
+                if (new[] { 0, 1, 2, 3, 4 }.Contains(clientChamp.Key))
+                {
+                    isNotEmpty = true;
+                    break;
+                }
+        }
+        else // check host team
+        {
+            foreach (KeyValuePair<int, string> hostChamp in championList)
+                if (new[] { 6, 7, 8, 9, 10 }.Contains(hostChamp.Key))
+                {
+                    isNotEmpty = true;
+                    break;
+                }
+        }
+
+        return isNotEmpty;
     }
     #endregion   
 }
