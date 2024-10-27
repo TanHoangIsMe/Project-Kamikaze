@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -9,18 +8,14 @@ public class ChoosingGameMode : MonoBehaviour
     [SerializeField] GameObject lobbyPvP;
     [SerializeField] VideoPlayer videoPlayer;
 
-    public void MoveToMainMenu()
+    public void MoveToMainMenuFromSelectChampPvE()
     {
-        // reset select champ scene
-        ChampSelectPvE champSelectScene = FindObjectOfType<ChampSelectPvE>();
-        if (champSelectScene != null )
-            champSelectScene.ResetScene();
+        BackToMainMenu(true);
+    }
 
-        champSelectPvE.SetActive(false);
-        mainMenu.SetActive(true);
-
-        if (!videoPlayer.isPlaying)
-            videoPlayer.Play();
+    public void MoveToMainMenuFromLobbyPvP()
+    {
+        BackToMainMenu(false);
     }
 
     public void MoveToChampSelectPvE()
@@ -45,5 +40,34 @@ public class ChoosingGameMode : MonoBehaviour
 
         lobbyPvP.SetActive(true);
         mainMenu.SetActive(false);
+    }
+
+    // isPve -> from select champ pve to home
+    // !isPvE -> from lobby pvp to home
+    private void BackToMainMenu(bool isPvE)
+    {
+        // reset select champ pve scene
+        if (isPvE)
+        {
+            ChampSelectPvE champSelectScene = champSelectPvE.GetComponent<ChampSelectPvE>();
+            if (champSelectScene != null)
+                champSelectScene.ResetScene();
+
+            champSelectPvE.SetActive(false);
+        }
+        else // reset lobby scene
+        {
+            LobbyPvP lobbyScene = lobbyPvP.GetComponent<LobbyPvP>();
+            if (lobbyScene != null)
+                lobbyScene.ResetScene();
+
+            lobbyPvP.SetActive(false);
+        }
+       
+        mainMenu.SetActive(true);
+
+        // stop intro video
+        if (!videoPlayer.isPlaying)
+            videoPlayer.Play();
     }
 }

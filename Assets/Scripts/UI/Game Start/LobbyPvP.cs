@@ -98,11 +98,23 @@ public class LobbyPvP : NetworkBehaviour
 
     private void SpawnSelectChampCanvas()
     {
-        if (GameObject.FindGameObjectWithTag("SelectChampPvP") == null)
+        GameObject selectChampCanvas = 
+            GameObject.FindGameObjectWithTag("SelectChampPvP");
+
+        if (selectChampCanvas == null)
         {
-            GameObject selectChampCanvas = Instantiate(selectChampPvP);
+            selectChampCanvas = Instantiate(selectChampPvP);
             selectChampCanvas.GetComponent<NetworkObject>().Spawn();
         }
+        
+        SendLobbyInfoToSelectChamp(selectChampCanvas);
+    }
+
+    private void SendLobbyInfoToSelectChamp(GameObject selectChampCanvas)
+    {
+        ChampSelectPvP champSelectPvP = selectChampCanvas.GetComponent<ChampSelectPvP>();
+        if (champSelectPvP != null)
+            champSelectPvP.LobbyPvp = gameObject;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -157,11 +169,16 @@ public class LobbyPvP : NetworkBehaviour
         // spawn shared object to select champ
         SpawnSelectChampCanvas();
 
-        // remove all listener of button
-        createRoomBT.onClick.RemoveAllListeners();
-        joinRoomBT.onClick.RemoveAllListeners();
+        // reset input field
+        ResetScene();
 
         // turn off join room UI
         gameObject.SetActive(false);
+    }
+
+    public void ResetScene()
+    {
+        createRoomIF.text = "";
+        joinRoomIF.text = "";
     }
 }

@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class ChampSelectPvP : NetworkBehaviour
 {
+    private GameObject lobbyPvP;
+    public GameObject LobbyPvp { set { lobbyPvP = value; } }
+
     // Ready Phase
     [SerializeField] private Transform selectChampBG;
     [SerializeField] private TextMeshProUGUI roomIDText;
@@ -46,11 +49,11 @@ public class ChampSelectPvP : NetworkBehaviour
         // set up ui depend on server or client
         if (!IsServer)
         {
-            SetUpClientUIServerRpc();
+            SetUpClientUIServerRpc(true);
 
             startPickButton.onClick.AddListener(() =>
             {
-                ReadyServerRpc(true);
+                ReadyServerRpc(true, false);
             });
         }
         else
@@ -86,19 +89,20 @@ public class ChampSelectPvP : NetworkBehaviour
 
     #region Server Rpc
     [ServerRpc (RequireOwnership = false)]
-    public void SetUpClientUIServerRpc()
+    public void SetUpClientUIServerRpc(bool isActive)
     {
         // active client player label when client join
-        SetUpClientUIClientRpc(); 
+        SetUpClientUIClientRpc(isActive); 
 
-        // set client player start button to ready
-        UpdateStartButtonTextClientRpc();
+        if(isActive)
+            // set client player start button to ready
+            UpdateStartButtonTextClientRpc();
     }
 
     [ServerRpc (RequireOwnership = false)]
-    private void ReadyServerRpc(bool isPick)
+    private void ReadyServerRpc(bool isPick, bool isClientDisconnect)
     {
-        ReadyClientRpc(isPick);
+        ReadyClientRpc(isPick, isClientDisconnect);
     }
 
     [ServerRpc (RequireOwnership = false)]
@@ -112,13 +116,35 @@ public class ChampSelectPvP : NetworkBehaviour
     {
         SetUpChampSelectClientRpc(buttonIndex, selectChamp, isHost);
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void BackToLobbyServerRpc(bool isHost)
+    {
+        BackToLobbyClientRpc(isHost);
+    }
     #endregion
 
     #region Client Rpc
     [ClientRpc]
-    private void SetUpClientUIClientRpc()
+    private void BackToLobbyClientRpc(bool isHost)
     {
-        clientLabel.SetActive(true);      
+        if (isHost)
+            ShutDownConnection();
+
+        if (!isHost && !IsHost)
+        {
+            // turn off client label
+            SetUpClientUIServerRpc(false);
+            ReadyServerRpc(true, true);
+
+            ShutDownConnection();
+        }
+    }
+
+    [ClientRpc]
+    private void SetUpClientUIClientRpc(bool isActive)
+    {
+        clientLabel.SetActive(isActive);    
     }
 
     [ClientRpc]
@@ -130,9 +156,9 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ReadyClientRpc(bool isPick)
+    private void ReadyClientRpc(bool isPick, bool isClientDisconnect)
     {
-        UpdateReadyState(isPick);
+        UpdateReadyState(isPick, isClientDisconnect);
     }
 
     [ClientRpc]
@@ -141,8 +167,6 @@ public class ChampSelectPvP : NetworkBehaviour
         // active all inactive object and vice versa
         if (isReadyPick)
         {
-            startPickButton.onClick.RemoveAllListeners();
-
             foreach (Transform child in selectChampBG)
             {
                 if (child.name != "VS")
@@ -154,7 +178,7 @@ public class ChampSelectPvP : NetworkBehaviour
                 UpdateStartButtonText("Ready", startMatchButton);
                 startMatchButton.onClick.AddListener(() =>
                 {
-                    ReadyServerRpc(false);
+                    ReadyServerRpc(false, false);
                 });
             }
             else
@@ -222,7 +246,7 @@ public class ChampSelectPvP : NetworkBehaviour
                     {
                         championList.Remove(champ.Key);
                         if (!isHost && !CheckChampList(false)) // client team is empty
-                            ReadyServerRpc(false); // update ready state        
+                            ReadyServerRpc(false, false); // update ready state        
                         break;
                     }
             }
@@ -262,10 +286,15 @@ public class ChampSelectPvP : NetworkBehaviour
 
     // isPick = true -> ready to start pick state
     // isPick = false -> ready to start match state
-    private void UpdateReadyState(bool isPick)
+    private void UpdateReadyState(bool isPick, bool isClientDisconnect)
     {
         if (isPick)
         {
+            // if this func call from client out server 
+            // then reset ready to pick state
+            if(isClientDisconnect) 
+                isReadyPick = true;
+
             isReadyPick = !isReadyPick;
 
             // active ready icon
@@ -388,5 +417,23 @@ public class ChampSelectPvP : NetworkBehaviour
 
         return isNotEmpty;
     }
-    #endregion   
+
+    private void ShutDownConnection()
+    {
+        // back to lobby
+        if (lobbyPvP != null)
+            lobbyPvP.SetActive(true);
+
+        // shutdown server 
+        NetworkManager.Singleton.Shutdown();
+        Destroy(gameObject);
+    }
+    #endregion
+
+    #region Connection
+    public void BackToLobby()
+    {
+        BackToLobbyServerRpc(IsHost);
+    }
+    #endregion
 }
