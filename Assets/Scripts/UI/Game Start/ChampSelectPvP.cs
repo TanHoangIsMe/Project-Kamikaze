@@ -122,6 +122,12 @@ public class ChampSelectPvP : NetworkBehaviour
     {
         BackToLobbyClientRpc(isHost);
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void BackToReadyPickServerRpc()
+    {
+        BackToReadyPickClientRpc();
+    }
     #endregion
 
     #region Client Rpc
@@ -131,13 +137,26 @@ public class ChampSelectPvP : NetworkBehaviour
         if (isHost)
             ShutDownConnection();
 
-        if (!isHost && !IsHost)
+        if (!isHost)
         {
             // turn off client label
             SetUpClientUIServerRpc(false);
             ReadyServerRpc(true, true);
 
-            ShutDownConnection();
+            if(!IsHost) // back to lobby 
+                ShutDownConnection();
+        }
+    }
+
+    [ClientRpc]
+    private void BackToReadyPickClientRpc()
+    {
+        ResetTeam();
+
+        foreach (Transform child in selectChampBG)
+        {
+            if (child.name != "VS")
+                child.gameObject.SetActive(!child.gameObject.activeSelf);
         }
     }
 
@@ -167,6 +186,11 @@ public class ChampSelectPvP : NetworkBehaviour
         // active all inactive object and vice versa
         if (isReadyPick)
         {
+            // reset ready state
+            UpdateReadyState(true, false);
+            // remove listener
+            startMatchButton.onClick.RemoveAllListeners();
+
             foreach (Transform child in selectChampBG)
             {
                 if (child.name != "VS")
@@ -428,12 +452,77 @@ public class ChampSelectPvP : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
         Destroy(gameObject);
     }
+
+    private void ResetTeam()
+    {
+        championList.Clear();
+
+        // reset select champ
+        hostSelectedChamp = null;
+        clientSelectedChamp = null;
+
+        // reset team slot UI
+        ResetSlotButton(hostSlotButtons, false);
+        ResetSlotButton(clientSlotButtons, false);
+        ResetSlotButton(champListButtons, true);
+    }
+
+    // isChampList -> champ list button
+    private void ResetSlotButton(Button[] slotButtons, bool isChampList)
+    {       
+        Image image;
+        foreach (Button slotButton in slotButtons)
+        {
+            slotButton.onClick.RemoveAllListeners();
+            if (!isChampList)
+            {
+                // reset add champ background
+                image = slotButton.GetComponent<Image>();
+                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+            }
+            else
+                // reset select border
+                SelectBorderHandler(false, slotButton);
+        }
+    }
     #endregion
 
     #region Connection
     public void BackToLobby()
     {
         BackToLobbyServerRpc(IsHost);
+    }
+
+    public void BackToReadyPick()
+    {
+        BackToReadyPickServerRpc();        
+    }
+
+    private void OnEnable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+    }
+
+    private void HandleClientDisconnect(ulong clientId)
+    {
+        if (!IsHost)
+        {
+            // back to lobby
+            if (lobbyPvP != null)
+                lobbyPvP.SetActive(true);
+
+            Destroy(gameObject);
+        }
+        else
+        {
+            BackToReadyPickClientRpc();
+            BackToLobbyClientRpc(false);
+        }
     }
     #endregion
 }

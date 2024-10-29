@@ -2366,7 +2366,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6621575600349521245}
         m_TargetAssemblyTypeName: ChampSelectPvP, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: BackToReadyPick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

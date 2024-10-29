@@ -178,6 +178,7 @@ public class LobbyPvP : NetworkBehaviour
 
     public void ResetScene()
     {
+        // reset input field
         createRoomIF.text = "";
         joinRoomIF.text = "";
     }
