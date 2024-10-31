@@ -12,6 +12,9 @@ public class LobbyPvP : NetworkBehaviour
     [SerializeField] private TMP_InputField joinRoomIF;
     [SerializeField] private Button createRoomBT;
     [SerializeField] private Button joinRoomBT;
+    [SerializeField] private GameObject alertCanvas;
+    [SerializeField] private TextMeshProUGUI errorTittle;
+    [SerializeField] private TextMeshProUGUI errorMessage;
 
     private void Awake()
     {
@@ -35,14 +38,18 @@ public class LobbyPvP : NetworkBehaviour
         // check input text 
         if (string.IsNullOrEmpty(createRoomID) || createRoomID.Length != 4 || !IsNumeric(createRoomID))
         {
-            Debug.Log("Invalid Room ID");
+            ShowAlert(
+                "Invalid ID",
+                "Please enter a ID that is numeric and 4 characters long.");
             return;
         }
 
         // check room id in use
         if (IsPortInUse(int.Parse(createRoomID)))
         {
-            Debug.Log($"Port {createRoomID} is in use.");
+            ShowAlert(
+                "Already Existed",
+                "The room ID is in use, please try another ID");
         }
         else
         {
@@ -64,7 +71,9 @@ public class LobbyPvP : NetworkBehaviour
         // check input text
         if (string.IsNullOrEmpty(joinRoomID) || joinRoomID.Length != 4 || !IsNumeric(joinRoomID))
         {
-            Debug.Log("Invalid Room ID");
+            ShowAlert(
+                "Invalid ID",
+                "Please enter a ID that is numeric and 4 characters long.");
             return;
         }
 
@@ -80,20 +89,18 @@ public class LobbyPvP : NetworkBehaviour
         }
         else
         {
-            Debug.Log($"Port {joinRoomID} is not exist.");
+            ShowAlert(
+                "Invalid Room",
+                "The room does not exist, please join another room.");
         }          
     }
 
     public override void OnNetworkSpawn()
-    {
-        if (IsHost)
-        {
+    {  
+        if(IsHost)
             MoveToSelectChampPhase();
-        }
         else if(IsClient)
-        {
-            CheckRoomStatusServerRpc(NetworkManager.Singleton.LocalClientId);
-        }
+            CheckRoomStatusServerRpc(NetworkManager.Singleton.LocalClientId);         
     }
 
     private void SpawnSelectChampCanvas()
@@ -120,7 +127,7 @@ public class LobbyPvP : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void CheckRoomStatusServerRpc(ulong clientId)
     {
-        // check if room has 2 player
+       // check if room has 2 player
        bool canJoin = NetworkManager.Singleton.ConnectedClients.Count == 2;
        NotifyClientJoinRoomClientRpc(canJoin, clientId);
     }
@@ -128,18 +135,19 @@ public class LobbyPvP : NetworkBehaviour
     [ClientRpc]
     private void NotifyClientJoinRoomClientRpc(bool canJoin, ulong clientId)
     {
-        // just send notify to local client
         if (NetworkManager.Singleton.LocalClientId != clientId)
             return;
 
         if (!canJoin)
         {
-            Debug.Log("Room is full. Disconnecting...");
+            ShowAlert(
+                "Maximum Reach",
+                "The room is full, please join another room.");
+
             NetworkManager.Singleton.Shutdown();
         }
         else
         {
-            Debug.Log("join success");
             MoveToSelectChampPhase();
         }
     }
@@ -181,5 +189,17 @@ public class LobbyPvP : NetworkBehaviour
         // reset input field
         createRoomIF.text = "";
         joinRoomIF.text = "";
+    }
+
+    private void ShowAlert(string tittle, string message)
+    {
+        alertCanvas.SetActive(true);
+        errorTittle.text = tittle;
+        errorMessage.text = message;
+    }
+
+    public void ConfirmAlert()
+    {
+        alertCanvas.SetActive(false);
     }
 }

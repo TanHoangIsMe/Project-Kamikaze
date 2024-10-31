@@ -3,6 +3,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -91,8 +92,9 @@ public class ChampSelectPvP : NetworkBehaviour
     [ServerRpc (RequireOwnership = false)]
     public void SetUpClientUIServerRpc(bool isActive)
     {
-        // active client player label when client join
-        SetUpClientUIClientRpc(isActive); 
+        if(NetworkManager.Singleton.ConnectedClients.Count < 3)
+            // active client player label when client join
+            SetUpClientUIClientRpc(isActive); 
 
         if(isActive)
             // set client player start button to ready
@@ -469,20 +471,23 @@ public class ChampSelectPvP : NetworkBehaviour
 
     // isChampList -> champ list button
     private void ResetSlotButton(Button[] slotButtons, bool isChampList)
-    {       
-        Image image;
-        foreach (Button slotButton in slotButtons)
+    {   
+        if (slotButtons != null)
         {
-            slotButton.onClick.RemoveAllListeners();
-            if (!isChampList)
+            Image image;
+            foreach (Button slotButton in slotButtons)
             {
-                // reset add champ background
-                image = slotButton.GetComponent<Image>();
-                image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+                slotButton.onClick.RemoveAllListeners();
+                if (!isChampList)
+                {
+                    // reset add champ background
+                    image = slotButton.GetComponent<Image>();
+                    image.sprite = Resources.Load<Sprite>("Art/UI/Game Start/Others/Add Champion Image");
+                }
+                else
+                    // reset select border
+                    SelectBorderHandler(false, slotButton);
             }
-            else
-                // reset select border
-                SelectBorderHandler(false, slotButton);
         }
     }
     #endregion
@@ -510,18 +515,20 @@ public class ChampSelectPvP : NetworkBehaviour
 
     private void HandleClientDisconnect(ulong clientId)
     {
-        if (!IsHost)
+        if (!IsHost && clientId == NetworkManager.Singleton.LocalClientId)
         {
             // back to lobby
             if (lobbyPvP != null)
                 lobbyPvP.SetActive(true);
-
-            Destroy(gameObject);
         }
-        else
+        else if (IsHost)
         {
-            BackToReadyPickClientRpc();
-            BackToLobbyClientRpc(false);
+            if (NetworkManager.Singleton.ConnectedClients.Count < 3)
+            {
+                if (startMatchButton.gameObject.activeSelf)
+                    BackToReadyPickClientRpc();
+                BackToLobbyClientRpc(false);
+            }
         }
     }
     #endregion
