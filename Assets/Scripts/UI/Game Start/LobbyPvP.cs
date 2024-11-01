@@ -8,6 +8,7 @@ using System.Linq;
 public class LobbyPvP : NetworkBehaviour
 {
     [SerializeField] private GameObject selectChampPvP;
+    [SerializeField] private GameObject loadingScene;
     [SerializeField] private TMP_InputField createRoomIF;
     [SerializeField] private TMP_InputField joinRoomIF;
     [SerializeField] private Button createRoomBT;
@@ -105,7 +106,7 @@ public class LobbyPvP : NetworkBehaviour
 
     private void SpawnSelectChampCanvas()
     {
-        GameObject selectChampCanvas = 
+        GameObject selectChampCanvas =
             GameObject.FindGameObjectWithTag("SelectChampPvP");
 
         if (selectChampCanvas == null)
@@ -114,14 +115,18 @@ public class LobbyPvP : NetworkBehaviour
             selectChampCanvas.GetComponent<NetworkObject>().Spawn();
         }
         
-        SendLobbyInfoToSelectChamp(selectChampCanvas);
+        SendInfoToSelectChamp(selectChampCanvas);
     }
 
-    private void SendLobbyInfoToSelectChamp(GameObject selectChampCanvas)
+    private void SendInfoToSelectChamp(GameObject selectChampCanvas)
     {
         ChampSelectPvP champSelectPvP = selectChampCanvas.GetComponent<ChampSelectPvP>();
-        if (champSelectPvP != null)
-            champSelectPvP.LobbyPvp = gameObject;
+
+        if (champSelectPvP != null && loadingScene != null)
+        {
+            champSelectPvP.LobbyPvP = gameObject;
+            champSelectPvP.LoadingCanvas = loadingScene;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

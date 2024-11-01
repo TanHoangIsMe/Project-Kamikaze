@@ -1398,6 +1398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectChampPvP: {fileID: 8143455256682484410, guid: f838326bf28f8fd458a32f8046613864, type: 3}
+  loadingScene: {fileID: 1229023063}
   createRoomIF: {fileID: 2057276338}
   joinRoomIF: {fileID: 909201149}
   createRoomBT: {fileID: 1019750153}

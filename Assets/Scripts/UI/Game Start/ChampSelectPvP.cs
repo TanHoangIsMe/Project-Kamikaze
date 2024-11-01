@@ -10,7 +10,10 @@ using UnityEngine.UI;
 public class ChampSelectPvP : NetworkBehaviour
 {
     private GameObject lobbyPvP;
-    public GameObject LobbyPvp { set { lobbyPvP = value; } }
+    public GameObject LobbyPvP { set { lobbyPvP = value; } }
+
+    private GameObject loadingCanvas;
+    public GameObject LoadingCanvas { set {  loadingCanvas = value; } }
 
     // Ready Phase
     [SerializeField] private Transform selectChampBG;
@@ -78,11 +81,9 @@ public class ChampSelectPvP : NetworkBehaviour
 
         // store host or client select champ
         if (IsHost)
-            //hostSelectedChamp.Value = new List<byte>(Encoding.UTF8.GetBytes(clickedButton.name));
-            UpdateSelectChampClientRpc(clickedButton.name);
+            hostSelectedChamp = clickedButton.name;
         else
-            // request server update client champ select
-            UpdateSelectChampServerRpc(clickedButton.name);
+            clientSelectedChamp = clickedButton.name;
 
         // turn on champ select border ui
         SelectBorderHandler(true, clickedButton);
@@ -105,12 +106,6 @@ public class ChampSelectPvP : NetworkBehaviour
     private void ReadyServerRpc(bool isPick, bool isClientDisconnect)
     {
         ReadyClientRpc(isPick, isClientDisconnect);
-    }
-
-    [ServerRpc (RequireOwnership = false)]
-    private void UpdateSelectChampServerRpc(string champName)
-    {
-        UpdateSelectChampClientRpc(champName);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -209,21 +204,24 @@ public class ChampSelectPvP : NetworkBehaviour
             }
             else
             {
-                startMatchButton.onClick.AddListener(() => { 
-                    
+                startMatchButton.onClick.AddListener(() => {
+                    Dictionary<int, string> cloneChampList = new Dictionary<int, string>(championList);
+                    ResetTeam();
+                    DataManager.Instance.championList = cloneChampList;
+
+                    // open loading scene
+                    LoadingScene loadingScene = loadingCanvas.GetComponent<LoadingScene>();
+
+                    if (loadingScene != null)
+                    {
+                        loadingCanvas.SetActive(true);
+                        loadingScene.LoadScene(2);
+                        gameObject.SetActive(false);
+                    }
                 });
                 startMatchButton.interactable = false;
             }
         }
-    }
-
-    [ClientRpc]
-    private void UpdateSelectChampClientRpc(string champName)
-    {
-        if (IsHost)
-            hostSelectedChamp = champName;
-        else
-            clientSelectedChamp = champName;
     }
 
     [ClientRpc]
@@ -452,7 +450,9 @@ public class ChampSelectPvP : NetworkBehaviour
 
         // shutdown server 
         NetworkManager.Singleton.Shutdown();
-        Destroy(gameObject);
+
+        if(IsHost)
+            Destroy(gameObject);
     }
 
     private void ResetTeam()
