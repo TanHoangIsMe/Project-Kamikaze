@@ -205,19 +205,14 @@ public class ChampSelectPvP : NetworkBehaviour
             else
             {
                 startMatchButton.onClick.AddListener(() => {
+                    // save and send selected champ list
                     Dictionary<int, string> cloneChampList = new Dictionary<int, string>(championList);
-                    ResetTeam();
                     DataManager.Instance.championList = cloneChampList;
 
-                    // open loading scene
-                    LoadingScene loadingScene = loadingCanvas.GetComponent<LoadingScene>();
+                    Destroy(gameObject); // destroy shared object
 
-                    if (loadingScene != null)
-                    {
-                        loadingCanvas.SetActive(true);
-                        loadingScene.LoadScene(2);
-                        gameObject.SetActive(false);
-                    }
+                    // open loading scene
+                    MoveToMatchClientRpc();
                 });
                 startMatchButton.interactable = false;
             }
@@ -292,6 +287,18 @@ public class ChampSelectPvP : NetworkBehaviour
                 if (!isExisted) // else create new champ slot
                     championList.Add(champPosition, champName);
             }
+        }
+    }
+
+    [ClientRpc]
+    private void MoveToMatchClientRpc()
+    {
+        LoadingScene loadingScene = loadingCanvas.GetComponent<LoadingScene>();
+
+        if (loadingScene != null)
+        {
+            loadingCanvas.SetActive(true);
+            loadingScene.LoadScene(2);
         }
     }
     #endregion
@@ -450,9 +457,6 @@ public class ChampSelectPvP : NetworkBehaviour
 
         // shutdown server 
         NetworkManager.Singleton.Shutdown();
-
-        if(IsHost)
-            Destroy(gameObject);
     }
 
     private void ResetTeam()

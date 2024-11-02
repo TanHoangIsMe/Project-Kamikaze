@@ -84,7 +84,6 @@ public class ChampSelectPvE : MonoBehaviour
                 {
                     loadingCanvas.SetActive(true);
                     loadingScene.LoadScene(1);
-                    gameObject.SetActive(false);
                 }
             }
         }
