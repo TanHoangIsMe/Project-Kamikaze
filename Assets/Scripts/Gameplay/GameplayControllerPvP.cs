@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class GameplayControllerPvP : NetworkBehaviour
 {
-
     private void Start()
     {
-        if (DataManager.Instance.championList != null)
-            SpawnChamp();
-    }
+        // spawn champion from champs selected list
+        SpawnChampion spawnChampion = GetComponent<SpawnChampion>();
+        if (spawnChampion != null)
+            spawnChampion.SpawnEnemiesAndHeroes(true);
 
-    private void SpawnChamp()
-    {
-        foreach (KeyValuePair<int, string> champ in DataManager.Instance.championList)
+        // await a little bit to start combat 
+        //Invoke("StartNewPhase", 2f);
+        SetUpTurnList setUpTurnList = GetComponent<SetUpTurnList>();
+        if (NetworkManager.Singleton.IsHost)
         {
-            string prefabPath = $"Prefabs/Characters/{champ.Value}";
-
-            GameObject prefab = Resources.Load<GameObject>(prefabPath);
-
-            Instantiate(prefab, new Vector3(Random.Range(-2, 2), 0, Random.Range(-2, 2)), Quaternion.identity);
+            if (setUpTurnList != null)
+                setUpTurnList.StartNewPhase();
         }
+        Debug.Log(setUpTurnList.TurnList.Count);
     }
+
+    //private void StartNewPhase()
+    //{
+    //    SetUpTurnList setUpTurnList = GetComponent<SetUpTurnList>();
+    //    if (setUpTurnList != null)
+    //        setUpTurnList.StartNewPhase();
+    //}
 }
