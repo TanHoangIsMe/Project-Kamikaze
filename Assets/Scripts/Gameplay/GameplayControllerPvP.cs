@@ -1,31 +1,35 @@
-using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 public class GameplayControllerPvP : NetworkBehaviour
 {
-    private void Start()
-    {
-        // spawn champion from champs selected list
-        SpawnChampion spawnChampion = GetComponent<SpawnChampion>();
-        if (spawnChampion != null)
-            spawnChampion.SpawnEnemiesAndHeroes(true);
+    private SpawnChampion spawnChampion;
+    private SetUpTurnList setUpTurnList;
 
-        // await a little bit to start combat 
-        //Invoke("StartNewPhase", 2f);
-        SetUpTurnList setUpTurnList = GetComponent<SetUpTurnList>();
-        if (NetworkManager.Singleton.IsHost)
-        {
-            if (setUpTurnList != null)
-                setUpTurnList.StartNewPhase();
-        }
-        Debug.Log(setUpTurnList.TurnList.Count);
+    private void Awake()
+    {
+        spawnChampion = GetComponent<SpawnChampion>();
+        setUpTurnList = GetComponent<SetUpTurnList>();
     }
 
-    //private void StartNewPhase()
-    //{
-    //    SetUpTurnList setUpTurnList = GetComponent<SetUpTurnList>();
-    //    if (setUpTurnList != null)
-    //        setUpTurnList.StartNewPhase();
-    //}
+    private void Start()
+    {
+        if (spawnChampion != null)
+        {
+            if (IsHost) // host spawn champ
+                spawnChampion.SpawnEnemiesAndHeroes(true);
+            else // client update his champ layer
+                spawnChampion.UpdateClientChampLayer();
+        }
+                   
+        // await a little bit to start combat 
+        Invoke("StartNewPhase", 2f);
+    }
+
+    private void StartNewPhase()
+    {
+        if (IsHost && setUpTurnList != null)
+            setUpTurnList.StartNewPhaseClientRpc();
+    }
 }

@@ -4,11 +4,26 @@ using UnityEngine;
 
 public class SetUpTurnList : NetworkBehaviour
 {
+    private CombatSkillMenu combatSkillMenu;
+
     // place to hold all champion that exist on battle field
-    private List<OnFieldCharacter> turnList = new List<OnFieldCharacter>();
+    private List<OnFieldCharacter> turnList;
     public List<OnFieldCharacter> TurnList { get { return turnList; } set { turnList = value; } }
 
-    public void StartNewPhase()
+    private OnFieldCharacter whoTurn; // variable to know whose turn
+
+    private void Awake()
+    {
+        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        turnList = new List<OnFieldCharacter>();
+        whoTurn = null;
+
+        if(combatSkillMenu != null) // turn off skill menu
+            combatSkillMenu.gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void StartNewPhaseClientRpc()
     {
         //phase++; // Next phase
         //phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
@@ -24,9 +39,9 @@ public class SetUpTurnList : NetworkBehaviour
 
         //    character.UpdateEffectIcon();
         //}
-        CreateTurnListClientRpc(); // Create new turn list 
+        CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
-        //StartTurn(); // Start character turn
+        StartTurn(); // Start character turn
     }
 
     public void StartTurn()
@@ -39,7 +54,7 @@ public class SetUpTurnList : NetworkBehaviour
         //    phaseCanvas.SetActive(false);
         //    return;
         //}
-
+       
         // remove turn list of dead champion       
         for (int i = 0; i < turnList.Count; i++)
             if (turnList[i].CurrentHealth < 0)
@@ -47,32 +62,32 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (turnList.Count == 0)
         {
-            StartNewPhase();
+            StartNewPhaseClientRpc();
             return;
         }
 
-        //whoTurn = turnList[0];
-        //turnList.RemoveAt(0);
-
-        //if (whoTurn.gameObject.layer == 6) // ally turn
-        //{
-        //    skillMenuCanvas.SetActive(true);
-
-        //    combatSkillMenu.Champion = whoTurn;
-        //    combatSkillMenu.SetUpSkillAvatar();
-        //    combatSkillMenu.SetUpBarsUI();
-        //    combatSkillMenu.StartAllyTurn();
-        //}
-        //else // enemy turn
-        //{
-        //    enemyAI.Champion = whoTurn;
-        //    enemyAI.StartEnemyTurn();
-        //    //StartTurn(); // for debug
-        //}
+        whoTurn = turnList[0];Debug.Log(whoTurn.name);
+        turnList.RemoveAt(0);
+        Debug.Log(whoTurn.name + whoTurn.gameObject.layer + IsClient);
+        if (whoTurn.gameObject.layer == 6 && IsHost && combatSkillMenu != null) // ally turn
+        {
+            combatSkillMenu.gameObject.SetActive(true);
+            combatSkillMenu.Champion = whoTurn;
+            combatSkillMenu.SetUpSkillAvatar();
+            combatSkillMenu.SetUpBarsUI();
+            combatSkillMenu.StartAllyTurn();
+        }
+        else if(whoTurn.gameObject.layer == 7 && !IsHost && combatSkillMenu != null) // enemy turn
+        {
+            combatSkillMenu.gameObject.SetActive(true);
+            //    enemyAI.Champion = whoTurn;
+            //    enemyAI.StartEnemyTurn();
+            //    //StartTurn(); // for debug
+        }
     }
 
-    [ClientRpc]
-    private void CreateTurnListClientRpc()
+    
+    private void CreateTurnList()
     {
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
         {

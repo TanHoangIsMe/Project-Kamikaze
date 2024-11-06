@@ -3,7 +3,7 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnChampion : MonoBehaviour
+public class SpawnChampion : NetworkBehaviour
 {
     // isNetwork -> spawn champ for pvp
     // !isNetwork -> spawn champ for pve
@@ -12,7 +12,7 @@ public class SpawnChampion : MonoBehaviour
         // get champion list data
         Dictionary<int, string> championList = DataManager.Instance.championList;
 
-        // spawn champions in list
+        // spawn champions in list by host
         if (championList != null)
             foreach (KeyValuePair<int, string> champ in championList)
                 CreateCharacter(champ, isNetwork);
@@ -29,17 +29,17 @@ public class SpawnChampion : MonoBehaviour
             // create champion
             GameObject champion = Instantiate(prefab, GetPosition(champ.Key), Quaternion.identity);
 
-            if(isNetwork) // shared network object 
+            if (isNetwork) // shared network object 
                 champion.GetComponent<NetworkObject>().Spawn();
-         
+
+            // set on field character position
+            champion.GetComponent<OnFieldCharacter>().Position = champ.Key;
+
             // set up champion layer
             if (new[] { 0, 1, 2, 3, 4 }.Contains(champ.Key))
                 champion.layer = 7;
             else
                 champion.layer = 6;
-
-            // set on field character position
-            champion.GetComponent<OnFieldCharacter>().Position = champ.Key;
 
             if (champion.layer == 7)
             {
@@ -95,5 +95,54 @@ public class SpawnChampion : MonoBehaviour
 
             default: return Vector3.zero;
         }
+    }
+
+    private int GetPositionFromVector3(Vector3 position)
+    {
+        if (17f < position.x && position.x < 19f
+            && 13f < position.z && position.z < 15f)
+            return 0;
+        else if (20.5f < position.x && position.x < 22.5f
+            && 15f < position.z && position.z < 17f)
+            return 1;
+        else if (24f < position.x && position.x < 26f
+            && 13f < position.z && position.z < 15f)
+            return 2;
+        else if (27.5f < position.x && position.x < 29.5f
+            && 15f < position.z && position.z < 17f)
+            return 3;
+        else if (31f < position.x && position.x < 33f
+            && 13f < position.z && position.z < 15f)
+            return 4;
+        else if (17f < position.x && position.x < 19f
+            && 3f < position.z && position.z < 5f)
+            return 6;
+        else if (20.5f < position.x && position.x < 22.5f
+            && 1f < position.z && position.z < 3f)
+            return 7;
+        else if (24f < position.x && position.x < 26f
+            && 3f < position.z && position.z < 5f)
+            return 8;
+        else if (27.5f < position.x && position.x < 29.5f
+            && 1f < position.z && position.z < 3f)
+            return 9;
+        else if (31f < position.x && position.x < 33f
+            && 3f < position.z && position.z < 5f)
+            return 10;
+        else
+            return -1;
+    }
+
+    public void UpdateClientChampLayer()
+    {
+        foreach(OnFieldCharacter champ in FindObjectsOfType<OnFieldCharacter>())
+        {
+            champ.Position = GetPositionFromVector3(champ.gameObject.transform.position);
+
+            if (new[] { 0, 1, 2, 3, 4 }.Contains(champ.Position))
+                champ.gameObject.layer = 7;
+            else
+                champ.gameObject.layer = 6;
+        }      
     }
 }
