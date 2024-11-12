@@ -198,12 +198,12 @@ public class CalculateToPlayAnimation : MonoBehaviour
             else
                 skillHandler.UsingSkillBurst();
 
-            skillHandler.AttackConfirm();
+            skillHandler.AttackConfirmClientRpc();
             skillHandler.CanReuse = false; // reset flag
         }
-        else
-            // start new turn
-            gameplayController.Invoke("StartTurn", 3f);
+        //else
+        //    // start new turn
+        //    gameplayController.Invoke("StartTurn", 3f);
     }
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)

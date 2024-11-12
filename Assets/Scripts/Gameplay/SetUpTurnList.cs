@@ -5,6 +5,7 @@ using UnityEngine;
 public class SetUpTurnList : NetworkBehaviour
 {
     private CombatSkillMenu combatSkillMenu;
+    private SkillHandler skillHandler;
 
     // place to hold all champion that exist on battle field
     private List<OnFieldCharacter> turnList;
@@ -15,11 +16,12 @@ public class SetUpTurnList : NetworkBehaviour
     private void Awake()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        skillHandler = FindObjectOfType<SkillHandler>();
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
 
-        if(combatSkillMenu != null) // turn off skill menu
-            combatSkillMenu.gameObject.SetActive(false);
+        //if(combatSkillMenu != null) // turn off skill menu
+        //    combatSkillMenu.gameObject.SetActive(false);
     }
 
     [ClientRpc]
@@ -68,24 +70,13 @@ public class SetUpTurnList : NetworkBehaviour
 
         whoTurn = turnList[0];Debug.Log(whoTurn.name);
         turnList.RemoveAt(0);
-        Debug.Log(whoTurn.name + whoTurn.gameObject.layer + IsClient);
-        if (whoTurn.gameObject.layer == 6 && IsHost && combatSkillMenu != null) // ally turn
-        {
-            combatSkillMenu.gameObject.SetActive(true);
-            combatSkillMenu.Champion = whoTurn;
-            combatSkillMenu.SetUpSkillAvatar();
-            combatSkillMenu.SetUpBarsUI();
-            combatSkillMenu.StartAllyTurn();
-        }
-        else if(whoTurn.gameObject.layer == 7 && !IsHost && combatSkillMenu != null) // enemy turn
-        {
-            combatSkillMenu.gameObject.SetActive(true);
-            //    enemyAI.Champion = whoTurn;
-            //    enemyAI.StartEnemyTurn();
-            //    //StartTurn(); // for debug
-        }
+        Debug.Log(whoTurn.name);
+        combatSkillMenu.gameObject.SetActive(true);
+        combatSkillMenu.Champion = whoTurn;
+        combatSkillMenu.SetUpSkillAvatar();
+        combatSkillMenu.SetUpBarsUI();
+        combatSkillMenu.StartAllyTurn();
     }
-
     
     private void CreateTurnList()
     {

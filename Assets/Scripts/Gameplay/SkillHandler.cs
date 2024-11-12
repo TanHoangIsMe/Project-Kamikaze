@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SkillHandler : MonoBehaviour
+public class SkillHandler : NetworkBehaviour
 {
-    [SerializeField] private GameObject skillMenu;
+    private GameObject skillMenu;
     [SerializeField] private GameObject popUpDamageText;
 
     private OnFieldCharacter champion;
@@ -29,6 +31,17 @@ public class SkillHandler : MonoBehaviour
         autoFindTargets = GetComponent<AutoFindTargets>();
         skillValues = new List<float>();
         canReuse = false;
+        skillMenu = FindObjectOfType<CombatSkillMenu>().gameObject;
+        Button button1 = GameObject.FindGameObjectWithTag("Finish").GetComponent<Button>();
+        button1.onClick.AddListener(() =>
+        {
+            UsingSkill1ClickClientRpc();
+        });
+        Button button2 = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Button>();
+        button2.onClick.AddListener(() =>
+        {
+            AttackConfirmClientRpc();
+        });
     }
 
     private void ChangeLayerToSelf()
@@ -131,14 +144,15 @@ public class SkillHandler : MonoBehaviour
 
     private void ResetCheckNumberOfTargetsFlags()
     {
-        checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
+        //checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
         checkNumberOfTargets.IsFinishChoosing = false;
         checkNumberOfTargets.IsChoosePriorityOpen = false;
         checkNumberOfTargets.CanSelectTarget = false;
     }
 
     #region Using Skill
-    public void UsingSkill1Click()
+    [ClientRpc]
+    public void UsingSkill1ClickClientRpc()
     {
         UsingSkill1();
     }
@@ -155,6 +169,7 @@ public class SkillHandler : MonoBehaviour
 
     public bool UsingSkill1()
     {
+        Debug.Log("mmmmm: " + champion);
         if (champion.CurrentMana > champion.Skills[0].ManaCost)
         {
             // Clear targets list and reset flag properties
@@ -206,8 +221,8 @@ public class SkillHandler : MonoBehaviour
             return false;
         }
     }
-
-    public void AttackConfirm()
+    [ClientRpc]
+    public void AttackConfirmClientRpc()
     {
         if (checkNumberOfTargets.IsFinishFinding)
         {
@@ -234,19 +249,21 @@ public class SkillHandler : MonoBehaviour
         else
             Debug.Log("Please choose a skill");   
     }
-
-    public void SendInfoToUsingFirstSkill()
+    [ClientRpc]
+    public void SendInfoToUsingFirstSkillClientRpc()
     {
+        champion.Skills[0].Character = autoFindTargets.SelfTarget;
+        champion.Skills[0].EnemyTargets = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
         OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingFirstSkill(this, enemyTargets: enemies, allyTargets: allies);
+            champion.UsingFirstSkill();
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingFirstSkill(this, enemyTargets: enemies);
+            champion.UsingFirstSkill();
         else
-            champion.UsingFirstSkill(this, allyTargets: allies);
+            champion.UsingFirstSkill();
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -260,11 +277,11 @@ public class SkillHandler : MonoBehaviour
         OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingSecondSkill(this, enemyTargets: enemies, allyTargets: allies);
+            champion.UsingSecondSkill();
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingSecondSkill(this, enemyTargets: enemies);
+            champion.UsingSecondSkill();
         else
-            champion.UsingSecondSkill(this, allyTargets: allies);
+            champion.UsingSecondSkill();
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -278,11 +295,11 @@ public class SkillHandler : MonoBehaviour
         OnFieldCharacter self = autoFindTargets.SelfTarget;
 
         if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingBurstSkill(this, enemyTargets: enemies, allyTargets: allies);
+            champion.UsingBurstSkill();
         else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingBurstSkill(this, enemyTargets: enemies);
+            champion.UsingBurstSkill();
         else
-            champion.UsingBurstSkill(this, allyTargets: allies);
+            champion.UsingBurstSkill();
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -293,6 +310,7 @@ public class SkillHandler : MonoBehaviour
     #region OverHead Champion UI
     public void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
     {
+        Debug.Log("alooooooooo" + skillValues.Count);
         // play health bar fill animation on enemies
         if (enemies != null && skillValues.Count > 0)
         {

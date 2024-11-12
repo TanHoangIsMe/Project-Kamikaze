@@ -20,10 +20,7 @@ public class testskill : Skill
         targetTypes = new TargetType[] { TargetType.Enemy, TargetType.Ally };
     }
 
-    public override void SkillFunction(OnFieldCharacter character,
-        SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null,
-        List<OnFieldCharacter> allyTargets = null)
+    public override void SkillFunction()
     {
         
     }

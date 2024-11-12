@@ -19,10 +19,7 @@ public class LionSpirit : Skill
         targetTypes = new TargetType[] { TargetType.Self};
     }
 
-    public override void SkillFunction(OnFieldCharacter character,
-        SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null,
-        List<OnFieldCharacter> allyTargets = null)
+    public override void SkillFunction()
     {
         // decrease champion mana
         calculateSkillEnergy.ReduceCharacterMana(character, manaCost);

@@ -28,6 +28,7 @@ public class CombatSkillMenu : MonoBehaviour
         if (skillHandler == null) Debug.LogWarning("Skill Handler Null On Skill Menu");
         else
         {
+            Debug.Log("kkkk: " + champion);
             skillHandler.Champion = champion;
             skillHandler.IsCombatSkillMenu = true;
         }

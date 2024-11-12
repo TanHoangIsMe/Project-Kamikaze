@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CheckNumberOfTargets : MonoBehaviour
 {
-    [SerializeField] private Transform choosePriorityPanel;
-    public Transform ChoosePriorityPanel { get { return choosePriorityPanel; } }
+    //[SerializeField] private Transform choosePriorityPanel;
+    //public Transform ChoosePriorityPanel { get { return choosePriorityPanel; } }
 
     private TextMeshProUGUI choosePriorityText;
 
@@ -51,10 +51,10 @@ public class CheckNumberOfTargets : MonoBehaviour
     {
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
 
-        choosePriorityPanel.gameObject.SetActive(false);
+        //choosePriorityPanel.gameObject.SetActive(false);
 
-        choosePriorityText = choosePriorityPanel.GetChild(0)
-            .gameObject.GetComponent<TextMeshProUGUI>();
+        //choosePriorityText = choosePriorityPanel.GetChild(0)
+        //    .gameObject.GetComponent<TextMeshProUGUI>();
 
         isFinishChoosing = false;
         canSelectTarget = false;
@@ -109,7 +109,7 @@ public class CheckNumberOfTargets : MonoBehaviour
             autoFindTargets.AutoFindTargetsBasedOnPriority
                 (numberOfEnemyTargets, 7, priorityStat, isLow);
 
-        choosePriorityPanel.gameObject.SetActive(false);
+        //choosePriorityPanel.gameObject.SetActive(false);
         isFinishChoosing = true;
         autoFindTargets.TurnOnShowTargets();
         isChoosePriorityOpen = false;
@@ -591,7 +591,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         if (layer == 6) targets = "allies";
         else targets = "enemies";
 
-        choosePriorityPanel.gameObject.SetActive(true);
+        //choosePriorityPanel.gameObject.SetActive(true);
         choosePriorityText.text = $"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?";
     }
 
