@@ -16,23 +16,6 @@ public class CombatSkillMenu : MonoBehaviour
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
-    private SkillHandler skillHandler;
-
-    private void Awake()
-    {
-        skillHandler = FindObjectOfType<SkillHandler>();
-    }
-
-   public void StartAllyTurn()
-    {
-        if (skillHandler == null) Debug.LogWarning("Skill Handler Null On Skill Menu");
-        else
-        {
-            skillHandler.Champion = champion;
-            skillHandler.IsCombatSkillMenu = true;
-        }
-    }
-
     public void SetUpBarsUI()
     {
         /// <summary>

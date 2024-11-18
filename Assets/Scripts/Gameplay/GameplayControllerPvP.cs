@@ -24,7 +24,7 @@ public class GameplayControllerPvP : NetworkBehaviour
         }
                    
         // await a little bit to start combat 
-        Invoke("StartNewPhase", 2f);
+        Invoke("StartNewPhase", 5f);
     }
 
     private void StartNewPhase()

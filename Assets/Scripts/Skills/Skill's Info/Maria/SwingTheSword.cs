@@ -18,10 +18,7 @@ public class SwingTheSword : Skill
         targetTypes = new TargetType[] { TargetType.Enemy };
     }
 
-    public override void SkillFunction(OnFieldCharacter character,
-        SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null,
-        List<OnFieldCharacter> allyTargets = null)
+    public override void SkillFunction()
     {
         if (enemyTargets == null) Debug.Log("Something's wrong");
 

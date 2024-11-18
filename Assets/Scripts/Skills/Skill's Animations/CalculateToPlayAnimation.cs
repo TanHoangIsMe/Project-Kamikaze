@@ -6,6 +6,7 @@ using UnityEngine;
 public class CalculateToPlayAnimation : MonoBehaviour
 {
     private GameplayController gameplayController;
+    private SetUpTurnList setUpTurnList;
     private List<OnFieldCharacter> targets;
     private List<Animator> animators;
     private Vector3 characterOriginalPosition;
@@ -26,6 +27,8 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     private void Start()
     {
+        setUpTurnList = FindObjectOfType<SetUpTurnList>();
+
         // value to store character position
         characterOriginalPosition = gameObject.transform.position;
 
@@ -184,7 +187,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         animationController.SetIsAnimating(false);
 
         // check end game condition
-        gameplayController.CheckGameOver();
+        //gameplayController.CheckGameOver();
 
         // reset values for next auto find targets
         skillHandler.ResetThings();
@@ -198,12 +201,13 @@ public class CalculateToPlayAnimation : MonoBehaviour
             else
                 skillHandler.UsingSkillBurst();
 
-            skillHandler.AttackConfirm();
+            skillHandler.AttackConfirmServerRpc();
             skillHandler.CanReuse = false; // reset flag
         }
         else
-            // start new turn
-            gameplayController.Invoke("StartTurn", 3f);
+            //    // start new turn
+            //    gameplayController.Invoke("StartTurn", 3f);
+            setUpTurnList.Invoke("StartTurnClientRpc", 3f);
     }
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)

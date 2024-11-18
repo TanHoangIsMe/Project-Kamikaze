@@ -72,7 +72,7 @@ public class GameplayController : MonoBehaviour
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
-
+        
         if (whoTurn.gameObject.layer == 6) // ally turn
         {
             skillMenuCanvas.SetActive(true);
@@ -80,7 +80,7 @@ public class GameplayController : MonoBehaviour
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
             combatSkillMenu.SetUpBarsUI();
-            combatSkillMenu.StartAllyTurn();
+            //combatSkillMenu.StartAllyTurn();
         }
         else // enemy turn
         {

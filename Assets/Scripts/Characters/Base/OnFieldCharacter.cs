@@ -31,28 +31,22 @@ public class OnFieldCharacter : MonoBehaviour
 
     public List<Effect> Effects { get { return effects; } set { effects = value; } }
 
-    public void UsingFirstSkill(SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null , 
-        List<OnFieldCharacter> allyTargets = null)
+    public void UsingFirstSkill()
     {
         currentCharacter.Skills[0]
-            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
+            .SkillFunction();
     }
 
-    public void UsingSecondSkill(SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null,
-        List<OnFieldCharacter> allyTargets = null)
+    public void UsingSecondSkill()
     {
         currentCharacter.Skills[1]
-            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
+            .SkillFunction();
     }
 
-    public void UsingBurstSkill(SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null,
-        List<OnFieldCharacter> allyTargets = null)
+    public void UsingBurstSkill()
     {
         currentCharacter.Skills[2]
-            .SkillFunction(this, skillHandler, enemyTargets, allyTargets);
+            .SkillFunction();
     }
 
     private void Awake()

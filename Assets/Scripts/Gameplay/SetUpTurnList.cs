@@ -5,6 +5,7 @@ using UnityEngine;
 public class SetUpTurnList : NetworkBehaviour
 {
     private CombatSkillMenu combatSkillMenu;
+    private SkillHandler skillHandler;
 
     // place to hold all champion that exist on battle field
     private List<OnFieldCharacter> turnList;
@@ -12,14 +13,15 @@ public class SetUpTurnList : NetworkBehaviour
 
     private OnFieldCharacter whoTurn; // variable to know whose turn
 
-    private void Awake()
+    private void Start()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        skillHandler = FindObjectOfType<SkillHandler>();
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
 
-        if(combatSkillMenu != null) // turn off skill menu
-            combatSkillMenu.gameObject.SetActive(false);
+        //if(combatSkillMenu != null) // turn off skill menu
+        //    combatSkillMenu.gameObject.SetActive(false);
     }
 
     [ClientRpc]
@@ -41,10 +43,11 @@ public class SetUpTurnList : NetworkBehaviour
         //}
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
-        StartTurn(); // Start character turn
+        StartTurnClientRpc(); // Start character turn
     }
 
-    public void StartTurn()
+    [ClientRpc]
+    public void StartTurnClientRpc()
     {
         //// check if game over
         //Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
@@ -66,26 +69,26 @@ public class SetUpTurnList : NetworkBehaviour
             return;
         }
 
-        whoTurn = turnList[0];Debug.Log(whoTurn.name);
+        whoTurn = turnList[0];
         turnList.RemoveAt(0);
-        Debug.Log(whoTurn.name + whoTurn.gameObject.layer + IsClient);
-        if (whoTurn.gameObject.layer == 6 && IsHost && combatSkillMenu != null) // ally turn
+
+        if (combatSkillMenu != null) // set up menu skill UI
         {
             combatSkillMenu.gameObject.SetActive(true);
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
             combatSkillMenu.SetUpBarsUI();
-            combatSkillMenu.StartAllyTurn();
         }
-        else if(whoTurn.gameObject.layer == 7 && !IsHost && combatSkillMenu != null) // enemy turn
+
+        if (skillHandler != null) // set up skill handler
         {
-            combatSkillMenu.gameObject.SetActive(true);
-            //    enemyAI.Champion = whoTurn;
-            //    enemyAI.StartEnemyTurn();
-            //    //StartTurn(); // for debug
+            skillHandler.Champion = whoTurn;
+            skillHandler.IsCombatSkillMenu = true;
+
+            if(whoTurn.gameObject.layer == 7)
+                skillHandler.SwapChampionsLayer();
         }
     }
-
     
     private void CreateTurnList()
     {

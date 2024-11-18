@@ -23,6 +23,11 @@ public abstract class Skill : MonoBehaviour
     protected CalculateSkillEnergy calculateSkillEnergy;
     protected CalculateSkillDamage calculateSkillDamage;
     protected GameplayController gameplayController;
+    protected SkillHandler skillHandler;
+
+    protected OnFieldCharacter character;
+    protected List<OnFieldCharacter> enemyTargets;
+    protected List<OnFieldCharacter> allyTargets;
     #endregion
 
     #region Properties
@@ -40,18 +45,20 @@ public abstract class Skill : MonoBehaviour
     public ActivateType[] ActivateTypes { get { return activateTypes; } }
     public TargetType[] TargetTypes { get { return targetTypes; } }
 
+    public OnFieldCharacter Character { set { character = value; } }
+    public List<OnFieldCharacter> EnemyTargets { set { enemyTargets = value; } }
+    public List<OnFieldCharacter> AllyTargets { set { allyTargets = value; } }
+
     protected Skill()
     {
         calculateSkillEnergy = new CalculateSkillEnergy();
         calculateSkillDamage = new CalculateSkillDamage();
         gameplayController = FindObjectOfType<GameplayController>();
+        skillHandler = FindObjectOfType<SkillHandler>();
     }
     #endregion
 
     #region Methods
-    public abstract void SkillFunction(OnFieldCharacter character,
-        SkillHandler skillHandler,
-        List<OnFieldCharacter> enemyTargets = null, 
-        List<OnFieldCharacter> allyTargets = null);
+    public abstract void SkillFunction();
     #endregion
 }
