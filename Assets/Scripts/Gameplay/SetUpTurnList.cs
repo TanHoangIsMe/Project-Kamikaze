@@ -13,7 +13,7 @@ public class SetUpTurnList : NetworkBehaviour
 
     private OnFieldCharacter whoTurn; // variable to know whose turn
 
-    private void Awake()
+    private void Start()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>();
@@ -43,10 +43,11 @@ public class SetUpTurnList : NetworkBehaviour
         //}
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
-        StartTurn(); // Start character turn
+        StartTurnClientRpc(); // Start character turn
     }
 
-    public void StartTurn()
+    [ClientRpc]
+    public void StartTurnClientRpc()
     {
         //// check if game over
         //Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
@@ -68,14 +69,25 @@ public class SetUpTurnList : NetworkBehaviour
             return;
         }
 
-        whoTurn = turnList[0];Debug.Log(whoTurn.name);
+        whoTurn = turnList[0];
         turnList.RemoveAt(0);
-        Debug.Log(whoTurn.name);
-        combatSkillMenu.gameObject.SetActive(true);
-        combatSkillMenu.Champion = whoTurn;
-        combatSkillMenu.SetUpSkillAvatar();
-        combatSkillMenu.SetUpBarsUI();
-        combatSkillMenu.StartAllyTurn();
+
+        if (combatSkillMenu != null) // set up menu skill UI
+        {
+            combatSkillMenu.gameObject.SetActive(true);
+            combatSkillMenu.Champion = whoTurn;
+            combatSkillMenu.SetUpSkillAvatar();
+            combatSkillMenu.SetUpBarsUI();
+        }
+
+        if (skillHandler != null) // set up skill handler
+        {
+            skillHandler.Champion = whoTurn;
+            skillHandler.IsCombatSkillMenu = true;
+
+            if(whoTurn.gameObject.layer == 7)
+                skillHandler.SwapChampionsLayer();
+        }
     }
     
     private void CreateTurnList()

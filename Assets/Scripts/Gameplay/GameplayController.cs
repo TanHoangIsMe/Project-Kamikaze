@@ -80,7 +80,7 @@ public class GameplayController : MonoBehaviour
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
             combatSkillMenu.SetUpBarsUI();
-            combatSkillMenu.StartAllyTurn();
+            //combatSkillMenu.StartAllyTurn();
         }
         else // enemy turn
         {

@@ -35,12 +35,12 @@ public class SkillHandler : NetworkBehaviour
         Button button1 = GameObject.FindGameObjectWithTag("Finish").GetComponent<Button>();
         button1.onClick.AddListener(() =>
         {
-            UsingSkill1ClickClientRpc();
+            UsingSkill1ServerRpc();
         });
         Button button2 = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Button>();
         button2.onClick.AddListener(() =>
         {
-            AttackConfirmClientRpc();
+            AttackConfirmServerRpc();
         });
     }
 
@@ -151,6 +151,12 @@ public class SkillHandler : NetworkBehaviour
     }
 
     #region Using Skill
+    [ServerRpc (RequireOwnership = false)]
+    public void UsingSkill1ServerRpc()
+    {
+        UsingSkill1ClickClientRpc();
+    }
+
     [ClientRpc]
     public void UsingSkill1ClickClientRpc()
     {
@@ -221,6 +227,13 @@ public class SkillHandler : NetworkBehaviour
             return false;
         }
     }
+
+    [ServerRpc (RequireOwnership = false)]
+    public void AttackConfirmServerRpc()
+    {
+        AttackConfirmClientRpc();
+    }
+
     [ClientRpc]
     public void AttackConfirmClientRpc()
     {
@@ -229,7 +242,7 @@ public class SkillHandler : NetworkBehaviour
             if(isCombatSkillMenu)
                 // turn off skill menu
                 skillMenu.SetActive(false);
-
+            
             // find champion animation controller script
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
             IAnimationPlayable animationController = champion.GetComponent<IAnimationPlayable>();
@@ -249,21 +262,22 @@ public class SkillHandler : NetworkBehaviour
         else
             Debug.Log("Please choose a skill");   
     }
-    [ClientRpc]
-    public void SendInfoToUsingFirstSkillClientRpc()
+
+    public void SendInfoToUsingFirstSkill()
     {
-        champion.Skills[0].Character = autoFindTargets.SelfTarget;
+        champion.Skills[0].Character = champion;
         champion.Skills[0].EnemyTargets = autoFindTargets.EnemyTargets;
+        champion.Skills[0].AllyTargets = autoFindTargets.AllyTargets;
         List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
         List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
         OnFieldCharacter self = autoFindTargets.SelfTarget;
-
-        if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingFirstSkill();
-        else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingFirstSkill();
-        else
-            champion.UsingFirstSkill();
+        champion.UsingFirstSkill();
+        //if (enemies.Count() > 0 && allies.Count() > 0)
+        //    champion.UsingFirstSkill();
+        //else if (enemies.Count() > 0 && allies.Count() == 0)
+        //    champion.UsingFirstSkill();
+        //else
+        //    champion.UsingFirstSkill();
 
         // play health bar reduce or increase animation
         // when champion current health change
@@ -310,7 +324,6 @@ public class SkillHandler : NetworkBehaviour
     #region OverHead Champion UI
     public void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
     {
-        Debug.Log("alooooooooo" + skillValues.Count);
         // play health bar fill animation on enemies
         if (enemies != null && skillValues.Count > 0)
         {
@@ -404,4 +417,16 @@ public class SkillHandler : NetworkBehaviour
         elementType = elementTypes[index];
     }
     #endregion
+
+    [ServerRpc (RequireOwnership = false)]
+    private void TestServerRpc()
+    {
+        TestClientRpc();
+    }
+
+    [ClientRpc]
+    private void TestClientRpc()
+    { 
+    
+    }
 }
