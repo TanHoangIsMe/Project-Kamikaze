@@ -20,8 +20,8 @@ public class SetUpTurnList : NetworkBehaviour
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
 
-        //if(combatSkillMenu != null) // turn off skill menu
-        //    combatSkillMenu.gameObject.SetActive(false);
+        if (combatSkillMenu != null) // turn off skill menu
+            combatSkillMenu.gameObject.SetActive(false);
     }
 
     [ClientRpc]
@@ -74,7 +74,11 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (combatSkillMenu != null) // set up menu skill UI
         {
-            combatSkillMenu.gameObject.SetActive(true);
+            if (whoTurn.gameObject.layer == 6 && IsHost)
+                combatSkillMenu.gameObject.SetActive(true);
+            else if (whoTurn.gameObject.layer == 7 && !IsHost)
+                combatSkillMenu.gameObject.SetActive(true);
+
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
             combatSkillMenu.SetUpBarsUI();
