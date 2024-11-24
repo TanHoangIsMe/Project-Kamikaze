@@ -188,6 +188,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         // check end game condition
         //gameplayController.CheckGameOver();
+        setUpTurnList.CheckGameOver();
 
         // reset values for next auto find targets
         skillHandler.ResetThings();

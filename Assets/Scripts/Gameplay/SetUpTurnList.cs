@@ -1,11 +1,22 @@
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SetUpTurnList : NetworkBehaviour
 {
     private CombatSkillMenu combatSkillMenu;
     private SkillHandler skillHandler;
+    private Setting setting;
+    private GameObject gameOverCanvas;
+    private GameObject resultIcon;
+    private GameObject phaseText;
+    private TextMeshProUGUI thisPhase;
+
+    private int phase; // combat turn
+    public int Phase { get { return phase; } }
 
     // place to hold all champion that exist on battle field
     private List<OnFieldCharacter> turnList;
@@ -17,30 +28,67 @@ public class SetUpTurnList : NetworkBehaviour
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>();
+        setting = FindObjectOfType<Setting>(); 
+
+        gameOverCanvas = GameObject.FindGameObjectWithTag("GameOver");
+        if(gameOverCanvas != null ) 
+            resultIcon = gameOverCanvas.transform.GetChild(1).gameObject;
+
+        phaseText = GameObject.FindGameObjectWithTag("Phase");
+        if(phaseText != null )
+            thisPhase = phaseText.GetComponent<TextMeshProUGUI>();
+
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
 
+        // turn off ui canvas
         if (combatSkillMenu != null) // turn off skill menu
             combatSkillMenu.gameObject.SetActive(false);
+
+        if (thisPhase != null)
+            thisPhase.text = "";
+
+        if(gameOverCanvas != null)
+            gameOverCanvas.SetActive(false);
     }
 
+    #region Server Rpc
+    [ServerRpc (RequireOwnership = false)]
+    public void StartNewPhaseServerRpc()
+    {
+        StartNewPhaseClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StartTurnServerRpc()
+    {
+        StartTurnClientRpc();
+    }
+    #endregion
+
+    #region Client Rpc
     [ClientRpc]
     public void StartNewPhaseClientRpc()
     {
-        //phase++; // Next phase
-        //phaseText.text = $"Phase: {phase.ToString()}"; // Display Turn 
-        //phaseCanvas.SetActive(true);
-        //turnList.Clear();
-        //foreach (var character in FindObjectsOfType<OnFieldCharacter>())
-        //{
-        //    if (character.Effects.Count > 0)
-        //        for (int i = character.Effects.Count - 1; i >= 0; i--)
-        //        {
-        //            character.Effects[i].UpdateEffect();
-        //        }
+        phase++; // Next phase
+       
+        if (thisPhase != null) // Display Turn
+            thisPhase.text = $"Phase: {phase.ToString()}";
 
-        //    character.UpdateEffectIcon();
-        //}
+        turnList.Clear(); // reset turn list
+
+        // update champ effect
+        foreach (var character in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (character.Effects.Count > 0)
+                for (int i = character.Effects.Count - 1; i >= 0; i--)
+                {
+                    character.Effects[i].UpdateEffect();
+                }
+
+            character.UpdateEffectIcon();
+        }
+
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
         StartTurnClientRpc(); // Start character turn
@@ -53,11 +101,11 @@ public class SetUpTurnList : NetworkBehaviour
         //Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
         //if (enemyAllDead || allyAllDead)
         //{
-        //    skillMenuCanvas.SetActive(false);
-        //    phaseCanvas.SetActive(false);
+        //    combatSkillMenu.gameObject.SetActive(false);
+        //    thisPhase.text = "";
         //    return;
         //}
-       
+
         // remove turn list of dead champion       
         for (int i = 0; i < turnList.Count; i++)
             if (turnList[i].CurrentHealth < 0)
@@ -93,7 +141,9 @@ public class SetUpTurnList : NetworkBehaviour
                 skillHandler.SwapChampionsLayer();
         }
     }
-    
+    #endregion
+
+    #region Create Turn    
     private void CreateTurnList()
     {
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
@@ -113,4 +163,52 @@ public class SetUpTurnList : NetworkBehaviour
         // Reverse the list
         turnList.Reverse();
     }
+    #endregion
+
+    #region GameOver
+    public void CheckGameOver()
+    {
+        Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
+
+        if (allyAllDead || enemyAllDead)
+        {
+            Time.timeScale = 0;
+            thisPhase.text = "";
+            setting.gameObject.SetActive(false);
+            gameOverCanvas.SetActive(true);
+        }
+
+        Image resultIconImage = resultIcon.GetComponent<Image>();
+
+        if (enemyAllDead && resultIconImage != null)
+        {
+            Debug.Log("aduuuuuu");
+            if(IsHost)
+                resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
+            else
+                resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
+        }
+        else
+        {
+            if(IsHost)
+                resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
+            else
+                resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
+        }
+    }
+
+    private void Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead)
+    {
+        enemyAllDead = true;
+        allyAllDead = true;
+
+        foreach (var champ in FindObjectsOfType<OnFieldCharacter>())
+        {
+            if (new[] { 6, 7, 8, 9, 10 }.Contains(champ.Position) && champ.CurrentHealth > 0)
+                allyAllDead = false;
+            else if (new[] { 0, 1, 2, 3, 4 }.Contains(champ.Position) && champ.CurrentHealth > 0)
+                enemyAllDead = false;
+        }
+    }
+    #endregion
 }
