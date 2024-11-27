@@ -119,13 +119,16 @@ public class SetUpTurnList : NetworkBehaviour
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
-
+        Debug.Log(turnList.Count + whoTurn.name);
         if (combatSkillMenu != null) // set up menu skill UI
         {
             if (whoTurn.gameObject.layer == 6 && IsHost)
                 combatSkillMenu.gameObject.SetActive(true);
             else if (whoTurn.gameObject.layer == 7 && !IsHost)
+            {
+                Debug.Log(whoTurn.gameObject.layer+whoTurn.name);
                 combatSkillMenu.gameObject.SetActive(true);
+            }
 
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
@@ -182,7 +185,6 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (enemyAllDead && resultIconImage != null)
         {
-            Debug.Log("aduuuuuu");
             if(IsHost)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
             else

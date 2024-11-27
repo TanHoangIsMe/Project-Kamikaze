@@ -25,6 +25,9 @@ public class SkillHandler : NetworkBehaviour
     private bool canReuse; // flat to know is skill can use instance after cast
     public bool CanReuse { get { return canReuse; } set { canReuse = value; } }
 
+    private bool canDestroyObject;
+    public bool CanDestroyObject { get { return canDestroyObject; } }
+
     private void Awake()
     {
         checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
@@ -32,6 +35,7 @@ public class SkillHandler : NetworkBehaviour
         skillValues = new List<float>();
         canReuse = false;
         skillMenu = FindObjectOfType<CombatSkillMenu>().gameObject;
+        
         Button button1 = GameObject.FindGameObjectWithTag("Finish").GetComponent<Button>();
         button1.onClick.AddListener(() =>
         {
@@ -42,6 +46,12 @@ public class SkillHandler : NetworkBehaviour
         {
             AttackConfirmServerRpc();
         });
+    }
+
+    private void Start()
+    {
+        if (IsHost) canDestroyObject = true;
+        else canDestroyObject = false;
     }
 
     private void ChangeLayerToSelf()

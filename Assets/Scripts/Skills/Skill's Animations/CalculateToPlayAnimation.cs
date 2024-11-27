@@ -177,7 +177,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
             yield return new WaitForSeconds(maxAnimationLength + 1f);
 
             foreach (var target in targets)
-                if (target.CurrentHealth <= 0)
+                if (target.CurrentHealth <= 0 && skillHandler.CanDestroyObject)
                     Destroy(target.gameObject);
         }
 
