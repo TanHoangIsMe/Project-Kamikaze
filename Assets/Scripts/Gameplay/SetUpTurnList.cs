@@ -138,9 +138,9 @@ public class SetUpTurnList : NetworkBehaviour
         if (skillHandler != null) // set up skill handler
         {
             skillHandler.Champion = whoTurn;
-            skillHandler.IsCombatSkillMenu = true;
+            skillHandler.IsPlayer = true;
 
-            if(whoTurn.gameObject.layer == 7)
+            if (whoTurn.gameObject.layer == 7)
                 skillHandler.SwapChampionsLayer();
         }
     }

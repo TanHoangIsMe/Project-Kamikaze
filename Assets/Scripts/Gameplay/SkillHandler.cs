@@ -13,8 +13,8 @@ public class SkillHandler : NetworkBehaviour
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
-    private bool isCombatSkillMenu;
-    public bool IsCombatSkillMenu { set { isCombatSkillMenu = value; } }
+    private bool isPlayer;
+    public bool IsPlayer { set { isPlayer = value; } }
 
     private CheckNumberOfTargets checkNumberOfTargets;
     private AutoFindTargets autoFindTargets;
@@ -99,10 +99,10 @@ public class SkillHandler : NetworkBehaviour
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
-        checkNumberOfTargets.CheckInfoToAutoFindTargets(isCombatSkillMenu, isTaunted, taunter);
+        checkNumberOfTargets.CheckInfoToAutoFindTargets(isPlayer, isTaunted, taunter);
 
         // if player champion using skill show UI
-        if (isCombatSkillMenu)
+        if (isPlayer)
         {
             // clear all selected ring and turn on based on targets
             autoFindTargets.TurnOffShowTargets();
@@ -126,14 +126,13 @@ public class SkillHandler : NetworkBehaviour
         // turn off show targets
         autoFindTargets.TurnOffShowTargets();
 
-        if (isCombatSkillMenu)
+        // change champion layer back
+        if (new[] { 6, 7, 8, 9, 10 }.Contains(champion.Position))
         {
-            // set champion layer back
             champion.gameObject.layer = 6;           
         }
         else
         {
-            // set champion layer back
             SwapChampionsLayer();
             champion.gameObject.layer = 7;
 
@@ -249,7 +248,7 @@ public class SkillHandler : NetworkBehaviour
     {
         if (checkNumberOfTargets.IsFinishFinding)
         {
-            if(isCombatSkillMenu)
+            if(isPlayer)
                 // turn off skill menu
                 skillMenu.SetActive(false);
             

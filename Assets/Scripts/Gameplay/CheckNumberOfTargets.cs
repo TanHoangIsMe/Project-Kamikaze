@@ -234,7 +234,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         skillTypes = champion.CurrentCharacter.Skills[whichSkill].SkillTypes;
     }
 
-    public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu, bool isTaunted, OnFieldCharacter taunter)
+    public void CheckInfoToAutoFindTargets(bool isPlayer, bool isTaunted, OnFieldCharacter taunter)
     {
         GetSkillInfo();
         
@@ -262,7 +262,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
@@ -279,7 +279,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
@@ -307,7 +307,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                     if(!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         // auto find group allies
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
@@ -322,7 +322,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                     if(!isGroupEnemy)
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, true);
 
@@ -334,7 +334,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     if (!isGroupEnemy && !isGroupAlly)
                     {
                         // auto find targets (allies and enemies)
-                        AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                        AutoFindOver1EnemyAndAlly(isPlayer);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -342,7 +342,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else if (!isGroupEnemy && isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -350,7 +350,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else if (isGroupEnemy && !isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -377,7 +377,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
@@ -397,7 +397,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
@@ -413,7 +413,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 5, true, true);
                 }
@@ -445,7 +445,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, false);
 
                 // auto find allies
-                AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                 // replace target list with taunter
                 AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -459,7 +459,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, false);
 
                 // auto find enemies
-                AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                 // replace target list with taunter
                 AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -471,7 +471,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (!isGroupEnemy && !isGroupAlly)
                 {
                     // auto find targets (allies and enemies)
-                    AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                    AutoFindOver1EnemyAndAlly(isPlayer);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -479,7 +479,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 else if (!isGroupEnemy && isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -487,7 +487,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 else if (isGroupEnemy && !isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -534,9 +534,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         isFinishFinding = true;
     }
 
-    private void AutoFindOver1EnemyOrAlly(bool isCombatSkillMenu, int layer)
+    private void AutoFindOver1EnemyOrAlly(bool isPlayer, int layer)
     {
-        if (isCombatSkillMenu)
+        if (isPlayer)
             // open choose priority dialog
             OpenChoosePriorityDialog(layer);
         else
@@ -546,9 +546,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         }
     }  
     
-    private void AutoFindOver1EnemyAndAlly(bool isCombatSkillMenu)
+    private void AutoFindOver1EnemyAndAlly(bool isPlayer)
     {
-        if (isCombatSkillMenu)
+        if (isPlayer)
             // open choose priority dialog 2 times
             StartCoroutine(OpenDialog2Times());
         else
