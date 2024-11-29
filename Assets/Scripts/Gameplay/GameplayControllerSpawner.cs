@@ -6,20 +6,19 @@ public class GameplayControllerSpawner : MonoBehaviour
     [SerializeField] private GameObject player1Cam;
     [SerializeField] private GameObject player2Cam;
     [SerializeField] private GameObject gameplayControllerPvP;
-    [SerializeField] private GameObject skillControllerPvp;
+    [SerializeField] private GameObject skillControllerPvP;
+    [SerializeField] private GameObject settingCanvasPvP;
 
     private void Awake()
     {
         if (NetworkManager.Singleton.IsHost)
         {
-            GameObject gameplayController = Instantiate(gameplayControllerPvP);
-            NetworkObject gamePlayNetObject = gameplayController.GetComponent<NetworkObject>();
-            if (gamePlayNetObject != null) gamePlayNetObject.Spawn();
+            // spawn net object
+            SpawnSharedObject(gameplayControllerPvP);
+            SpawnSharedObject(skillControllerPvP);
+            SpawnSharedObject(settingCanvasPvP);
 
-            GameObject skillController = Instantiate(skillControllerPvp);
-            NetworkObject skillNetObject = skillController.GetComponent<NetworkObject>();
-            if (skillNetObject != null) skillNetObject.Spawn();
-
+            // setting cam for each player
             player1Cam.SetActive(true);
             player2Cam.SetActive(false);
         }
@@ -28,6 +27,13 @@ public class GameplayControllerSpawner : MonoBehaviour
             player1Cam.SetActive(false);
             player2Cam.SetActive(true);
         }
+    }
+
+    private void SpawnSharedObject(GameObject gameObject)
+    {
+        GameObject spawnObject = Instantiate(gameObject);
+        NetworkObject networkObject = spawnObject.GetComponent<NetworkObject>();
+        if (networkObject != null) networkObject.Spawn();
     }
 }
 
