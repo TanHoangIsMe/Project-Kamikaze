@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameplayControllerSpawner : MonoBehaviour
 {
+    [SerializeField] private GameObject player1Cam;
+    [SerializeField] private GameObject player2Cam;
     [SerializeField] private GameObject gameplayControllerPvP;
     [SerializeField] private GameObject skillControllerPvp;
 
@@ -17,6 +19,14 @@ public class GameplayControllerSpawner : MonoBehaviour
             GameObject skillController = Instantiate(skillControllerPvp);
             NetworkObject skillNetObject = skillController.GetComponent<NetworkObject>();
             if (skillNetObject != null) skillNetObject.Spawn();
+
+            player1Cam.SetActive(true);
+            player2Cam.SetActive(false);
+        }
+        else
+        {
+            player1Cam.SetActive(false);
+            player2Cam.SetActive(true);
         }
     }
 }

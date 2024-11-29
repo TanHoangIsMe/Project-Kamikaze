@@ -74,11 +74,15 @@ public class CheckNumberOfTargets : MonoBehaviour
             // check if player click something
             if (Input.GetMouseButtonDown(0))
             {
-                // Create raycast based on mouse position
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                // Create ray cast based on mouse position
+                Camera camera = Camera.main;
+                if (camera == null)
+                    camera = GameObject.Find("Player 2 Camera").GetComponent<Camera>();
+
+                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                // Check if raycast hit something
+                // Check if ray cast hit something
                 if (Physics.Raycast(ray, out hit))
                 {
                     // Get object that ray hit
