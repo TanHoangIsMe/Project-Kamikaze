@@ -3779,7 +3779,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1 &857222474
 GameObject:
@@ -4546,6 +4546,7 @@ GameObject:
   - component: {fileID: 969050055}
   - component: {fileID: 969050054}
   - component: {fileID: 969050053}
+  - component: {fileID: 969050057}
   - component: {fileID: 969050056}
   m_Layer: 5
   m_Name: Setting Canvas
@@ -4651,7 +4652,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingMenu: {fileID: 1409622117}
-  loadingCanvas: {fileID: 137996011}
+  resumeButton: {fileID: 0}
+--- !u!114 &969050057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969050051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1806518871
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1007808580
 GameObject:
   m_ObjectHideFlags: 0
@@ -8023,7 +8045,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce17496c5873ff64ba5b654c62ec1266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  choosePriorityPanel: {fileID: 1699481564}
 --- !u!114 &2132432323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8036,7 +8057,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b611b284c8dc6b1499e32b9ecadfba6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillMenu: {fileID: 1464223453}
   popUpDamageText: {fileID: 8847024633125801646, guid: 6d1d62e43a7c4bb4daeb6c5df4538fc7, type: 3}
 --- !u!4 &2132432324
 Transform:

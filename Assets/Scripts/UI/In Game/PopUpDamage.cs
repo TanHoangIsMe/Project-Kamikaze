@@ -6,7 +6,11 @@ public class PopUpDamage : MonoBehaviour
 
     private void Awake()
     {
+        // set camera 
         cam = Camera.main;
+        if (cam == null) // if player 2 switch cam
+            cam = GameObject.Find("Player 2 Camera").GetComponent<Camera>();
+
         transform.rotation = cam.transform.rotation;
     }
 

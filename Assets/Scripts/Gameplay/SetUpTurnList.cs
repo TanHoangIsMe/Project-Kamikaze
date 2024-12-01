@@ -9,7 +9,6 @@ public class SetUpTurnList : NetworkBehaviour
 {
     private CombatSkillMenu combatSkillMenu;
     private SkillHandler skillHandler;
-    private Setting setting;
     private GameObject gameOverCanvas;
     private GameObject resultIcon;
     private GameObject phaseText;
@@ -27,8 +26,7 @@ public class SetUpTurnList : NetworkBehaviour
     private void Start()
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
-        skillHandler = FindObjectOfType<SkillHandler>();
-        setting = FindObjectOfType<Setting>(); 
+        skillHandler = FindObjectOfType<SkillHandler>(); 
 
         gameOverCanvas = GameObject.FindGameObjectWithTag("GameOver");
         if(gameOverCanvas != null ) 
@@ -57,12 +55,6 @@ public class SetUpTurnList : NetworkBehaviour
     public void StartNewPhaseServerRpc()
     {
         StartNewPhaseClientRpc();
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void StartTurnServerRpc()
-    {
-        StartTurnClientRpc();
     }
     #endregion
 
@@ -97,14 +89,14 @@ public class SetUpTurnList : NetworkBehaviour
     [ClientRpc]
     public void StartTurnClientRpc()
     {
-        //// check if game over
-        //Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
-        //if (enemyAllDead || allyAllDead)
-        //{
-        //    combatSkillMenu.gameObject.SetActive(false);
-        //    thisPhase.text = "";
-        //    return;
-        //}
+        // check if game over
+        Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
+        if (enemyAllDead || allyAllDead)
+        {
+            combatSkillMenu.gameObject.SetActive(false);
+            thisPhase.text = "";
+            return;
+        }
 
         // remove turn list of dead champion       
         for (int i = 0; i < turnList.Count; i++)
@@ -177,7 +169,6 @@ public class SetUpTurnList : NetworkBehaviour
         {
             Time.timeScale = 0;
             thisPhase.text = "";
-            setting.gameObject.SetActive(false);
             gameOverCanvas.SetActive(true);
         }
 
@@ -190,7 +181,7 @@ public class SetUpTurnList : NetworkBehaviour
             else
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
         }
-        else
+        else if (allyAllDead && resultIconImage != null)
         {
             if(IsHost)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");

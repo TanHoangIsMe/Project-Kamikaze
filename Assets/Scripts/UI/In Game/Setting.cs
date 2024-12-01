@@ -25,8 +25,7 @@ public class Setting : NetworkBehaviour
 
     public void ResumeBattle()
     {
-        Time.timeScale = 1;
-        settingMenu.SetActive(false);
+        ResumeBattleServerRpc();
     }
 
     public void RestartBattle()
@@ -37,8 +36,7 @@ public class Setting : NetworkBehaviour
 
     public void BackToMainMenu()
     {
-        // load main menu scene
-        LoadScene(0);
+        BackToMainMenuServerRpc();
     }
 
     #region ServerRpc
@@ -46,6 +44,18 @@ public class Setting : NetworkBehaviour
     private void OpenSettingMenuServerRpc(bool isHost)
     {
         OpenSettingMenuClientRpc(isHost);        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ResumeBattleServerRpc()
+    {
+        ResumeBattleClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void BackToMainMenuServerRpc()
+    {
+        BackToMainMenuClientRpc();
     }
     #endregion
 
@@ -55,10 +65,25 @@ public class Setting : NetworkBehaviour
     {
         Time.timeScale = 0;
         settingMenu.SetActive(true);
-        Debug.Log(isHost+" " + IsHost);
+
         // DeActive other player resume button
         if ((isHost && !IsHost) || (!isHost && IsHost))
             resumeButton.interactable = false;
+    }
+
+    [ClientRpc]
+    private void ResumeBattleClientRpc()
+    {
+        Time.timeScale = 1;
+        settingMenu.SetActive(false);
+    }
+
+    [ClientRpc]
+    private void BackToMainMenuClientRpc()
+    {
+        if (IsHost) NetworkManager.Singleton.Shutdown();
+
+        LoadScene(0);
     }
     #endregion
 
