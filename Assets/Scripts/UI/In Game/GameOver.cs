@@ -1,13 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameOver : MonoBehaviour
 {
+    private LoadingScene loadingScene;
+
+    private void Awake()
+    {
+        loadingScene = FindObjectOfType<LoadingScene>();
+    }
+
     public void BackToMainMenu()
     {
-        Setting setting = FindObjectOfType<Setting>();
-        if (setting != null )
-            setting.BackToMainMenu();
+        if (loadingScene != null)
+        {
+            loadingScene.gameObject.SetActive(true);
+            loadingScene.LoadScene(0);
+        }
     }
 }

@@ -161,27 +161,30 @@ public class SetUpTurnList : NetworkBehaviour
     #endregion
 
     #region GameOver
-    public void CheckGameOver()
+    public void CheckGameOver(bool isPlayer1Quit, bool isPlayer2Quit)
     {
         Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
 
-        if (allyAllDead || enemyAllDead)
+        if (allyAllDead || enemyAllDead || isPlayer1Quit || isPlayer2Quit)
         {
             Time.timeScale = 0;
             thisPhase.text = "";
+            combatSkillMenu.gameObject.SetActive(false);
             gameOverCanvas.SetActive(true);
         }
 
         Image resultIconImage = resultIcon.GetComponent<Image>();
 
-        if (enemyAllDead && resultIconImage != null)
+        if (enemyAllDead && resultIconImage != null 
+            || isPlayer2Quit && resultIconImage != null)
         {
             if(IsHost)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
             else
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
         }
-        else if (allyAllDead && resultIconImage != null)
+        else if (allyAllDead && resultIconImage != null
+                || isPlayer1Quit && resultIconImage != null)
         {
             if(IsHost)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");

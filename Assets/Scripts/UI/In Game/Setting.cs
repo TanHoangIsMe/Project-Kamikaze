@@ -1,6 +1,5 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Setting : NetworkBehaviour
@@ -9,6 +8,7 @@ public class Setting : NetworkBehaviour
     [SerializeField] private Button resumeButton;
 
     private LoadingScene loadingScene;
+    private SetUpTurnList setUpTurnList;
 
     private void Start()
     {
@@ -16,6 +16,8 @@ public class Setting : NetworkBehaviour
         loadingScene = FindObjectOfType<LoadingScene>();
         if(loadingScene != null )
             loadingScene.gameObject.SetActive(false);
+
+        setUpTurnList = FindObjectOfType<SetUpTurnList>();
     }
 
     public void OpenSettingMenu()
@@ -36,7 +38,7 @@ public class Setting : NetworkBehaviour
 
     public void BackToMainMenu()
     {
-        BackToMainMenuServerRpc();
+        BackToMainMenuServerRpc(IsHost);
     }
 
     #region ServerRpc
@@ -53,9 +55,9 @@ public class Setting : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void BackToMainMenuServerRpc()
+    private void BackToMainMenuServerRpc(bool isHost)
     {
-        BackToMainMenuClientRpc();
+        BackToMainMenuClientRpc(isHost);
     }
     #endregion
 
@@ -79,10 +81,13 @@ public class Setting : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void BackToMainMenuClientRpc()
+    private void BackToMainMenuClientRpc(bool isHost)
     {
+        settingMenu.SetActive(false);
         NetworkManager.Singleton.Shutdown();
-        LoadScene(0);
+
+        if ((isHost && IsHost) || (!isHost && !IsHost))
+            LoadScene(0);
     }
     #endregion
 
@@ -111,8 +116,12 @@ public class Setting : NetworkBehaviour
 
     private void HandleClientDisconnect(ulong clientId)
     {
+        if(setUpTurnList != null && IsHost) 
+            setUpTurnList.CheckGameOver(false, true);
+        else
+            setUpTurnList.CheckGameOver(true, false);
+
         NetworkManager.Singleton.Shutdown();
-        LoadScene(0);
     }
     #endregion
 }
