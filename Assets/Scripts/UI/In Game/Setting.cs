@@ -81,8 +81,7 @@ public class Setting : NetworkBehaviour
     [ClientRpc]
     private void BackToMainMenuClientRpc()
     {
-        if (IsHost) NetworkManager.Singleton.Shutdown();
-
+        NetworkManager.Singleton.Shutdown();
         LoadScene(0);
     }
     #endregion
@@ -95,12 +94,25 @@ public class Setting : NetworkBehaviour
         {
             loadingScene.gameObject.SetActive(true);
             loadingScene.LoadScene(sceneId);
-            settingMenu.SetActive(false);
-            Time.timeScale = 1;
         }
+    }
+    #endregion
 
-        // load scene
-        SceneManager.LoadSceneAsync(sceneId);
+    #region Disconnect
+    private void OnEnable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+    }
+
+    private void HandleClientDisconnect(ulong clientId)
+    {
+        NetworkManager.Singleton.Shutdown();
+        LoadScene(0);
     }
     #endregion
 }
