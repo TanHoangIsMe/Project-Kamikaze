@@ -675,7 +675,7 @@ GameObject:
   - component: {fileID: 172832181}
   m_Layer: 5
   m_Name: Confirm Attack
-  m_TagString: Respawn
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2056,7 +2056,7 @@ GameObject:
   - component: {fileID: 382156904}
   m_Layer: 5
   m_Name: Skill 1
-  m_TagString: Finish
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

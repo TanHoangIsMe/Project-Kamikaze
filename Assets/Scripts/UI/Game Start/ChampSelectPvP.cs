@@ -40,6 +40,11 @@ public class ChampSelectPvP : NetworkBehaviour
 
     private bool isReadyMatch = false;
 
+    // Alert 
+    [SerializeField] private GameObject alertCanvas;
+    [SerializeField] private TextMeshProUGUI errorTittle;
+    [SerializeField] private TextMeshProUGUI errorMessage;
+
     private void Start()
     {
         // set room id
@@ -57,7 +62,7 @@ public class ChampSelectPvP : NetworkBehaviour
 
             startPickButton.onClick.AddListener(() =>
             {
-                ReadyServerRpc(true, false);
+                ReadyServerRpc(true, false, true);
             });
         }
         else
@@ -103,9 +108,9 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ServerRpc (RequireOwnership = false)]
-    private void ReadyServerRpc(bool isPick, bool isClientDisconnect)
+    private void ReadyServerRpc(bool isPick, bool isClientDisconnect, bool isButtonClick)
     {
-        ReadyClientRpc(isPick, isClientDisconnect);
+        ReadyClientRpc(isPick, isClientDisconnect, isButtonClick);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -138,7 +143,7 @@ public class ChampSelectPvP : NetworkBehaviour
         {
             // turn off client label
             SetUpClientUIServerRpc(false);
-            ReadyServerRpc(true, true);
+            ReadyServerRpc(true, true, true);
 
             if(!IsHost) // back to lobby 
                 ShutDownConnection();
@@ -172,9 +177,9 @@ public class ChampSelectPvP : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ReadyClientRpc(bool isPick, bool isClientDisconnect)
+    private void ReadyClientRpc(bool isPick, bool isClientDisconnect, bool isButtonClick)
     {
-        UpdateReadyState(isPick, isClientDisconnect);
+        UpdateReadyState(isPick, isClientDisconnect, isButtonClick);
     }
 
     [ClientRpc]
@@ -184,7 +189,7 @@ public class ChampSelectPvP : NetworkBehaviour
         if (isReadyPick)
         {
             // reset ready state
-            UpdateReadyState(true, false);
+            UpdateReadyState(true, false, true);
             // remove listener
             startMatchButton.onClick.RemoveAllListeners();
 
@@ -199,20 +204,26 @@ public class ChampSelectPvP : NetworkBehaviour
                 UpdateStartButtonText("Ready", startMatchButton);
                 startMatchButton.onClick.AddListener(() =>
                 {
-                    ReadyServerRpc(false, false);
+                    ReadyServerRpc(false, false, true);
                 });
             }
             else
             {
                 startMatchButton.onClick.AddListener(() => {
-                    // save and send selected champ list
-                    Dictionary<int, string> cloneChampList = new Dictionary<int, string>(championList);
-                    DataManager.Instance.championList = cloneChampList;
+                    if (CheckChampList(true))
+                    {
+                        // save and send selected champ list
+                        Dictionary<int, string> cloneChampList = new Dictionary<int, string>(championList);
+                        DataManager.Instance.championList = cloneChampList;
 
-                    Destroy(gameObject); // destroy shared object
+                        Destroy(gameObject); // destroy shared object
 
-                    // open loading scene
-                    MoveToMatchClientRpc();
+                        // open loading scene
+                        MoveToMatchClientRpc();
+                    }
+                    else
+                        ShowAlert("Selection Required",
+                            "Please choose at least 1 character before starting.");
                 });
                 startMatchButton.interactable = false;
             }
@@ -265,7 +276,7 @@ public class ChampSelectPvP : NetworkBehaviour
                     {
                         championList.Remove(champ.Key);
                         if (!isHost && !CheckChampList(false)) // client team is empty
-                            ReadyServerRpc(false, false); // update ready state        
+                            ReadyServerRpc(false, false, false); // update ready state        
                         break;
                     }
             }
@@ -317,7 +328,7 @@ public class ChampSelectPvP : NetworkBehaviour
 
     // isPick = true -> ready to start pick state
     // isPick = false -> ready to start match state
-    private void UpdateReadyState(bool isPick, bool isClientDisconnect)
+    private void UpdateReadyState(bool isPick, bool isClientDisconnect, bool isButtonClick)
     {
         if (isPick)
         {
@@ -350,7 +361,11 @@ public class ChampSelectPvP : NetworkBehaviour
         {
             if (isReadyMatch || (!isReadyMatch && CheckChampList(false)))
                 isReadyMatch = !isReadyMatch;
-            
+            else
+                if(!IsHost && isButtonClick)
+                ShowAlert("Selection Required",
+                    "Please choose at least 1 character before ready.");
+
             if (!IsHost)
             {
                 // change start button text to ready
@@ -493,6 +508,18 @@ public class ChampSelectPvP : NetworkBehaviour
                     SelectBorderHandler(false, slotButton);
             }
         }
+    }
+
+    private void ShowAlert(string tittle, string message)
+    {
+        alertCanvas.SetActive(true);
+        errorTittle.text = tittle;
+        errorMessage.text = message;
+    }
+
+    public void ConfirmAlert()
+    {
+        alertCanvas.SetActive(false);
     }
     #endregion
 

@@ -35,17 +35,8 @@ public class SkillHandler : NetworkBehaviour
         skillValues = new List<float>();
         canReuse = false;
         skillMenu = FindObjectOfType<CombatSkillMenu>().gameObject;
-        
-        Button button1 = GameObject.FindGameObjectWithTag("Finish").GetComponent<Button>();
-        button1.onClick.AddListener(() =>
-        {
-            UsingSkill1ServerRpc();
-        });
-        Button button2 = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Button>();
-        button2.onClick.AddListener(() =>
-        {
-            AttackConfirmServerRpc();
-        });
+
+        AddListenerToButton();
     }
 
     private void Start()
@@ -54,6 +45,41 @@ public class SkillHandler : NetworkBehaviour
         else canDestroyObject = false;
     }
 
+    #region Add Listener
+    private void AddListenerToButton()
+    {
+        Button skill1Button = GameObject.Find("Skill 1").GetComponent<Button>();
+        Button skill2Button = GameObject.Find("Skill 2").GetComponent<Button>();
+        Button skillBurstButton = GameObject.Find("Skill Burst").GetComponent<Button>();
+        Button confirmAttackButton = GameObject.Find("Confirm Attack").GetComponent<Button>();
+
+        if (skill1Button != null)
+            skill1Button.onClick.AddListener(() =>
+            {
+                UsingSkill1ServerRpc();
+            });
+
+        if (skill2Button != null)
+            skill2Button.onClick.AddListener(() =>
+            {
+                UsingSkill2ServerRpc();
+            });
+
+        if (skillBurstButton != null)
+            skillBurstButton.onClick.AddListener(() =>
+            {
+                UsingSkillBurstServerRpc();
+            });
+
+        if (confirmAttackButton != null)
+            confirmAttackButton.onClick.AddListener(() =>
+            {
+               AttackConfirmServerRpc();
+            });
+    }
+    #endregion
+
+    #region Set Up Champ Layer 
     private void ChangeLayerToSelf()
     {
         if (champion != null)
@@ -123,9 +149,6 @@ public class SkillHandler : NetworkBehaviour
         // reset skill value list
         skillValues.Clear();
 
-        // turn off show targets
-        autoFindTargets.TurnOffShowTargets();
-
         // change champion layer back
         if (new[] { 6, 7, 8, 9, 10 }.Contains(champion.Position))
         {
@@ -143,7 +166,9 @@ public class SkillHandler : NetworkBehaviour
                     transform.eulerAngles.z);
         }
     }
+    #endregion
 
+    #region Reset Value
     private void ClearTargetsList()
     {
         autoFindTargets.AllyTargets.Clear();
@@ -158,89 +183,74 @@ public class SkillHandler : NetworkBehaviour
         checkNumberOfTargets.IsChoosePriorityOpen = false;
         checkNumberOfTargets.CanSelectTarget = false;
     }
+    #endregion
 
-    #region Using Skill
+    #region Server Rpc
     [ServerRpc (RequireOwnership = false)]
     public void UsingSkill1ServerRpc()
     {
-        UsingSkill1ClickClientRpc();
+        UsingSkill1ClientRpc();
     }
 
-    [ClientRpc]
-    public void UsingSkill1ClickClientRpc()
+    [ServerRpc(RequireOwnership = false)]
+    public void UsingSkill2ServerRpc()
     {
-        UsingSkill1();
+        UsingSkill2ClientRpc();
     }
 
-    public void UsingSkill2Click()
+    [ServerRpc(RequireOwnership = false)]
+    public void UsingSkillBurstServerRpc()
     {
-        UsingSkill2();
+        UsingSkillBurstClientRpc();
     }
 
-    public void UsingSkillBurstClick()
-    {
-        UsingSkillBurst();
-    }
-
-    public bool UsingSkill1()
-    {
-        Debug.Log("mmmmm: " + champion);
-        if (champion.CurrentMana > champion.Skills[0].ManaCost)
-        {
-            // Clear targets list and reset flag properties
-            ResetCheckNumberOfTargetsFlags();
-            ClearTargetsList();
-
-            SetUpToAutoFindTargets(0);
-            return true;
-        }
-        else
-        {
-            Debug.Log("Not enough mana to use skill");
-            return false;
-        }
-    }
-
-    public bool UsingSkill2()
-    {
-        if (champion.CurrentMana > champion.Skills[1].ManaCost)
-        {
-            // Clear targets list and reset flag properties
-            ResetCheckNumberOfTargetsFlags();
-            ClearTargetsList();
-
-            SetUpToAutoFindTargets(1);
-            return true;
-        }
-        else
-        {
-            Debug.Log("Not enough mana to use skill");
-            return false;
-        }
-    }
-
-    public bool UsingSkillBurst()
-    {
-        if (champion.CurrentBurst == champion.Skills[2].BurstCost)
-        {
-            // Clear targets list and reset flag properties
-            ResetCheckNumberOfTargetsFlags();
-            ClearTargetsList();
-
-            SetUpToAutoFindTargets(2);
-            return true;
-        }
-        else
-        {
-            Debug.Log("Not enough burst to use skill");
-            return false;
-        }
-    }
-
-    [ServerRpc (RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void AttackConfirmServerRpc()
     {
         AttackConfirmClientRpc();
+    }
+    #endregion
+
+    #region Client Rpc
+    [ClientRpc]
+    private void UsingSkill1ClientRpc()
+    {
+        UsingSkill(0);
+    }
+
+    [ClientRpc]
+    private void UsingSkill2ClientRpc()
+    {
+        UsingSkill(1);
+    }
+
+    [ClientRpc]
+    private void UsingSkillBurstClientRpc()
+    {
+        UsingSkill(2);
+    }
+
+    public bool UsingSkill(int whichSkill)
+    {
+        if(whichSkill != 2 && champion.CurrentMana < champion.Skills[whichSkill].ManaCost)
+        {
+            Debug.Log("Not enough mana to use skill");
+            return false;
+        }
+        else if (whichSkill == 2 && champion.CurrentBurst != champion.Skills[2].BurstCost)
+        {
+            Debug.Log("Not enough mana to use skill");
+            return false;
+        }
+        else
+        {
+            // Clear targets list and reset flag properties
+            ResetCheckNumberOfTargetsFlags();
+            ClearTargetsList();
+
+            SetUpToAutoFindTargets(whichSkill);
+            return true;
+        }
     }
 
     [ClientRpc]
@@ -267,72 +277,51 @@ public class SkillHandler : NetworkBehaviour
                 // play animation
                 animationController.PlayBurstSkillAnimation();
 
+            // turn off show targets
+            autoFindTargets.TurnOffShowTargets();
         }
         else
             Debug.Log("Please choose a skill");   
     }
+    #endregion
 
+    #region Using Skill Info
     public void SendInfoToUsingFirstSkill()
     {
-        champion.Skills[0].Character = champion;
-        champion.Skills[0].EnemyTargets = autoFindTargets.EnemyTargets;
-        champion.Skills[0].AllyTargets = autoFindTargets.AllyTargets;
-        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
-        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
-        OnFieldCharacter self = autoFindTargets.SelfTarget;
-        champion.UsingFirstSkill();
-        //if (enemies.Count() > 0 && allies.Count() > 0)
-        //    champion.UsingFirstSkill();
-        //else if (enemies.Count() > 0 && allies.Count() == 0)
-        //    champion.UsingFirstSkill();
-        //else
-        //    champion.UsingFirstSkill();
-
-        // play health bar reduce or increase animation
-        // when champion current health change
-        PlayHealthBarEffect(enemies, allies, self);
+        SendInfoToUsingSkill(0);
     }
 
     public void SendInfoToUsingSecondSkill()
     {
-        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
-        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
-        OnFieldCharacter self = autoFindTargets.SelfTarget;
-
-        if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingSecondSkill();
-        else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingSecondSkill();
-        else
-            champion.UsingSecondSkill();
-
-        // play health bar reduce or increase animation
-        // when champion current health change
-        PlayHealthBarEffect(enemies, allies, self);
+        SendInfoToUsingSkill(1);
     }
 
     public void SendInfoToUsingBurstSkill()
     {
-        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
-        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
-        OnFieldCharacter self = autoFindTargets.SelfTarget;
+        SendInfoToUsingSkill(2);
+    }
 
-        if (enemies.Count() > 0 && allies.Count() > 0)
-            champion.UsingBurstSkill();
-        else if (enemies.Count() > 0 && allies.Count() == 0)
-            champion.UsingBurstSkill();
-        else
-            champion.UsingBurstSkill();
+    private void SendInfoToUsingSkill(int whichSkill)
+    {
+        champion.Skills[whichSkill].Character = champion;
+        champion.Skills[whichSkill].EnemyTargets = autoFindTargets.EnemyTargets;
+        champion.Skills[whichSkill].AllyTargets = autoFindTargets.AllyTargets;
+
+        champion.UsingSkill(whichSkill);
 
         // play health bar reduce or increase animation
         // when champion current health change
-        PlayHealthBarEffect(enemies, allies, self);
+        PlayHealthBarEffect();
     }
     #endregion
 
     #region OverHead Champion UI
-    public void PlayHealthBarEffect(List<OnFieldCharacter> enemies, List<OnFieldCharacter> allies, OnFieldCharacter self)
+    public void PlayHealthBarEffect()
     {
+        List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
+        List<OnFieldCharacter> allies = autoFindTargets.AllyTargets;
+        OnFieldCharacter self = autoFindTargets.SelfTarget;
+
         // play health bar fill animation on enemies
         if (enemies != null && skillValues.Count > 0)
         {
@@ -426,16 +415,4 @@ public class SkillHandler : NetworkBehaviour
         elementType = elementTypes[index];
     }
     #endregion
-
-    [ServerRpc (RequireOwnership = false)]
-    private void TestServerRpc()
-    {
-        TestClientRpc();
-    }
-
-    [ClientRpc]
-    private void TestClientRpc()
-    { 
-    
-    }
 }

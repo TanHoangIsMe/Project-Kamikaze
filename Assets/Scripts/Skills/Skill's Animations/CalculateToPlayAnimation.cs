@@ -195,13 +195,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
         if (skillHandler.CanReuse)
         {
-            if (whichSkill == 0)
-                skillHandler.UsingSkill1();
-            else if (whichSkill == 1)
-                skillHandler.UsingSkill2();
-            else
-                skillHandler.UsingSkillBurst();
-
+            skillHandler.UsingSkill(whichSkill);
             skillHandler.AttackConfirmServerRpc();
             skillHandler.CanReuse = false; // reset flag
         }

@@ -31,22 +31,9 @@ public class OnFieldCharacter : MonoBehaviour
 
     public List<Effect> Effects { get { return effects; } set { effects = value; } }
 
-    public void UsingFirstSkill()
+    public void UsingSkill(int whichSkill)
     {
-        currentCharacter.Skills[0]
-            .SkillFunction();
-    }
-
-    public void UsingSecondSkill()
-    {
-        currentCharacter.Skills[1]
-            .SkillFunction();
-    }
-
-    public void UsingBurstSkill()
-    {
-        currentCharacter.Skills[2]
-            .SkillFunction();
+        currentCharacter.Skills[whichSkill].SkillFunction();
     }
 
     private void Awake()
