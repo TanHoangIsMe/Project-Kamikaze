@@ -304,12 +304,10 @@ public class ChampSelectPvP : NetworkBehaviour
     [ClientRpc]
     private void MoveToMatchClientRpc()
     {
-        LoadingScene loadingScene = loadingCanvas.GetComponent<LoadingScene>();
-
-        if (loadingScene != null)
+        if (loadingCanvas != null)
         {
             loadingCanvas.SetActive(true);
-            loadingScene.LoadScene(2);
+            loadingCanvas.GetComponent<LoadingScene>().LoadScene(2);
         }
     }
     #endregion

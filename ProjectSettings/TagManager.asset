@@ -6,9 +6,6 @@ TagManager:
   tags:
   - Maria
   - UrielAPlotexia
-  - SelectChampPvP
-  - Phase
-  - GameOver
   layers:
   - Default
   - TransparentFX

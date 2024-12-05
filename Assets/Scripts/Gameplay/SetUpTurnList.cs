@@ -11,8 +11,8 @@ public class SetUpTurnList : NetworkBehaviour
     private SkillHandler skillHandler;
     private GameObject gameOverCanvas;
     private GameObject resultIcon;
-    private GameObject phaseText;
-    private TextMeshProUGUI thisPhase;
+    private TextMeshProUGUI phaseText;
+    private TextMeshProUGUI whoTurnText;
 
     private int phase; // combat turn
     public int Phase { get { return phase; } }
@@ -28,13 +28,12 @@ public class SetUpTurnList : NetworkBehaviour
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>(); 
 
-        gameOverCanvas = GameObject.FindGameObjectWithTag("GameOver");
+        gameOverCanvas = GameObject.Find("GameOver Canvas");
         if(gameOverCanvas != null ) 
             resultIcon = gameOverCanvas.transform.GetChild(1).gameObject;
 
-        phaseText = GameObject.FindGameObjectWithTag("Phase");
-        if(phaseText != null )
-            thisPhase = phaseText.GetComponent<TextMeshProUGUI>();
+        phaseText = GameObject.Find("Phase Text").GetComponent<TextMeshProUGUI>();
+        whoTurnText = GameObject.Find("Who Turn Text").GetComponent<TextMeshProUGUI>();
 
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
@@ -43,10 +42,13 @@ public class SetUpTurnList : NetworkBehaviour
         if (combatSkillMenu != null) // turn off skill menu
             combatSkillMenu.gameObject.SetActive(false);
 
-        if (thisPhase != null)
-            thisPhase.text = "";
+        if (phaseText != null)
+            phaseText.text = "";
 
-        if(gameOverCanvas != null)
+        if (whoTurnText != null)
+            whoTurnText.text = "";
+
+        if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
     }
 
@@ -64,8 +66,8 @@ public class SetUpTurnList : NetworkBehaviour
     {
         phase++; // Next phase
        
-        if (thisPhase != null) // Display Turn
-            thisPhase.text = $"Phase: {phase.ToString()}";
+        if (phaseText != null) // Display Turn
+            phaseText.text = $"Phase: {phase.ToString()}";
 
         turnList.Clear(); // reset turn list
 
@@ -94,7 +96,7 @@ public class SetUpTurnList : NetworkBehaviour
         if (enemyAllDead || allyAllDead)
         {
             combatSkillMenu.gameObject.SetActive(false);
-            thisPhase.text = "";
+            phaseText.text = "";
             return;
         }
 
@@ -111,16 +113,13 @@ public class SetUpTurnList : NetworkBehaviour
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
-        Debug.Log(turnList.Count + whoTurn.name);
+
         if (combatSkillMenu != null) // set up menu skill UI
         {
-            if (whoTurn.gameObject.layer == 6 && IsHost)
-                combatSkillMenu.gameObject.SetActive(true);
-            else if (whoTurn.gameObject.layer == 7 && !IsHost)
-            {
-                Debug.Log(whoTurn.gameObject.layer+whoTurn.name);
-                combatSkillMenu.gameObject.SetActive(true);
-            }
+            if (whoTurn.gameObject.layer == 6)
+                DisplaySkillMenu(IsHost);
+            else
+                DisplaySkillMenu(!IsHost);
 
             combatSkillMenu.Champion = whoTurn;
             combatSkillMenu.SetUpSkillAvatar();
@@ -135,6 +134,17 @@ public class SetUpTurnList : NetworkBehaviour
             if (whoTurn.gameObject.layer == 7)
                 skillHandler.SwapChampionsLayer();
         }
+    }
+
+    private void DisplaySkillMenu(bool isHost)
+    {
+        if (isHost)
+        {
+            whoTurnText.text = "Your Turn";
+            combatSkillMenu.gameObject.SetActive(true);
+        }
+        else
+            whoTurnText.text = "Enemy's Turn";
     }
     #endregion
 
@@ -168,9 +178,11 @@ public class SetUpTurnList : NetworkBehaviour
         if (allyAllDead || enemyAllDead || isPlayer1Quit || isPlayer2Quit)
         {
             Time.timeScale = 0;
-            thisPhase.text = "";
+            phaseText.text = "";
+            whoTurnText.text = "";
             combatSkillMenu.gameObject.SetActive(false);
             gameOverCanvas.SetActive(true);
+            NetworkManager.Singleton.Shutdown();
         }
 
         Image resultIconImage = resultIcon.GetComponent<Image>();
