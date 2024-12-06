@@ -10,7 +10,7 @@ public class HitFirstTalkLater : Skill
         description = "Not yet";
         manaCost = 0f;
         burstCost = 0f;
-        numberOfEnemyTargets = 1;
+        numberOfEnemyTargets = 2;
         numberOfAllyTargets = 0;
         priorityStat = StatType.CurrentHealth;
         skillTypes = new SkillType[] { SkillType.Attack, SkillType.Heal };

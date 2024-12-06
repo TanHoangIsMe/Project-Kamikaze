@@ -11,7 +11,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
     private List<Animator> animators;
     private Vector3 characterOriginalPosition;
     private Vector3 characterOriginalRotation;
-    List<float> animationLengths;
+    private List<float> animationLengths;
 
     private void Awake()
     {

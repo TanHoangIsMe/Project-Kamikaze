@@ -7,20 +7,20 @@ using UnityEngine.UI;
 
 public class SkillHandler : NetworkBehaviour
 {
-    private GameObject skillMenu;
     [SerializeField] private GameObject popUpDamageText;
+
+    private GameObject skillMenu;
+    private CheckNumberOfTargets checkNumberOfTargets;
+    private AutoFindTargets autoFindTargets;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
 
-    private bool isPlayer;
-    public bool IsPlayer { set { isPlayer = value; } }
-
-    private CheckNumberOfTargets checkNumberOfTargets;
-    private AutoFindTargets autoFindTargets;
-
     private List<float> skillValues;
     public List<float> SkillValues { set { skillValues = value; } }
+
+    private bool isPlayer;
+    public bool IsPlayer { set { isPlayer = value; } }
 
     private bool canReuse; // flat to know is skill can use instance after cast
     public bool CanReuse { get { return canReuse; } set { canReuse = value; } }
