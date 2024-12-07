@@ -5,12 +5,7 @@ using UnityEngine;
 
 public class CheckNumberOfTargets : MonoBehaviour
 {
-    private Transform choosePriorityPanel;
-    public Transform ChoosePriorityPanel { get { return choosePriorityPanel; } set { choosePriorityPanel = value; } }
-
-    private TextMeshProUGUI choosePriorityText;
-    public TextMeshProUGUI ChoosePriorityText { set { choosePriorityText = value; } }
-
+    private SkillPriority skillPriority;
     private AutoFindTargets autoFindTargets;
 
     private OnFieldCharacter champion; // who using skill
@@ -48,9 +43,16 @@ public class CheckNumberOfTargets : MonoBehaviour
     private bool isFinishFinding;
     public bool IsFinishFinding { get { return isFinishFinding; } set { isFinishFinding = value; } }
 
-    private void Awake()
+    private void Start()
     {
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
+
+        skillPriority = FindObjectOfType<SkillPriority>();
+        if (skillPriority != null) // set up skill priority panel
+        {
+            skillPriority.CheckNumberOfTargets = this;
+            skillPriority.gameObject.SetActive(false);
+        }
 
         isFinishChoosing = false;
         canSelectTarget = false;
@@ -90,17 +92,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         }
     }
 
-    public void ChoosingLowestPriority()
-    {
-        AutoFindTargetsBasedOnPriority(true);
-    }
-
-    public void ChoosingHighestPriority()
-    {
-        AutoFindTargetsBasedOnPriority(false);
-    }
-
-    private void AutoFindTargetsBasedOnPriority(bool isLow)
+    public void AutoFindTargetsBasedOnPriority(bool isLow)
     {
         if (layer == 6)
             autoFindTargets.AutoFindTargetsBasedOnPriority
@@ -109,7 +101,7 @@ public class CheckNumberOfTargets : MonoBehaviour
             autoFindTargets.AutoFindTargetsBasedOnPriority
                 (numberOfEnemyTargets, 7, priorityStat, isLow);
 
-        choosePriorityPanel.gameObject.SetActive(false);
+        skillPriority.gameObject.SetActive(false);
         isFinishChoosing = true;
         autoFindTargets.TurnOnShowTargets();
         isChoosePriorityOpen = false;
@@ -542,7 +534,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         else
         {
             this.layer = layer;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
         }
     }  
     
@@ -554,9 +546,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         else
         {
             layer = 7;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
             layer = 6;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
         }
     }
 
@@ -591,8 +583,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         if (layer == 6) targets = "allies";
         else targets = "enemies";
 
-        choosePriorityPanel.gameObject.SetActive(true);
-        choosePriorityText.text = $"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?";
+        skillPriority.gameObject.SetActive(true);
+        skillPriority.CheckCanOpen();
+        skillPriority.SetTittle($"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?");
     }
 
     private IEnumerator OpenDialog2Times()

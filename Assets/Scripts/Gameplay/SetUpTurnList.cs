@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class SetUpTurnList : NetworkBehaviour
 {
-    private CheckNumberOfTargets checkNumberOfTargets;
     private CombatSkillMenu combatSkillMenu;
     private SkillHandler skillHandler;
     private GameObject gameOverCanvas;
@@ -28,14 +27,13 @@ public class SetUpTurnList : NetworkBehaviour
     {
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>(); 
-        checkNumberOfTargets = FindObjectOfType<CheckNumberOfTargets>();
         phaseText = GameObject.Find("Phase Text").GetComponent<TextMeshProUGUI>();
         whoTurnText = GameObject.Find("Who Turn Text").GetComponent<TextMeshProUGUI>();
         gameOverCanvas = GameObject.Find("GameOver Canvas");
 
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
-
+        
         // turn off ui canvas
         if (combatSkillMenu != null) // turn off skill menu
             combatSkillMenu.gameObject.SetActive(false);
@@ -48,15 +46,6 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
-
-        if (checkNumberOfTargets != null && combatSkillMenu != null)
-        {
-            Transform choosePriority = combatSkillMenu.transform.GetChild(1);
-            checkNumberOfTargets.ChoosePriorityPanel = choosePriority;
-            checkNumberOfTargets.ChoosePriorityText = 
-                choosePriority.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-            choosePriority.gameObject.SetActive(false);
-        }
 
         if (gameOverCanvas != null)
             resultIcon = gameOverCanvas.transform.GetChild(1).gameObject;

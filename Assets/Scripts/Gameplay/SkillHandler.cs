@@ -9,9 +9,10 @@ public class SkillHandler : NetworkBehaviour
 {
     [SerializeField] private GameObject popUpDamageText;
 
-    private GameObject skillMenu;
     private CheckNumberOfTargets checkNumberOfTargets;
     private AutoFindTargets autoFindTargets;
+    private SkillPriority skillPriority;
+    private CombatSkillMenu combatSkillMenu;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
@@ -32,15 +33,17 @@ public class SkillHandler : NetworkBehaviour
     {
         checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
         autoFindTargets = GetComponent<AutoFindTargets>();
+        combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillValues = new List<float>();
         canReuse = false;
-        skillMenu = FindObjectOfType<CombatSkillMenu>().gameObject;
 
         AddListenerToButton();
     }
 
     private void Start()
     {
+        skillPriority = FindObjectOfType<SkillPriority>();
+
         if (IsHost) canDestroyObject = true;
         else canDestroyObject = false;
     }
@@ -109,6 +112,10 @@ public class SkillHandler : NetworkBehaviour
 
     private void SetUpToAutoFindTargets(int whichSkill)
     {
+        bool isHost;
+        if(new[] { 6, 7, 8, 9, 10 }.Contains(champion.Position)) isHost = true;
+        else isHost = false;
+
         // change champion layer = 8 - self
         ChangeLayerToSelf();
 
@@ -125,7 +132,9 @@ public class SkillHandler : NetworkBehaviour
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
+        skillPriority.IsHostClick = isHost;
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isPlayer, isTaunted, taunter);
+        
 
         // if player champion using skill show UI
         if (isPlayer)
@@ -260,7 +269,7 @@ public class SkillHandler : NetworkBehaviour
         {
             if(isPlayer)
                 // turn off skill menu
-                skillMenu.SetActive(false);
+                combatSkillMenu.gameObject.SetActive(false);
             
             // find champion animation controller script
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;

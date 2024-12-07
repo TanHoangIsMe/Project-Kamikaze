@@ -22,8 +22,9 @@ public class GameplayControllerPvP : NetworkBehaviour
             else // client update his champ layer
                 spawnChampion.UpdateClientChampLayer();
         }
-                   
+
         // await a little bit to start combat 
+        Time.timeScale = 1;
         Invoke("StartNewPhase", 5f);
     }
 
