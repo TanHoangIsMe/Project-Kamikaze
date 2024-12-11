@@ -22,7 +22,7 @@ public abstract class Skill : MonoBehaviour
 
     protected CalculateSkillEnergy calculateSkillEnergy;
     protected CalculateSkillDamage calculateSkillDamage;
-    protected GameplayController gameplayController;
+    protected SetUpTurnList setUpTurnList;
     protected SkillHandler skillHandler;
 
     protected OnFieldCharacter character;
@@ -53,7 +53,7 @@ public abstract class Skill : MonoBehaviour
     {
         calculateSkillEnergy = new CalculateSkillEnergy();
         calculateSkillDamage = new CalculateSkillDamage();
-        gameplayController = FindObjectOfType<GameplayController>();
+        setUpTurnList = FindObjectOfType<SetUpTurnList>();
         skillHandler = FindObjectOfType<SkillHandler>();
     }
     #endregion

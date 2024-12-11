@@ -39,12 +39,22 @@ public class SkillPriority : NetworkBehaviour
     [ClientRpc]
     private void ChoosingHighestPriorityClientRpc()
     {
-        if (checkNumberOfTarget != null)
-            checkNumberOfTarget.AutoFindTargetsBasedOnPriority(false);
+        ChoosingHighestPriority();
     }
 
     [ClientRpc]
     private void ChoosingLowestPriorityClientRpc()
+    {
+        ChoosingLowestPriority();
+    }
+
+    public void ChoosingHighestPriority()
+    {
+        if (checkNumberOfTarget != null)
+            checkNumberOfTarget.AutoFindTargetsBasedOnPriority(false);
+    }
+
+    public void ChoosingLowestPriority()
     {
         if (checkNumberOfTarget != null)
             checkNumberOfTarget.AutoFindTargetsBasedOnPriority(true);

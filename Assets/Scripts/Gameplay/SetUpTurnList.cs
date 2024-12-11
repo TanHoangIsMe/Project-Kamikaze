@@ -13,6 +13,7 @@ public class SetUpTurnList : NetworkBehaviour
     private GameObject resultIcon;
     private TextMeshProUGUI phaseText;
     private TextMeshProUGUI whoTurnText;
+    private EnemyAI enemyAI;
 
     private int phase; // combat turn
     public int Phase { get { return phase; } }
@@ -25,6 +26,7 @@ public class SetUpTurnList : NetworkBehaviour
 
     private void Start()
     {
+        enemyAI = GetComponent<EnemyAI>();
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
         skillHandler = FindObjectOfType<SkillHandler>(); 
         phaseText = GameObject.Find("Phase Text").GetComponent<TextMeshProUGUI>();
@@ -33,7 +35,7 @@ public class SetUpTurnList : NetworkBehaviour
 
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
-        
+
         // turn off ui canvas
         if (combatSkillMenu != null) // turn off skill menu
             combatSkillMenu.gameObject.SetActive(false);
@@ -51,20 +53,11 @@ public class SetUpTurnList : NetworkBehaviour
             resultIcon = gameOverCanvas.transform.GetChild(1).gameObject;
     }
 
-    #region Server Rpc
-    [ServerRpc (RequireOwnership = false)]
-    public void StartNewPhaseServerRpc()
-    {
-        StartNewPhaseClientRpc();
-    }
-    #endregion
-
-    #region Client Rpc
-    [ClientRpc]
-    public void StartNewPhaseClientRpc()
+    #region PvE
+    public void StartNewPhase()
     {
         phase++; // Next phase
-       
+
         if (phaseText != null) // Display Turn
             phaseText.text = $"Phase: {phase.ToString()}";
 
@@ -84,11 +77,13 @@ public class SetUpTurnList : NetworkBehaviour
 
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
-        StartTurnClientRpc(); // Start character turn
+
+        // Start character turn
+        if (enemyAI == null) StartTurnClientRpc(); 
+        else StartTurn();
     }
 
-    [ClientRpc]
-    public void StartTurnClientRpc()
+    public void StartTurn()
     {
         // check if game over
         Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
@@ -106,29 +101,40 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (turnList.Count == 0)
         {
-            StartNewPhaseClientRpc();
+            if(enemyAI == null) StartNewPhaseClientRpc();
+            else StartNewPhase();
+
             return;
         }
 
         whoTurn = turnList[0];
         turnList.RemoveAt(0);
 
-        if (combatSkillMenu != null) // set up menu skill UI
+        // set up turn pve
+        if (enemyAI != null && combatSkillMenu != null && skillHandler != null)
+        {
+            if (whoTurn.gameObject.layer == 6)
+            {
+                DisplaySkillMenu(true);
+                SetUpWhoTurn();
+            }
+            else
+            {
+                DisplaySkillMenu(false);
+                enemyAI.Champion = whoTurn;
+                enemyAI.StartEnemyTurn();
+            }
+        }
+
+        // set up turn pvp
+        if (enemyAI == null && combatSkillMenu != null && skillHandler != null) // set up menu skill UI
         {
             if (whoTurn.gameObject.layer == 6)
                 DisplaySkillMenu(IsHost);
             else
                 DisplaySkillMenu(!IsHost);
 
-            combatSkillMenu.Champion = whoTurn;
-            combatSkillMenu.SetUpSkillAvatar();
-            combatSkillMenu.SetUpBarsUI();
-        }
-
-        if (skillHandler != null) // set up skill handler
-        {
-            skillHandler.Champion = whoTurn;
-            skillHandler.IsPlayer = true;
+            SetUpWhoTurn();
 
             if (whoTurn.gameObject.layer == 7)
                 skillHandler.SwapChampionsLayer();
@@ -144,6 +150,35 @@ public class SetUpTurnList : NetworkBehaviour
         }
         else
             whoTurnText.text = "Enemy's Turn";
+    }
+
+    private void SetUpWhoTurn()
+    {
+        combatSkillMenu.Champion = whoTurn;
+        combatSkillMenu.SetUpSkillAvatar();
+        combatSkillMenu.SetUpBarsUI();
+        skillHandler.Champion = whoTurn;
+        skillHandler.IsPlayer = true;
+    }
+    #endregion
+
+    #region Rpc
+    [ServerRpc (RequireOwnership = false)]
+    public void StartNewPhaseServerRpc()
+    {
+        StartNewPhaseClientRpc();
+    }
+
+    [ClientRpc]
+    public void StartNewPhaseClientRpc()
+    {
+        StartNewPhase();
+    }
+
+    [ClientRpc]
+    public void StartTurnClientRpc()
+    {
+        StartTurn();
     }
     #endregion
 

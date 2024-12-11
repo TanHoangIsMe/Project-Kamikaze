@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameplayControllerSpawner : MonoBehaviour
+public class ObjectsSpawn : MonoBehaviour
 {
     [SerializeField] private GameObject player1Cam;
     [SerializeField] private GameObject player2Cam;

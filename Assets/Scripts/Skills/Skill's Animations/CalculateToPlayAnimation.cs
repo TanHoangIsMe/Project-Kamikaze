@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
-    private GameplayController gameplayController;
     private SetUpTurnList setUpTurnList;
     private List<OnFieldCharacter> targets;
     private List<Animator> animators;
@@ -15,8 +14,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
 
     private void Awake()
     {
-        gameplayController = FindObjectOfType<GameplayController>();
-
         // enemy targets list will be clear when finish using skill
         // so make a clone list to not encounter bug
         targets = new List<OnFieldCharacter>();
@@ -200,8 +197,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
             skillHandler.CanReuse = false; // reset flag
         }
         else
-            //    // start new turn
-            //    gameplayController.Invoke("StartTurn", 3f);
+            // start new turn
             setUpTurnList.Invoke("StartTurnClientRpc", 3f);
     }
 

@@ -56,22 +56,33 @@ public class SkillHandler : NetworkBehaviour
         Button skillBurstButton = GameObject.Find("Skill Burst").GetComponent<Button>();
         Button confirmAttackButton = GameObject.Find("Confirm Attack").GetComponent<Button>();
 
+        bool isPvE = FindObjectOfType<EnemyAI>();
+
         if (skill1Button != null)
             skill1Button.onClick.AddListener(() =>
             {
-                UsingSkill1ServerRpc();
+                if (isPvE)
+                    UsingSkill(0);
+                else
+                    UsingSkill1ServerRpc();
             });
 
         if (skill2Button != null)
             skill2Button.onClick.AddListener(() =>
             {
-                UsingSkill2ServerRpc();
+                if (isPvE)
+                    UsingSkill(1);
+                else
+                    UsingSkill2ServerRpc();
             });
 
         if (skillBurstButton != null)
             skillBurstButton.onClick.AddListener(() =>
             {
-                UsingSkillBurstServerRpc();
+                if (isPvE)
+                    UsingSkill(2);
+                else
+                    UsingSkillBurstServerRpc();
             });
 
         if (confirmAttackButton != null)
@@ -132,7 +143,7 @@ public class SkillHandler : NetworkBehaviour
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
-        skillPriority.IsHostClick = isHost;
+        if(skillPriority != null) skillPriority.IsHostClick = isHost;
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isPlayer, isTaunted, taunter);
         
 

@@ -30,10 +30,10 @@ public class LionSpirit : Skill
         temporaryShield.EffectValue = 200f;
         temporaryShield.EffectFunction();
 
-        if (gameplayController != null)
+        if (setUpTurnList != null)
         {
-            temporaryShield.StartTurn = gameplayController.Phase;
-            temporaryShield.EndTurn = gameplayController.Phase + 2;
+            temporaryShield.StartTurn = setUpTurnList.Phase;
+            temporaryShield.EndTurn = setUpTurnList.Phase + 2;
         }
 
         character.Effects.Add(temporaryShield);
