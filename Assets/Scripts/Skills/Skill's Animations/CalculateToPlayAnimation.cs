@@ -184,7 +184,6 @@ public class CalculateToPlayAnimation : MonoBehaviour
         animationController.SetIsAnimating(false);
 
         // check end game condition
-        //gameplayController.CheckGameOver();
         setUpTurnList.CheckGameOver(false, false);
 
         // reset values for next auto find targets
@@ -198,7 +197,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         }
         else
             // start new turn
-            setUpTurnList.Invoke("StartTurnClientRpc", 3f);
+            setUpTurnList.Invoke("StartTurn", 3f);
     }
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)

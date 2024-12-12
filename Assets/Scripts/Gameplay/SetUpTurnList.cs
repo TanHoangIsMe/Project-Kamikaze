@@ -77,10 +77,7 @@ public class SetUpTurnList : NetworkBehaviour
 
         CreateTurnList(); // Create new turn list 
         SortChampionTurnBySpeed(); // Sort turn list to who faster speed go first
-
-        // Start character turn
-        if (enemyAI == null) StartTurnClientRpc(); 
-        else StartTurn();
+        StartTurn(); // Start character turn
     }
 
     public void StartTurn()
@@ -101,9 +98,7 @@ public class SetUpTurnList : NetworkBehaviour
 
         if (turnList.Count == 0)
         {
-            if(enemyAI == null) StartNewPhaseClientRpc();
-            else StartNewPhase();
-
+            StartNewPhase();
             return;
         }
 
@@ -163,22 +158,10 @@ public class SetUpTurnList : NetworkBehaviour
     #endregion
 
     #region Rpc
-    [ServerRpc (RequireOwnership = false)]
-    public void StartNewPhaseServerRpc()
-    {
-        StartNewPhaseClientRpc();
-    }
-
     [ClientRpc]
     public void StartNewPhaseClientRpc()
     {
         StartNewPhase();
-    }
-
-    [ClientRpc]
-    public void StartTurnClientRpc()
-    {
-        StartTurn();
     }
     #endregion
 
@@ -208,17 +191,7 @@ public class SetUpTurnList : NetworkBehaviour
     public void CheckGameOver(bool isPlayer1Quit, bool isPlayer2Quit)
     {
         Check1SideAllDead(out bool enemyAllDead, out bool allyAllDead);
-
-        if (allyAllDead || enemyAllDead || isPlayer1Quit || isPlayer2Quit)
-        {
-            Time.timeScale = 0;
-            phaseText.text = "";
-            whoTurnText.text = "";
-            combatSkillMenu.gameObject.SetActive(false);
-            gameOverCanvas.SetActive(true);
-            NetworkManager.Singleton.Shutdown();
-        }
-
+        
         Image resultIconImage = resultIcon.GetComponent<Image>();
 
         if (enemyAllDead && resultIconImage != null 
@@ -232,10 +205,20 @@ public class SetUpTurnList : NetworkBehaviour
         else if (allyAllDead && resultIconImage != null
                 || isPlayer1Quit && resultIconImage != null)
         {
-            if(IsHost)
+            if (IsHost)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
             else
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
+        }
+
+        if (allyAllDead || enemyAllDead || isPlayer1Quit || isPlayer2Quit)
+        {
+            Time.timeScale = 0;
+            phaseText.text = "";
+            whoTurnText.text = "";
+            combatSkillMenu.gameObject.SetActive(false);
+            gameOverCanvas.SetActive(true);
+            NetworkManager.Singleton.Shutdown();
         }
     }
 

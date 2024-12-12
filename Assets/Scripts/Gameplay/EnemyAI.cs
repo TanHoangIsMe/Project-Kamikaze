@@ -25,18 +25,18 @@ public class EnemyAI : MonoBehaviour
 
             if (skillHandler.UsingSkill(2))
             {
-                skillHandler.AttackConfirmClientRpc();
+                skillHandler.AttackConfirm();
             }
             else
             {
                 if (skillHandler.UsingSkill(1))
                 {
-                    skillHandler.AttackConfirmClientRpc();
+                    skillHandler.AttackConfirm();
                 }
                 else
                 {
                     skillHandler.UsingSkill(0);
-                    skillHandler.AttackConfirmClientRpc();
+                    skillHandler.AttackConfirm();
                 }
             }
         }

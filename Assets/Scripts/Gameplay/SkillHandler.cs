@@ -43,9 +43,45 @@ public class SkillHandler : NetworkBehaviour
     private void Start()
     {
         skillPriority = FindObjectOfType<SkillPriority>();
+        //if can not find value get from other value
+        if(skillPriority == null && checkNumberOfTargets != null)
+            skillPriority = checkNumberOfTargets.SkillPriority;
 
         if (IsHost) canDestroyObject = true;
         else canDestroyObject = false;
+    }
+
+    private void Update()
+    {
+        SelectSingleTarget();
+    }
+
+    private void SelectSingleTarget()
+    {
+        if (checkNumberOfTargets.CanSelectTarget)
+        {
+            // check if player click something
+            if (Input.GetMouseButtonDown(0))
+            {
+                // Create ray cast based on mouse position
+                Camera camera = Camera.main;
+                if (camera == null)
+                    camera = GameObject.Find("Player 2 Camera").GetComponent<Camera>();
+
+                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                // Check if ray cast hit something
+                if (Physics.Raycast(ray, out hit))
+                {
+                    // Get object that ray hit
+                    OnFieldCharacter clickedCharacter = 
+                        hit.collider.gameObject.GetComponent<OnFieldCharacter>();
+                    if (clickedCharacter != null)                      
+                        UpdateClickTargetServerRpc(clickedCharacter.Position);
+                }
+            }
+        }
     }
 
     #region Add Listener
@@ -88,7 +124,10 @@ public class SkillHandler : NetworkBehaviour
         if (confirmAttackButton != null)
             confirmAttackButton.onClick.AddListener(() =>
             {
-               AttackConfirmServerRpc();
+                if (isPvE)
+                    AttackConfirm();
+                else
+                    AttackConfirmServerRpc();
             });
     }
     #endregion
@@ -111,13 +150,9 @@ public class SkillHandler : NetworkBehaviour
         foreach (var character in FindObjectsOfType<OnFieldCharacter>())
         {
             if (character != null && character.gameObject.layer == 6)
-            {
                 character.gameObject.layer = 7;
-            }
             else
-            {
                 character.gameObject.layer = 6;
-            }
         }
     }
 
@@ -143,17 +178,11 @@ public class SkillHandler : NetworkBehaviour
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
-        if(skillPriority != null) skillPriority.IsHostClick = isHost;
+        skillPriority.IsHostClick = isHost;
+        checkNumberOfTargets.IsHost = IsHost;
+        checkNumberOfTargets.IsHostClick = isHost;
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isPlayer, isTaunted, taunter);
-        
-
-        // if player champion using skill show UI
-        if (isPlayer)
-        {
-            // clear all selected ring and turn on based on targets
-            autoFindTargets.TurnOffShowTargets();
-            autoFindTargets.TurnOnShowTargets();
-        }
+        autoFindTargets.TurnOnShowTargets();
     }
 
     public void ResetThings()
@@ -198,10 +227,10 @@ public class SkillHandler : NetworkBehaviour
 
     private void ResetCheckNumberOfTargetsFlags()
     {
-        //checkNumberOfTargets.ChoosePriorityPanel.gameObject.SetActive(false);
         checkNumberOfTargets.IsFinishChoosing = false;
         checkNumberOfTargets.IsChoosePriorityOpen = false;
         checkNumberOfTargets.CanSelectTarget = false;
+        checkNumberOfTargets.IsFinishFinding = false;
     }
     #endregion
 
@@ -229,6 +258,12 @@ public class SkillHandler : NetworkBehaviour
     {
         AttackConfirmClientRpc();
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateClickTargetServerRpc(int position)
+    {
+        UpdateClickTargetClientRpc(position);
+    }
     #endregion
 
     #region Client Rpc
@@ -252,7 +287,15 @@ public class SkillHandler : NetworkBehaviour
 
     public bool UsingSkill(int whichSkill)
     {
-        if(whichSkill != 2 && champion.CurrentMana < champion.Skills[whichSkill].ManaCost)
+        // Clear targets list and reset flag properties
+        ResetCheckNumberOfTargetsFlags();
+        ClearTargetsList();
+
+        // reset UI
+        autoFindTargets.TurnOffShowTargets();
+        skillPriority.gameObject.SetActive(false);
+
+        if (whichSkill != 2 && champion.CurrentMana < champion.Skills[whichSkill].ManaCost)
         {
             Debug.Log("Not enough mana to use skill");
             return false;
@@ -264,10 +307,6 @@ public class SkillHandler : NetworkBehaviour
         }
         else
         {
-            // Clear targets list and reset flag properties
-            ResetCheckNumberOfTargetsFlags();
-            ClearTargetsList();
-
             SetUpToAutoFindTargets(whichSkill);
             return true;
         }
@@ -276,12 +315,17 @@ public class SkillHandler : NetworkBehaviour
     [ClientRpc]
     public void AttackConfirmClientRpc()
     {
+        AttackConfirm();                 
+    }
+
+    public void AttackConfirm()
+    {
         if (checkNumberOfTargets.IsFinishFinding)
         {
-            if(isPlayer)
+            if (isPlayer)
                 // turn off skill menu
                 combatSkillMenu.gameObject.SetActive(false);
-            
+
             // find champion animation controller script
             List<OnFieldCharacter> enemies = autoFindTargets.EnemyTargets;
             IAnimationPlayable animationController = champion.GetComponent<IAnimationPlayable>();
@@ -301,7 +345,18 @@ public class SkillHandler : NetworkBehaviour
             autoFindTargets.TurnOffShowTargets();
         }
         else
-            Debug.Log("Please choose a skill");   
+            Debug.Log("Please choose a skill");
+    }
+
+    [ClientRpc]
+    public void UpdateClickTargetClientRpc(int position)
+    {
+        foreach (OnFieldCharacter champ in FindObjectsOfType<OnFieldCharacter>())
+            if(champ.Position == position)
+            {
+                checkNumberOfTargets.UpdateTargetListBasedOnSelect(champ.gameObject);
+                autoFindTargets.TurnOnShowTargets();
+            }
     }
     #endregion
 

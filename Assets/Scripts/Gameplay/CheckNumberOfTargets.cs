@@ -6,6 +6,8 @@ using UnityEngine;
 public class CheckNumberOfTargets : MonoBehaviour
 {
     private SkillPriority skillPriority;
+    public SkillPriority SkillPriority { get { return skillPriority; } }
+
     private AutoFindTargets autoFindTargets;
 
     private OnFieldCharacter champion; // who using skill
@@ -38,7 +40,14 @@ public class CheckNumberOfTargets : MonoBehaviour
 
     // value to know when player can select target
     private bool canSelectTarget;
-    public bool CanSelectTarget { set { canSelectTarget = value; } }
+    public bool CanSelectTarget { get { return canSelectTarget; } set { canSelectTarget = value; } }
+
+    // value to know who can click
+    private bool isHost;
+    public bool IsHost { set { isHost = value; } }
+
+    private bool isHostClick;
+    public bool IsHostClick { set { isHostClick = value; } }
 
     private bool isFinishFinding;
     public bool IsFinishFinding { get { return isFinishFinding; } set { isFinishFinding = value; } }
@@ -60,38 +69,6 @@ public class CheckNumberOfTargets : MonoBehaviour
         isFinishFinding = false;
     }
 
-    private void Update()
-    {
-        SelectSingleTarget();
-    }
-
-    private void SelectSingleTarget()
-    {
-        if (canSelectTarget)
-        {
-            // check if player click something
-            if (Input.GetMouseButtonDown(0))
-            {
-                // Create ray cast based on mouse position
-                Camera camera = Camera.main;
-                if (camera == null)
-                    camera = GameObject.Find("Player 2 Camera").GetComponent<Camera>();
-
-                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                // Check if ray cast hit something
-                if (Physics.Raycast(ray, out hit))
-                {
-                    // Get object that ray hit
-                    GameObject clickedObject = hit.collider.gameObject;
-                    UpdateTargetListBasedOnSelect(clickedObject);
-                    autoFindTargets.TurnOnShowTargets();
-                }
-            }
-        }
-    }
-
     public void AutoFindTargetsBasedOnPriority(bool isLow)
     {
         if (layer == 6)
@@ -108,7 +85,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         isFinishFinding = true;
     }
 
-    private void UpdateTargetListBasedOnSelect(GameObject clickedObject)
+    public void UpdateTargetListBasedOnSelect(GameObject clickedObject)
     {
         // can select enemy 
         if ((selectType == 1) && clickedObject.layer == 7)
@@ -514,8 +491,9 @@ public class CheckNumberOfTargets : MonoBehaviour
             else
                 autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfAllyTargets, 6, priorityStat);
 
+
         // check if can select target and which type of target can select
-        canSelectTarget = true;
+        if (isHost == isHostClick) canSelectTarget = true;
         this.selectType = selectType;
 
         // check if need to show targets found UI 
@@ -584,7 +562,8 @@ public class CheckNumberOfTargets : MonoBehaviour
         else targets = "enemies";
 
         skillPriority.gameObject.SetActive(true);
-        skillPriority.CheckCanOpen();
+        // prevent can not open from pve
+        if(!FindObjectOfType<EnemyAI>()) skillPriority.CheckCanOpen();
         skillPriority.SetTittle($"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?");
     }
 
