@@ -13,6 +13,7 @@ public class SkillHandler : NetworkBehaviour
     private AutoFindTargets autoFindTargets;
     private SkillPriority skillPriority;
     private CombatSkillMenu combatSkillMenu;
+    private EnemyAI enemyAI;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
@@ -34,6 +35,7 @@ public class SkillHandler : NetworkBehaviour
         checkNumberOfTargets = GetComponent<CheckNumberOfTargets>();
         autoFindTargets = GetComponent<AutoFindTargets>();
         combatSkillMenu = FindObjectOfType<CombatSkillMenu>();
+        enemyAI = FindObjectOfType<EnemyAI>();
         skillValues = new List<float>();
         canReuse = false;
 
@@ -47,7 +49,7 @@ public class SkillHandler : NetworkBehaviour
         if(skillPriority == null && checkNumberOfTargets != null)
             skillPriority = checkNumberOfTargets.SkillPriority;
 
-        if (IsHost) canDestroyObject = true;
+        if(enemyAI != null || IsHost) canDestroyObject = true;
         else canDestroyObject = false;
     }
 
@@ -75,9 +77,13 @@ public class SkillHandler : NetworkBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     // Get object that ray hit
+                    GameObject clickedObject = hit.collider.gameObject;
                     OnFieldCharacter clickedCharacter = 
-                        hit.collider.gameObject.GetComponent<OnFieldCharacter>();
-                    if (clickedCharacter != null)                      
+                        clickedObject.GetComponent<OnFieldCharacter>();
+
+                    if (enemyAI != null) // pve 
+                        UpdateClickTarget(clickedObject);                   
+                    else if (clickedCharacter != null) // pvp                      
                         UpdateClickTargetServerRpc(clickedCharacter.Position);
                 }
             }
@@ -285,6 +291,22 @@ public class SkillHandler : NetworkBehaviour
         UsingSkill(2);
     }
 
+    [ClientRpc]
+    public void AttackConfirmClientRpc()
+    {
+        AttackConfirm();                 
+    }
+
+    [ClientRpc]
+    public void UpdateClickTargetClientRpc(int position)
+    {
+        foreach (OnFieldCharacter champ in FindObjectsOfType<OnFieldCharacter>())
+            if (champ.Position == position)
+                UpdateClickTarget(champ.gameObject);
+    }
+    #endregion
+
+    #region PvE Func
     public bool UsingSkill(int whichSkill)
     {
         // Clear targets list and reset flag properties
@@ -310,12 +332,6 @@ public class SkillHandler : NetworkBehaviour
             SetUpToAutoFindTargets(whichSkill);
             return true;
         }
-    }
-
-    [ClientRpc]
-    public void AttackConfirmClientRpc()
-    {
-        AttackConfirm();                 
     }
 
     public void AttackConfirm()
@@ -348,15 +364,10 @@ public class SkillHandler : NetworkBehaviour
             Debug.Log("Please choose a skill");
     }
 
-    [ClientRpc]
-    public void UpdateClickTargetClientRpc(int position)
+    public void UpdateClickTarget(GameObject clickedObject)
     {
-        foreach (OnFieldCharacter champ in FindObjectsOfType<OnFieldCharacter>())
-            if(champ.Position == position)
-            {
-                checkNumberOfTargets.UpdateTargetListBasedOnSelect(champ.gameObject);
-                autoFindTargets.TurnOnShowTargets();
-            }
+        checkNumberOfTargets.UpdateTargetListBasedOnSelect(clickedObject);
+        autoFindTargets.TurnOnShowTargets();
     }
     #endregion
 

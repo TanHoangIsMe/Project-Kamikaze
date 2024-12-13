@@ -9,6 +9,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     public SkillPriority SkillPriority { get { return skillPriority; } }
 
     private AutoFindTargets autoFindTargets;
+    private EnemyAI enemyAI;
 
     private OnFieldCharacter champion; // who using skill
     public OnFieldCharacter Champion { get { return champion; } set {  champion = value; } }
@@ -55,6 +56,7 @@ public class CheckNumberOfTargets : MonoBehaviour
     private void Start()
     {
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
+        enemyAI = FindObjectOfType<EnemyAI>();
 
         skillPriority = FindObjectOfType<SkillPriority>();
         if (skillPriority != null) // set up skill priority panel
@@ -493,7 +495,8 @@ public class CheckNumberOfTargets : MonoBehaviour
 
 
         // check if can select target and which type of target can select
-        if (isHost == isHostClick) canSelectTarget = true;
+        if (isHost == isHostClick || enemyAI != null) 
+            canSelectTarget = true;
         this.selectType = selectType;
 
         // check if need to show targets found UI 

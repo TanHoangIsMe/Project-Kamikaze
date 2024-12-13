@@ -9,6 +9,7 @@ public class Setting : NetworkBehaviour
 
     private LoadingScene loadingScene;
     private SetUpTurnList setUpTurnList;
+    private EnemyAI enemyAI;
 
     private void Start()
     {
@@ -18,15 +19,18 @@ public class Setting : NetworkBehaviour
             loadingScene.gameObject.SetActive(false);
 
         setUpTurnList = FindObjectOfType<SetUpTurnList>();
+        enemyAI = FindObjectOfType<EnemyAI>();
     }
 
     public void OpenSettingMenu()
     {
-        OpenSettingMenuServerRpc(IsHost);
+        if (enemyAI != null) OnOffMenu(true);
+        else OpenSettingMenuServerRpc(IsHost);
     }
 
     public void ResumeBattle()
     {
+        if (enemyAI != null) OnOffMenu(false);
         ResumeBattleServerRpc();
     }
 
@@ -38,7 +42,8 @@ public class Setting : NetworkBehaviour
 
     public void BackToMainMenu()
     {
-        BackToMainMenuServerRpc(IsHost);
+        if(enemyAI != null) LoadScene(0);
+        else BackToMainMenuServerRpc(IsHost);
     }
 
     #region ServerRpc
@@ -65,8 +70,7 @@ public class Setting : NetworkBehaviour
     [ClientRpc]
     private void OpenSettingMenuClientRpc(bool isHost)
     {
-        Time.timeScale = 0;
-        settingMenu.SetActive(true);
+        OnOffMenu(true); // open setting menu
 
         // DeActive other player resume button
         if ((isHost && !IsHost) || (!isHost && IsHost))
@@ -76,8 +80,7 @@ public class Setting : NetworkBehaviour
     [ClientRpc]
     private void ResumeBattleClientRpc()
     {
-        Time.timeScale = 1;
-        settingMenu.SetActive(false);
+        OnOffMenu(false);
     }
 
     [ClientRpc]
@@ -88,6 +91,16 @@ public class Setting : NetworkBehaviour
 
         if ((isHost && IsHost) || (!isHost && !IsHost))
             LoadScene(0);
+    }
+    #endregion
+
+    #region PvE
+    private void OnOffMenu(bool isOn)
+    {
+        if(isOn) Time.timeScale = 0;
+        else Time.timeScale = 1;
+
+        settingMenu.SetActive(isOn);
     }
     #endregion
 
