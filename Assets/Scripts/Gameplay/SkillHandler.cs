@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -14,6 +15,7 @@ public class SkillHandler : NetworkBehaviour
     private SkillPriority skillPriority;
     private CombatSkillMenu combatSkillMenu;
     private EnemyAI enemyAI;
+    private TextMeshProUGUI alertText;
 
     private OnFieldCharacter champion;
     public OnFieldCharacter Champion { get { return champion; } set { champion = value; } }
@@ -38,6 +40,9 @@ public class SkillHandler : NetworkBehaviour
         enemyAI = FindObjectOfType<EnemyAI>();
         skillValues = new List<float>();
         canReuse = false;
+
+        alertText = GameObject.Find("Alert Text").GetComponent<TextMeshProUGUI>();
+        OnOffAlert(false);
 
         AddListenerToButton();
     }
@@ -164,10 +169,6 @@ public class SkillHandler : NetworkBehaviour
 
     private void SetUpToAutoFindTargets(int whichSkill)
     {
-        bool isHost;
-        if(new[] { 6, 7, 8, 9, 10 }.Contains(champion.Position)) isHost = true;
-        else isHost = false;
-
         // change champion layer = 8 - self
         ChangeLayerToSelf();
 
@@ -184,9 +185,9 @@ public class SkillHandler : NetworkBehaviour
         // set up information need to auto find targets 
         checkNumberOfTargets.Champion = champion;
         checkNumberOfTargets.WhichSkill = whichSkill;
-        skillPriority.IsHostClick = isHost;
+        skillPriority.IsHostClick = CheckWhoClick();
         checkNumberOfTargets.IsHost = IsHost;
-        checkNumberOfTargets.IsHostClick = isHost;
+        checkNumberOfTargets.IsHostClick = CheckWhoClick();
         checkNumberOfTargets.CheckInfoToAutoFindTargets(isPlayer, isTaunted, taunter);
         autoFindTargets.TurnOnShowTargets();
     }
@@ -319,12 +320,12 @@ public class SkillHandler : NetworkBehaviour
 
         if (whichSkill != 2 && champion.CurrentMana < champion.Skills[whichSkill].ManaCost)
         {
-            Debug.Log("Not enough mana to use skill");
+            ShowAlert("You don't have enough mana to use the skill");
             return false;
         }
         else if (whichSkill == 2 && champion.CurrentBurst != champion.Skills[2].BurstCost)
         {
-            Debug.Log("Not enough mana to use skill");
+            ShowAlert("You don't have enough burst to use the skill");
             return false;
         }
         else
@@ -361,13 +362,46 @@ public class SkillHandler : NetworkBehaviour
             autoFindTargets.TurnOffShowTargets();
         }
         else
-            Debug.Log("Please choose a skill");
+            ShowAlert("Please select a skill before using it");
     }
 
     public void UpdateClickTarget(GameObject clickedObject)
     {
         checkNumberOfTargets.UpdateTargetListBasedOnSelect(clickedObject);
         autoFindTargets.TurnOnShowTargets();
+    }
+
+    private bool CheckWhoClick()
+    {
+        if (new[] { 6, 7, 8, 9, 10 }.Contains(champion.Position)) return true;
+        else return false;
+    }
+
+    // show alert when not have enough energy to using skill
+    private void ShowAlert(string message)
+    {
+        // prevent show alert when don't need
+        if (CheckWhoClick() && !IsHost 
+            || !CheckWhoClick() && IsHost
+            || !isPlayer) 
+            return;
+
+        OnOffAlert(true);
+        if (alertText != null)
+            alertText.text = message;
+        StartCoroutine(TurnOffAlert());
+    }
+
+    private void OnOffAlert(bool isActive)
+    {
+        if(alertText != null) alertText.gameObject.SetActive(isActive);
+    }
+
+    // wait 1s to turn of alert
+    private IEnumerator TurnOffAlert()
+    {
+        yield return new WaitForSeconds(1f);
+        OnOffAlert(false);
     }
     #endregion
 
