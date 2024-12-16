@@ -85,6 +85,9 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5450214570997621117}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1133761087539563384}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: bc843fa64a331ea43a3717067911427f, type: 3}
       insertIndex: -1
@@ -226,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 670561995
+  GlobalObjectIdHash: 2332926193
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -470,6 +473,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &6204051863597596067
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2328666592244123028}
+    m_Modifications:
+    - target: {fileID: 2072668037606489232, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 5.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2072668037606489232, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.078431375
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2298792969966270952, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+      propertyPath: m_Name
+      value: Lion Shield Effect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+--- !u!4 &5450214570997621117 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2142082890709408990, guid: 208c9749e931b9b41bbcb541410a7ab9, type: 3}
+  m_PrefabInstance: {fileID: 6204051863597596067}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8244297339107833277
 PrefabInstance:
   m_ObjectHideFlags: 0
