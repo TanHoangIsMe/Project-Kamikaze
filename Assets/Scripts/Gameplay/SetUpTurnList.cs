@@ -24,6 +24,9 @@ public class SetUpTurnList : NetworkBehaviour
 
     private OnFieldCharacter whoTurn; // variable to know whose turn
 
+    private bool isEnd; // variable to know if game end
+    public bool IsEnd { get { return isEnd; } set { isEnd = value; } }
+
     private void Start()
     {
         enemyAI = GetComponent<EnemyAI>();
@@ -35,6 +38,7 @@ public class SetUpTurnList : NetworkBehaviour
 
         turnList = new List<OnFieldCharacter>();
         whoTurn = null;
+        isEnd = false;
 
         // turn off ui canvas
         if (combatSkillMenu != null) // turn off skill menu
@@ -214,6 +218,7 @@ public class SetUpTurnList : NetworkBehaviour
         if (allyAllDead || enemyAllDead || isPlayer1Quit || isPlayer2Quit)
         {
             Time.timeScale = 0;
+            isEnd =  true;
             phaseText.text = "";
             whoTurnText.text = "";
             combatSkillMenu.gameObject.SetActive(false);

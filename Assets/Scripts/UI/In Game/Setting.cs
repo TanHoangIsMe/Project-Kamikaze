@@ -75,6 +75,8 @@ public class Setting : NetworkBehaviour
         // DeActive other player resume button
         if ((isHost && !IsHost) || (!isHost && IsHost))
             resumeButton.interactable = false;
+        else
+            resumeButton.interactable = true;
     }
 
     [ClientRpc]
@@ -129,6 +131,12 @@ public class Setting : NetworkBehaviour
 
     private void HandleClientDisconnect(ulong clientId)
     {
+        if (setUpTurnList.IsEnd) // if game end skip 
+        {
+            setUpTurnList.IsEnd = false;
+            return;
+        }
+
         if(setUpTurnList != null && IsHost) 
             setUpTurnList.CheckGameOver(false, true);
         else
