@@ -174,6 +174,7 @@ public class CalculateSkillDamage
 
                     temporaryShield.RemoveEffect();
                     enemy.UpdateEffectIcon();
+                    enemy.UpdateSkillEffect();
 
                     // run this method again to find next shield
                     UpdateRemainShield(enemy, shieldLost);

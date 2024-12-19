@@ -14,30 +14,31 @@ public class EnemyAI : MonoBehaviour
 
     public void StartEnemyTurn()
     {
-        //if (skillHandler == null) Debug.LogWarning("Skill Handler Null On AI");
-        //else
-        //{
-        //    skillHandler.Champion = champion;
-        //    skillHandler.IsCombatSkillMenu = false;
+        if (skillHandler == null) 
+            Debug.LogWarning("Skill Handler Null On AI");
+        else
+        {
+            skillHandler.Champion = champion;
+            skillHandler.IsPlayer = false;
 
-        //    skillHandler.SwapChampionsLayer();
+            skillHandler.SwapChampionsLayer();
 
-        //    if (skillHandler.UsingSkillBurst())
-        //    {
-        //        skillHandler.AttackConfirm();
-        //    }
-        //    else
-        //    {
-        //        if (skillHandler.UsingSkill2())
-        //        {
-        //            skillHandler.AttackConfirm();
-        //        }
-        //        else
-        //        {
-        //            skillHandler.UsingSkill1();
-        //            skillHandler.AttackConfirm();
-        //        }
-        //    }
-        //}
+            if (skillHandler.UsingSkill(2))
+            {
+                skillHandler.AttackConfirm();
+            }
+            else
+            {
+                if (skillHandler.UsingSkill(1))
+                {
+                    skillHandler.AttackConfirm();
+                }
+                else
+                {
+                    skillHandler.UsingSkill(0);
+                    skillHandler.AttackConfirm();
+                }
+            }
+        }
     }
 }

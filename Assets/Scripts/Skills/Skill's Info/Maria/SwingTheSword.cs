@@ -38,10 +38,10 @@ public class SwingTheSword : Skill
             armorBreak.EffectValue = enemyTargets[0].CurrentArmor * 0.2f;
             armorBreak.EffectFunction();
 
-            if (gameplayController != null)
+            if (setUpTurnList != null)
             {
-                armorBreak.StartTurn = gameplayController.Phase;
-                armorBreak.EndTurn = gameplayController.Phase + 2;
+                armorBreak.StartTurn = setUpTurnList.Phase;
+                armorBreak.EndTurn = setUpTurnList.Phase + 2;
             }
 
             enemyTargets[0].Effects.Add(armorBreak);

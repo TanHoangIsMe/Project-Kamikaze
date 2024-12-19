@@ -30,7 +30,7 @@ public class TemporaryShield : Effect
                 // play champion health bars animation
                 SkillHandler skillHandler = FindObjectOfType<SkillHandler>();
                 if (skillHandler != null)
-                    skillHandler.PlayHealthBarEffect(null, null, champion);
+                    skillHandler.PlayHealthBarEffect();
             }
 
             int removeIndex = 0;

@@ -1,28 +1,37 @@
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class Setting : MonoBehaviour
+public class Setting : NetworkBehaviour
 {
     [SerializeField] private GameObject settingMenu;
-    [SerializeField] private GameObject loadingCanvas;
+    [SerializeField] private Button resumeButton;
 
     private LoadingScene loadingScene;
+    private SetUpTurnList setUpTurnList;
+    private EnemyAI enemyAI;
 
-    private void Awake()
+    private void Start()
     {
-        loadingScene = loadingCanvas.GetComponent<LoadingScene>();
+        // setting loading scene
+        loadingScene = FindObjectOfType<LoadingScene>();
+        if(loadingScene != null )
+            loadingScene.gameObject.SetActive(false);
+
+        setUpTurnList = FindObjectOfType<SetUpTurnList>();
+        enemyAI = FindObjectOfType<EnemyAI>();
     }
 
     public void OpenSettingMenu()
     {
-        Time.timeScale = 0;
-        settingMenu.SetActive(true);
+        if (enemyAI != null) OnOffMenu(true);
+        else OpenSettingMenuServerRpc(IsHost);
     }
 
     public void ResumeBattle()
     {
-        Time.timeScale = 1;
-        settingMenu.SetActive(false);
+        if (enemyAI != null) OnOffMenu(false);
+        ResumeBattleServerRpc();
     }
 
     public void RestartBattle()
@@ -33,22 +42,107 @@ public class Setting : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        // load main menu scene
-        LoadScene(0);
+        if(enemyAI != null) LoadScene(0);
+        else BackToMainMenuServerRpc(IsHost);
     }
 
+    #region ServerRpc
+    [ServerRpc (RequireOwnership = false)]
+    private void OpenSettingMenuServerRpc(bool isHost)
+    {
+        OpenSettingMenuClientRpc(isHost);        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ResumeBattleServerRpc()
+    {
+        ResumeBattleClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void BackToMainMenuServerRpc(bool isHost)
+    {
+        BackToMainMenuClientRpc(isHost);
+    }
+    #endregion
+
+    #region ClientRpc
+    [ClientRpc]
+    private void OpenSettingMenuClientRpc(bool isHost)
+    {
+        OnOffMenu(true); // open setting menu
+
+        // DeActive other player resume button
+        if ((isHost && !IsHost) || (!isHost && IsHost))
+            resumeButton.interactable = false;
+        else
+            resumeButton.interactable = true;
+    }
+
+    [ClientRpc]
+    private void ResumeBattleClientRpc()
+    {
+        OnOffMenu(false);
+    }
+
+    [ClientRpc]
+    private void BackToMainMenuClientRpc(bool isHost)
+    {
+        settingMenu.SetActive(false);
+        NetworkManager.Singleton.Shutdown();
+
+        if ((isHost && IsHost) || (!isHost && !IsHost))
+            LoadScene(0);
+    }
+    #endregion
+
+    #region PvE
+    private void OnOffMenu(bool isOn)
+    {
+        if(isOn) Time.timeScale = 0;
+        else Time.timeScale = 1;
+
+        settingMenu.SetActive(isOn);
+    }
+    #endregion
+
+    #region Loading
     private void LoadScene(int sceneId)
     {
         // open loading scene
         if (loadingScene != null)
         {
-            loadingCanvas.SetActive(true);
+            loadingScene.gameObject.SetActive(true);
             loadingScene.LoadScene(sceneId);
-            settingMenu.SetActive(false);
-            Time.timeScale = 1;
+        }
+    }
+    #endregion
+
+    #region Disconnect
+    private void OnEnable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+    }
+
+    private void HandleClientDisconnect(ulong clientId)
+    {
+        if (setUpTurnList.IsEnd) // if game end skip 
+        {
+            setUpTurnList.IsEnd = false;
+            return;
         }
 
-        // load scene
-        SceneManager.LoadSceneAsync(sceneId);
+        if(setUpTurnList != null && IsHost) 
+            setUpTurnList.CheckGameOver(false, true);
+        else
+            setUpTurnList.CheckGameOver(true, false);
+
+        NetworkManager.Singleton.Shutdown();
     }
+    #endregion
 }

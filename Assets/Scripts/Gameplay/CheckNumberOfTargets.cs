@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class CheckNumberOfTargets : MonoBehaviour
 {
-    //[SerializeField] private Transform choosePriorityPanel;
-    //public Transform ChoosePriorityPanel { get { return choosePriorityPanel; } }
-
-    private TextMeshProUGUI choosePriorityText;
+    private SkillPriority skillPriority;
+    public SkillPriority SkillPriority { get { return skillPriority; } }
 
     private AutoFindTargets autoFindTargets;
+    private EnemyAI enemyAI;
 
     private OnFieldCharacter champion; // who using skill
     public OnFieldCharacter Champion { get { return champion; } set {  champion = value; } }
@@ -42,19 +41,29 @@ public class CheckNumberOfTargets : MonoBehaviour
 
     // value to know when player can select target
     private bool canSelectTarget;
-    public bool CanSelectTarget { set { canSelectTarget = value; } }
+    public bool CanSelectTarget { get { return canSelectTarget; } set { canSelectTarget = value; } }
+
+    // value to know who can click
+    private bool isHost;
+    public bool IsHost { set { isHost = value; } }
+
+    private bool isHostClick;
+    public bool IsHostClick { set { isHostClick = value; } }
 
     private bool isFinishFinding;
     public bool IsFinishFinding { get { return isFinishFinding; } set { isFinishFinding = value; } }
 
-    private void Awake()
+    private void Start()
     {
         autoFindTargets = FindObjectOfType<AutoFindTargets>();
+        enemyAI = FindObjectOfType<EnemyAI>();
 
-        //choosePriorityPanel.gameObject.SetActive(false);
-
-        //choosePriorityText = choosePriorityPanel.GetChild(0)
-        //    .gameObject.GetComponent<TextMeshProUGUI>();
+        skillPriority = FindObjectOfType<SkillPriority>();
+        if (skillPriority != null) // set up skill priority panel
+        {
+            skillPriority.CheckNumberOfTargets = this;
+            skillPriority.gameObject.SetActive(false);
+        }
 
         isFinishChoosing = false;
         canSelectTarget = false;
@@ -62,45 +71,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         isFinishFinding = false;
     }
 
-    private void Update()
-    {
-        SelectSingleTarget();
-    }
-
-    private void SelectSingleTarget()
-    {
-        if (canSelectTarget)
-        {
-            // check if player click something
-            if (Input.GetMouseButtonDown(0))
-            {
-                // Create raycast based on mouse position
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                // Check if raycast hit something
-                if (Physics.Raycast(ray, out hit))
-                {
-                    // Get object that ray hit
-                    GameObject clickedObject = hit.collider.gameObject;
-                    UpdateTargetListBasedOnSelect(clickedObject);
-                    autoFindTargets.TurnOnShowTargets();
-                }
-            }
-        }
-    }
-
-    public void ChoosingLowestPriority()
-    {
-        AutoFindTargetsBasedOnPriority(true);
-    }
-
-    public void ChoosingHighestPriority()
-    {
-        AutoFindTargetsBasedOnPriority(false);
-    }
-
-    private void AutoFindTargetsBasedOnPriority(bool isLow)
+    public void AutoFindTargetsBasedOnPriority(bool isLow)
     {
         if (layer == 6)
             autoFindTargets.AutoFindTargetsBasedOnPriority
@@ -109,14 +80,14 @@ public class CheckNumberOfTargets : MonoBehaviour
             autoFindTargets.AutoFindTargetsBasedOnPriority
                 (numberOfEnemyTargets, 7, priorityStat, isLow);
 
-        //choosePriorityPanel.gameObject.SetActive(false);
+        skillPriority.gameObject.SetActive(false);
         isFinishChoosing = true;
         autoFindTargets.TurnOnShowTargets();
         isChoosePriorityOpen = false;
         isFinishFinding = true;
     }
 
-    private void UpdateTargetListBasedOnSelect(GameObject clickedObject)
+    public void UpdateTargetListBasedOnSelect(GameObject clickedObject)
     {
         // can select enemy 
         if ((selectType == 1) && clickedObject.layer == 7)
@@ -234,7 +205,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         skillTypes = champion.CurrentCharacter.Skills[whichSkill].SkillTypes;
     }
 
-    public void CheckInfoToAutoFindTargets(bool isCombatSkillMenu, bool isTaunted, OnFieldCharacter taunter)
+    public void CheckInfoToAutoFindTargets(bool isPlayer, bool isTaunted, OnFieldCharacter taunter)
     {
         GetSkillInfo();
         
@@ -262,7 +233,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
@@ -279,7 +250,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
@@ -307,7 +278,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                     if(!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         // auto find group allies
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 3, true, true);
@@ -322,7 +293,7 @@ public class CheckNumberOfTargets : MonoBehaviour
 
                     if(!isGroupEnemy)
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 3, true, true);
 
@@ -334,7 +305,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     if (!isGroupEnemy && !isGroupAlly)
                     {
                         // auto find targets (allies and enemies)
-                        AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                        AutoFindOver1EnemyAndAlly(isPlayer);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -342,7 +313,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else if (!isGroupEnemy && isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -350,7 +321,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                     else if (isGroupEnemy && !isGroupAlly)
                     {
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                         // replace target list with taunter (cannot select enemy)
                         AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -377,7 +348,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 1, true, true);
                 }
@@ -397,7 +368,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupAlly)
                         // auto find allies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 6);
                     else
                         AutoFind1EnemyOrAllyOrGroup(false, 6, 2, true, true);
                 }
@@ -413,7 +384,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 {
                     if (!isGroupEnemy) // enemies not next to others
                         // auto find enemies
-                        AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                        AutoFindOver1EnemyOrAlly(isPlayer, 7);
                     else // enemies next to others
                         AutoFind1EnemyOrAllyOrGroup(false, 7, 5, true, true);
                 }
@@ -445,7 +416,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, false);
 
                 // auto find allies
-                AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                 // replace target list with taunter
                 AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -459,7 +430,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, false);
 
                 // auto find enemies
-                AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                 // replace target list with taunter
                 AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -471,7 +442,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 if (!isGroupEnemy && !isGroupAlly)
                 {
                     // auto find targets (allies and enemies)
-                    AutoFindOver1EnemyAndAlly(isCombatSkillMenu);
+                    AutoFindOver1EnemyAndAlly(isPlayer);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -479,7 +450,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 else if (!isGroupEnemy && isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 6, 2, false, true);
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 7);
+                    AutoFindOver1EnemyOrAlly(isPlayer, 7);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, true, 2, skillTypes);
@@ -487,7 +458,7 @@ public class CheckNumberOfTargets : MonoBehaviour
                 else if (isGroupEnemy && !isGroupAlly)
                 {
                     AutoFind1EnemyOrAllyOrGroup(false, 7, 1, false, true);
-                    AutoFindOver1EnemyOrAlly(isCombatSkillMenu, 6);
+                    AutoFindOver1EnemyOrAlly(isPlayer, 6);
 
                     // replace target list with taunter
                     AutoFindTauntTargets(isTaunted, taunter, false, 0, skillTypes);
@@ -522,8 +493,10 @@ public class CheckNumberOfTargets : MonoBehaviour
             else
                 autoFindTargets.AutoFindGroupTargetsBasedOnPriority(numberOfAllyTargets, 6, priorityStat);
 
+
         // check if can select target and which type of target can select
-        canSelectTarget = true;
+        if (isHost == isHostClick || enemyAI != null) 
+            canSelectTarget = true;
         this.selectType = selectType;
 
         // check if need to show targets found UI 
@@ -534,29 +507,29 @@ public class CheckNumberOfTargets : MonoBehaviour
         isFinishFinding = true;
     }
 
-    private void AutoFindOver1EnemyOrAlly(bool isCombatSkillMenu, int layer)
+    private void AutoFindOver1EnemyOrAlly(bool isPlayer, int layer)
     {
-        if (isCombatSkillMenu)
+        if (isPlayer)
             // open choose priority dialog
             OpenChoosePriorityDialog(layer);
         else
         {
             this.layer = layer;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
         }
     }  
     
-    private void AutoFindOver1EnemyAndAlly(bool isCombatSkillMenu)
+    private void AutoFindOver1EnemyAndAlly(bool isPlayer)
     {
-        if (isCombatSkillMenu)
+        if (isPlayer)
             // open choose priority dialog 2 times
             StartCoroutine(OpenDialog2Times());
         else
         {
             layer = 7;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
             layer = 6;
-            ChoosingLowestPriority();
+            skillPriority.ChoosingLowestPriorityServerRpc();
         }
     }
 
@@ -591,8 +564,10 @@ public class CheckNumberOfTargets : MonoBehaviour
         if (layer == 6) targets = "allies";
         else targets = "enemies";
 
-        //choosePriorityPanel.gameObject.SetActive(true);
-        choosePriorityText.text = $"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?";
+        skillPriority.gameObject.SetActive(true);
+        // prevent can not open from pve
+        if(!FindObjectOfType<EnemyAI>()) skillPriority.CheckCanOpen();
+        skillPriority.SetTittle($"Do you want to choose the {targets} with the lowest or highest {priorityStat} points?");
     }
 
     private IEnumerator OpenDialog2Times()

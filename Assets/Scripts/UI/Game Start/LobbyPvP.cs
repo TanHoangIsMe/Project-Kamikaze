@@ -99,33 +99,29 @@ public class LobbyPvP : NetworkBehaviour
     public override void OnNetworkSpawn()
     {  
         if(IsHost)
-            MoveToSelectChampPhase();
+            MoveToSelectChampPhase(true);
         else if(IsClient)
             CheckRoomStatusServerRpc(NetworkManager.Singleton.LocalClientId);         
     }
 
     private void SpawnSelectChampCanvas()
     {
-        GameObject selectChampCanvas =
-            GameObject.FindGameObjectWithTag("SelectChampPvP");
-
-        if (selectChampCanvas == null)
-        {
-            selectChampCanvas = Instantiate(selectChampPvP);
-            selectChampCanvas.GetComponent<NetworkObject>().Spawn();
-        }
-        
-        SendInfoToSelectChamp(selectChampCanvas);
+        // spawn shared object
+        GameObject selectChampCanvas = Instantiate(selectChampPvP);
+        selectChampCanvas.GetComponent<NetworkObject>().Spawn();
     }
 
-    private void SendInfoToSelectChamp(GameObject selectChampCanvas)
+    private void SendInfoToSelectChamp()
     {
-        ChampSelectPvP champSelectPvP = selectChampCanvas.GetComponent<ChampSelectPvP>();
+        GameObject selectChampCanvas = 
+            GameObject.Find("PvP Choosing Champ Canvas(Clone)");
 
-        if (champSelectPvP != null && loadingScene != null)
+        if (selectChampCanvas != null && loadingScene != null)
         {
-            champSelectPvP.LobbyPvP = gameObject;
-            champSelectPvP.LoadingCanvas = loadingScene;
+            ChampSelectPvP selectChampPvP = selectChampCanvas.GetComponent<ChampSelectPvP>();
+            
+            selectChampPvP.LobbyPvP = gameObject;
+            selectChampPvP.LoadingCanvas = loadingScene;
         }
     }
 
@@ -153,7 +149,7 @@ public class LobbyPvP : NetworkBehaviour
         }
         else
         {
-            MoveToSelectChampPhase();
+            MoveToSelectChampPhase(false);
         }
     }
 
@@ -177,10 +173,13 @@ public class LobbyPvP : NetworkBehaviour
         return true;
     }
 
-    private void MoveToSelectChampPhase()
+    private void MoveToSelectChampPhase(bool isHost)
     {
-        // spawn shared object to select champ
-        SpawnSelectChampCanvas();
+        if(isHost)
+            // spawn shared object to select champ
+            SpawnSelectChampCanvas();
+
+        SendInfoToSelectChamp();
 
         // reset input field
         ResetScene();

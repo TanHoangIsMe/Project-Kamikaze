@@ -5,18 +5,15 @@ using UnityEngine;
 
 public class CalculateToPlayAnimation : MonoBehaviour
 {
-    private GameplayController gameplayController;
     private SetUpTurnList setUpTurnList;
     private List<OnFieldCharacter> targets;
     private List<Animator> animators;
     private Vector3 characterOriginalPosition;
     private Vector3 characterOriginalRotation;
-    List<float> animationLengths;
+    private List<float> animationLengths;
 
     private void Awake()
     {
-        gameplayController = FindObjectOfType<GameplayController>();
-
         // enemy targets list will be clear when finish using skill
         // so make a clone list to not encounter bug
         targets = new List<OnFieldCharacter>();
@@ -177,7 +174,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
             yield return new WaitForSeconds(maxAnimationLength + 1f);
 
             foreach (var target in targets)
-                if (target.CurrentHealth <= 0)
+                if (target.CurrentHealth <= 0 && skillHandler.CanDestroyObject)
                     Destroy(target.gameObject);
         }
 
@@ -187,27 +184,20 @@ public class CalculateToPlayAnimation : MonoBehaviour
         animationController.SetIsAnimating(false);
 
         // check end game condition
-        //gameplayController.CheckGameOver();
+        setUpTurnList.CheckGameOver(false, false);
 
         // reset values for next auto find targets
         skillHandler.ResetThings();
 
         if (skillHandler.CanReuse)
         {
-            if (whichSkill == 0)
-                skillHandler.UsingSkill1();
-            else if (whichSkill == 1)
-                skillHandler.UsingSkill2();
-            else
-                skillHandler.UsingSkillBurst();
-
+            skillHandler.UsingSkill(whichSkill);
             skillHandler.AttackConfirmServerRpc();
             skillHandler.CanReuse = false; // reset flag
         }
         else
-            //    // start new turn
-            //    gameplayController.Invoke("StartTurn", 3f);
-            setUpTurnList.Invoke("StartTurnClientRpc", 3f);
+            // start new turn
+            setUpTurnList.Invoke("StartTurn", 3f);
     }
 
     private void GetAnimationByTag(Animator animator, string animationName, List<float> animationLengths)
