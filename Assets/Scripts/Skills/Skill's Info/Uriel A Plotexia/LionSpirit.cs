@@ -38,5 +38,6 @@ public class LionSpirit : Skill
 
         character.Effects.Add(temporaryShield);
         character.UpdateEffectIcon();
+        character.UpdateSkillEffect();
     }
 }

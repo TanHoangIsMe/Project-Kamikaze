@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class OnFieldCharacter : MonoBehaviour 
 {
+    [SerializeField] private GameObject tempShieldEffect;
+    private GameObject lionShield; // value to know if character have shield
+    
     private Character currentCharacter;
     private int position;
     private float currentAttack;
@@ -141,4 +144,28 @@ public class OnFieldCharacter : MonoBehaviour
         }
     }
     #endregion
+
+    public void UpdateSkillEffect()
+    {
+        bool haveTempShield = false;
+
+        // check if character have shield effect
+        foreach(Effect effect in effects)
+            if(effect is TemporaryShield)
+            {
+                haveTempShield = true;
+                break;
+            }
+
+        if (haveTempShield && lionShield == null)
+        {
+            lionShield = Instantiate(tempShieldEffect, transform.position + new Vector3(0f,2f,0f), Quaternion.identity);
+            lionShield.transform.SetParent(transform);
+        }
+        else if(!haveTempShield && lionShield != null)
+        {
+            Destroy(lionShield);
+            lionShield = null;
+        }         
+    }
 }

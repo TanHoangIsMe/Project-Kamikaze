@@ -77,6 +77,7 @@ public class SetUpTurnList : NetworkBehaviour
                 }
 
             character.UpdateEffectIcon();
+            character.UpdateSkillEffect();
         }
 
         CreateTurnList(); // Create new turn list 
@@ -201,7 +202,7 @@ public class SetUpTurnList : NetworkBehaviour
         if (enemyAllDead && resultIconImage != null 
             || isPlayer2Quit && resultIconImage != null)
         {
-            if(IsHost)
+            if(IsHost || enemyAI != null)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
             else
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
@@ -209,7 +210,7 @@ public class SetUpTurnList : NetworkBehaviour
         else if (allyAllDead && resultIconImage != null
                 || isPlayer1Quit && resultIconImage != null)
         {
-            if (IsHost)
+            if (IsHost || enemyAI != null)
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Defeat Icon");
             else
                 resultIconImage.sprite = Resources.Load<Sprite>("Art/UI/In Game/Victory Icon");
