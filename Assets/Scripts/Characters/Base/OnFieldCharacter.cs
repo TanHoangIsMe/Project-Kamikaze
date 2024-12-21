@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 public class OnFieldCharacter : MonoBehaviour 
 {
+    [SerializeField] private GameObject healingEffect;
     [SerializeField] private GameObject tempShieldEffect;
     private GameObject lionShield; // value to know if character have shield
-    
+
     private Character currentCharacter;
     private int position;
     private float currentAttack;
@@ -145,6 +146,7 @@ public class OnFieldCharacter : MonoBehaviour
     }
     #endregion
 
+    #region Process VFX
     public void UpdateSkillEffect()
     {
         bool haveTempShield = false;
@@ -157,7 +159,7 @@ public class OnFieldCharacter : MonoBehaviour
                 break;
             }
 
-        if (haveTempShield && lionShield == null)
+        if (haveTempShield && lionShield == null && tempShieldEffect != null)
         {
             lionShield = Instantiate(tempShieldEffect, transform.position + new Vector3(0f,2f,0f), Quaternion.identity);
             lionShield.transform.SetParent(transform);
@@ -168,4 +170,14 @@ public class OnFieldCharacter : MonoBehaviour
             lionShield = null;
         }         
     }
+
+    public void ProcessHealingEffect()
+    {
+        if (healingEffect != null)
+        {
+            GameObject healingObj = Instantiate(healingEffect, transform.position, Quaternion.identity);
+            healingObj.transform.SetParent(transform);
+        }
+    }
+    #endregion
 }
