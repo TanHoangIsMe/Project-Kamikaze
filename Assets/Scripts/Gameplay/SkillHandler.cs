@@ -381,14 +381,14 @@ public class SkillHandler : NetworkBehaviour
     private void ShowAlert(string message)
     {
         // prevent show alert when don't need
-        if (CheckWhoClick() && !IsHost 
-            || !CheckWhoClick() && IsHost
-            || !isPlayer) 
+        if ((enemyAI != null && !isPlayer) ||
+            (enemyAI == null && CheckWhoClick() && !IsHost) ||
+            (enemyAI == null && !CheckWhoClick() && IsHost))
             return;
 
+        // show alert 
         OnOffAlert(true);
-        if (alertText != null)
-            alertText.text = message;
+        if (alertText != null) alertText.text = message;
         StartCoroutine(TurnOffAlert());
     }
 

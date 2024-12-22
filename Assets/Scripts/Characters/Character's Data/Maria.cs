@@ -12,7 +12,7 @@ public class Maria : Character
         speed = 40f;
         health = 700f;
         maxMana = 80f;
-        maxBurst = 100f;
+        maxBurst = 80f;
         skills = new Skill[] {
             new SkyfallSlash(),
             new SwingTheSword(), 
