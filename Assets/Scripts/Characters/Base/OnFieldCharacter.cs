@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class OnFieldCharacter : MonoBehaviour 
 {
+    [SerializeField] private GameObject fallingSwordEffect;
     [SerializeField] private GameObject healingEffect;
     [SerializeField] private GameObject tempShieldEffect;
     private GameObject lionShield; // value to know if character have shield
@@ -85,7 +86,7 @@ public class OnFieldCharacter : MonoBehaviour
         currentSpeed = currentCharacter.Speed;
         currentHealth = currentCharacter.Health;
         currentMana = currentCharacter.MaxMana;
-        currentBurst = 0f;
+        currentBurst = currentCharacter.MaxBurst;
         skills = currentCharacter.Skills;
         effects = new List<Effect>();
     }
@@ -178,6 +179,12 @@ public class OnFieldCharacter : MonoBehaviour
             GameObject healingObj = Instantiate(healingEffect, transform.position, Quaternion.identity);
             healingObj.transform.SetParent(transform);
         }
+    }
+
+    public void ProcessFallingSwordEffect()
+    {
+        if (fallingSwordEffect != null)
+            Instantiate(fallingSwordEffect, Vector3.zero, Quaternion.identity);
     }
     #endregion
 }

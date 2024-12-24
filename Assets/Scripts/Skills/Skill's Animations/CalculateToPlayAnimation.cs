@@ -192,7 +192,7 @@ public class CalculateToPlayAnimation : MonoBehaviour
         if (skillHandler.CanReuse)
         {
             skillHandler.UsingSkill(whichSkill);
-            skillHandler.AttackConfirmServerRpc();
+            skillHandler.AttackConfirm();
             skillHandler.CanReuse = false; // reset flag
         }
         else
