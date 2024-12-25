@@ -515,7 +515,7 @@ public class CheckNumberOfTargets : MonoBehaviour
         else
         {
             this.layer = layer;
-            skillPriority.ChoosingLowestPriorityServerRpc();
+            skillPriority.ChoosingLowestPriority();
         }
     }  
     
@@ -527,9 +527,9 @@ public class CheckNumberOfTargets : MonoBehaviour
         else
         {
             layer = 7;
-            skillPriority.ChoosingLowestPriorityServerRpc();
+            skillPriority.ChoosingLowestPriority();
             layer = 6;
-            skillPriority.ChoosingLowestPriorityServerRpc();
+            skillPriority.ChoosingLowestPriority();
         }
     }
 
