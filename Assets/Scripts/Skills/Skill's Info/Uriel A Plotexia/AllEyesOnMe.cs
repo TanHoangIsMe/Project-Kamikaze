@@ -42,7 +42,7 @@ public class AllEyesOnMe : Skill
             if (effect is Taunt previousTaunt && setUpTurnList != null)
             {
                 previousTaunt.StartTurn = setUpTurnList.Phase;
-                previousTaunt.EndTurn = setUpTurnList.Phase + 1;
+                previousTaunt.EndTurn = setUpTurnList.Phase + 2;
                 isTaunt = true;
                 character.UpdateEffectIcon();
                 break;
@@ -57,7 +57,7 @@ public class AllEyesOnMe : Skill
         if (setUpTurnList != null)
         {
             taunt.StartTurn = setUpTurnList.Phase;
-            taunt.EndTurn = setUpTurnList.Phase + 1;
+            taunt.EndTurn = setUpTurnList.Phase + 2;
         }
 
         character.Effects.Add(taunt);
@@ -78,7 +78,7 @@ public class AllEyesOnMe : Skill
                 {
                     previousTaunted.TauntedBy = character;
                     previousTaunted.StartTurn = setUpTurnList.Phase;
-                    previousTaunted.EndTurn = setUpTurnList.Phase + 1;
+                    previousTaunted.EndTurn = setUpTurnList.Phase + 2;
                     isTaunted = true;
                     target.UpdateEffectIcon();
                     break;
@@ -94,7 +94,7 @@ public class AllEyesOnMe : Skill
             if (setUpTurnList != null)
             {
                 taunted.StartTurn = setUpTurnList.Phase;
-                taunted.EndTurn = setUpTurnList.Phase + 1;
+                taunted.EndTurn = setUpTurnList.Phase + 2;
             }
 
             target.Effects.Add(taunted);

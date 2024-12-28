@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +13,9 @@ public class ChampSelectPvP : NetworkBehaviour
 
     private GameObject loadingCanvas;
     public GameObject LoadingCanvas { set {  loadingCanvas = value; } }
+
+    private string roomID;
+    public string RoomID { set { roomID = value; } }
 
     // Ready Phase
     [SerializeField] private Transform selectChampBG;
@@ -47,12 +49,6 @@ public class ChampSelectPvP : NetworkBehaviour
 
     private void Start()
     {
-        // set room id
-        string roomID = NetworkManager.Singleton.GetComponent<UnityTransport>()
-            .ConnectionData.Port.ToString();
-
-        roomIDText.text = $"Room ID: {roomID}";
-
         championList = new Dictionary<int, string>();
 
         // set up ui depend on server or client
@@ -310,6 +306,14 @@ public class ChampSelectPvP : NetworkBehaviour
             loadingCanvas.GetComponent<LoadingScene>().LoadScene(2);
         }
     }
+
+    [ClientRpc]
+    private void UpdateRoomIDClientRpc(string id)
+    {
+        // set room id
+        roomID = id;
+        roomIDText.text = $"Room ID: {roomID}";
+    }
     #endregion
 
     #region Reuse Code
@@ -535,11 +539,17 @@ public class ChampSelectPvP : NetworkBehaviour
     private void OnEnable()
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+        NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnect;
     }
 
     private void OnDisable()
     {
         NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+    }
+
+    private void HandleClientConnect(ulong clientId)
+    {
+        if (IsHost) UpdateRoomIDClientRpc(roomID);
     }
 
     private void HandleClientDisconnect(ulong clientId)

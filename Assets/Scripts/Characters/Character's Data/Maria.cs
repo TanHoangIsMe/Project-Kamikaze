@@ -7,9 +7,9 @@ public class Maria : Character
         roleTypes = new RoleType[] { RoleType.Attacker };
         classTypes = new ClassType[] { ClassType.Warrior };
         elementTypes = new ElementType[] { ElementType.Fire };
-        attack = 2000f;
-        armor = 50f;
-        speed = 40f;
+        attack = 250f;
+        armor = 80f;
+        speed = 70f;
         health = 700f;
         maxMana = 80f;
         maxBurst = 80f;

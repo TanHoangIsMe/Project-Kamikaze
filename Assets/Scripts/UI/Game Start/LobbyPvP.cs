@@ -4,6 +4,11 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Networking.Transport.Relay;
 
 public class LobbyPvP : NetworkBehaviour
 {
@@ -17,17 +22,72 @@ public class LobbyPvP : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI errorTittle;
     [SerializeField] private TextMeshProUGUI errorMessage;
 
+    private string joinCode;
+
     private void Awake()
     {
         // player create room as host 
         createRoomBT.onClick.AddListener(() => {
-            CreateRoom();
+            //CreateRoom();
+            CreateRelay();
         });
 
         // player join room as client
         joinRoomBT.onClick.AddListener(() => {
-            JoinRoom();
+            //JoinRoom();
+            JoinRelay();
         });
+    }
+
+    private async void Start()
+    {
+        await UnityServices.InitializeAsync();
+
+        AuthenticationService.Instance.SignedIn += () =>
+        {
+            Debug.Log("Signed In" + AuthenticationService.Instance.PlayerId);
+        };
+        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    }
+
+    private async void CreateRelay()
+    {
+        try
+        {
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
+            joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            NetworkManager.Singleton.StartHost();
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+            ShowAlert(
+                "Create Room Failed",
+                "Something went wrong while try to create room. Please try again.");
+        }
+    }
+
+    private async void JoinRelay()
+    {
+        string joinRoomID = joinRoomIF.text;
+
+        joinRoomIF.text = ""; // reset input text
+
+        try
+        {
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinRoomID);
+            RelayServerData relayServerData = new RelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            NetworkManager.Singleton.StartClient();
+        }
+        catch (RelayServiceException e) {
+            Debug.Log(e);
+            ShowAlert(
+                "Join Room Failed",
+                "Something went wrong while try to join room. Please try again.");
+        }
     }
 
     private void CreateRoom()
@@ -122,6 +182,7 @@ public class LobbyPvP : NetworkBehaviour
             
             selectChampPvP.LobbyPvP = gameObject;
             selectChampPvP.LoadingCanvas = loadingScene;
+            selectChampPvP.RoomID = joinCode;
         }
     }
 
@@ -193,6 +254,7 @@ public class LobbyPvP : NetworkBehaviour
         // reset input field
         createRoomIF.text = "";
         joinRoomIF.text = "";
+        joinCode = "";
     }
 
     private void ShowAlert(string tittle, string message)
