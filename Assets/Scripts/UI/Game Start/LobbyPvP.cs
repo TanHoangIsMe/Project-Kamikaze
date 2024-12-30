@@ -14,7 +14,6 @@ public class LobbyPvP : NetworkBehaviour
 {
     [SerializeField] private GameObject selectChampPvP;
     [SerializeField] private GameObject loadingScene;
-    [SerializeField] private TMP_InputField createRoomIF;
     [SerializeField] private TMP_InputField joinRoomIF;
     [SerializeField] private Button createRoomBT;
     [SerializeField] private Button joinRoomBT;
@@ -28,14 +27,12 @@ public class LobbyPvP : NetworkBehaviour
     {
         // player create room as host 
         createRoomBT.onClick.AddListener(() => {
-            //CreateRoom();
-            CreateRelay();
+            CreateRoom();
         });
 
         // player join room as client
         joinRoomBT.onClick.AddListener(() => {
-            //JoinRoom();
-            JoinRelay();
+            JoinRoom();
         });
     }
 
@@ -50,7 +47,7 @@ public class LobbyPvP : NetworkBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
-    private async void CreateRelay()
+    private async void CreateRoom()
     {
         try
         {
@@ -69,11 +66,20 @@ public class LobbyPvP : NetworkBehaviour
         }
     }
 
-    private async void JoinRelay()
+    private async void JoinRoom()
     {
         string joinRoomID = joinRoomIF.text;
 
         joinRoomIF.text = ""; // reset input text
+
+        // check input text empty
+        if (string.IsNullOrEmpty(joinRoomID))
+        {
+            ShowAlert(
+                "Input Required",
+                "Please enter join code before submitting.");
+            return;
+        }
 
         try
         {
@@ -82,78 +88,13 @@ public class LobbyPvP : NetworkBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartClient();
         }
-        catch (RelayServiceException e) {
+        catch (RelayServiceException e)
+        {
             Debug.Log(e);
             ShowAlert(
                 "Join Room Failed",
                 "Something went wrong while try to join room. Please try again.");
         }
-    }
-
-    private void CreateRoom()
-    {
-        string createRoomID = createRoomIF.text;
-
-        createRoomIF.text = ""; // reset input text
-
-        // check input text 
-        if (string.IsNullOrEmpty(createRoomID) || createRoomID.Length != 4 || !IsNumeric(createRoomID))
-        {
-            ShowAlert(
-                "Invalid ID",
-                "Please enter a ID that is numeric and 4 characters long.");
-            return;
-        }
-
-        // check room id in use
-        if (IsPortInUse(int.Parse(createRoomID)))
-        {
-            ShowAlert(
-                "Already Existed",
-                "The room ID is in use, please try another ID");
-        }
-        else
-        {
-            // Update Port
-            NetworkManager.Singleton.GetComponent<UnityTransport>()
-                .ConnectionData.Port = ushort.Parse(createRoomID);
-
-            // Start room as host
-            NetworkManager.Singleton.StartHost();
-        }
-    }
-
-    public void JoinRoom()
-    {
-        string joinRoomID = joinRoomIF.text;
-
-        joinRoomIF.text = ""; // reset input text
-
-        // check input text
-        if (string.IsNullOrEmpty(joinRoomID) || joinRoomID.Length != 4 || !IsNumeric(joinRoomID))
-        {
-            ShowAlert(
-                "Invalid ID",
-                "Please enter a ID that is numeric and 4 characters long.");
-            return;
-        }
-
-        // check room id in use
-        if (IsPortInUse(int.Parse(joinRoomID)))
-        {
-            // Update Port
-            NetworkManager.Singleton.GetComponent<UnityTransport>()
-            .ConnectionData.Port = ushort.Parse(joinRoomID);
-
-            // join room as client
-            NetworkManager.Singleton.StartClient();           
-        }
-        else
-        {
-            ShowAlert(
-                "Invalid Room",
-                "The room does not exist, please join another room.");
-        }          
     }
 
     public override void OnNetworkSpawn()
@@ -214,26 +155,6 @@ public class LobbyPvP : NetworkBehaviour
         }
     }
 
-    private bool IsPortInUse(int port)
-    {
-        return System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
-            .GetActiveUdpListeners()
-            .Any(p => p.Port == port);
-    }
-
-    // check if string contain all number
-    private bool IsNumeric(string str)
-    {
-        foreach (char c in str)
-        {
-            if (!char.IsDigit(c))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void MoveToSelectChampPhase(bool isHost)
     {
         if(isHost)
@@ -252,7 +173,6 @@ public class LobbyPvP : NetworkBehaviour
     public void ResetScene()
     {
         // reset input field
-        createRoomIF.text = "";
         joinRoomIF.text = "";
         joinCode = "";
     }
