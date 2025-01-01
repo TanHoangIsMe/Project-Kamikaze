@@ -46,12 +46,26 @@ public class OverHealthBar : MonoBehaviour
             float shieldAmount = champion.CurrentShield
                 / champion.CurrentCharacter.Health;
 
+            // update shield amount to display on UI
+            if (shieldAmount > 0 && shieldAmount < 1 - fillAmount)
+            {
+                shieldAmount += fillAmount;
+                shieldFill.fillOrigin = 0; // fill from left side
+                // swap location for UI render
+                shieldFill.transform.SetSiblingIndex(2);
+                healthFill.transform.SetSiblingIndex(3);
+            }
+            else
+            {
+                shieldFill.fillOrigin = 1; // fill from right side
+                // swap location for UI render
+                shieldFill.transform.SetSiblingIndex(3);
+                healthFill.transform.SetSiblingIndex(2);
+            }
+
             // update health fill images
             healthFill.fillAmount = fillAmount;
             StartCoroutine(UpdateHealthLoseFill(fillAmount));
-
-            //calculate shield image position
-            SetShieldImageNewPosition(fillAmount, shieldAmount);
 
             //update shield fill image
             StartCoroutine(UpdateShieldFill(shieldAmount));
@@ -95,14 +109,5 @@ public class OverHealthBar : MonoBehaviour
             shieldFill.fillAmount = Mathf.Lerp(shieldFill.fillAmount, shieldAmount, duration);
             yield return null;
         }
-    }
-
-    private void SetShieldImageNewPosition(float fillAmount, float shieldAmount)
-    {
-        RectTransform rectTransform = shieldFill.GetComponent<RectTransform>();
-
-        float newX = (0.9f * fillAmount) - (0.9f * shieldAmount);
-
-        rectTransform.localPosition = new Vector3(newX, 0, 0);
     }
 }
